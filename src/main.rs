@@ -1,6 +1,16 @@
 #![allow(unused_imports)]
+use std::i32;
+use std::net::TcpStream;
+use std::process::exit;
 use std::{cmp::Ordering, net::TcpListener};
-use std::io::Write;
+use std::io::{Read, Write};
+
+// Header Bytes
+const MESSAGE_SIZE: usize = 4;
+const REQUEST_API_KEY: usize = 2;
+const REQUEST_API_VERSION: usize = 2;
+const CORRELATION_ID: usize = 4;
+const HEADER: usize = MESSAGE_SIZE + REQUEST_API_KEY + REQUEST_API_VERSION + CORRELATION_ID;
 
 fn main() {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -12,7 +22,14 @@ fn main() {
         match stream {
             Ok(mut _stream) => {
                 println!("accepted new connection");
-                let (message_size_bytes, correlation_id_bytes) = response(0, 7);
+
+                let mut buf = [0u8; HEADER];
+                read_bytes_from_stream(&_stream, &mut buf);
+                let correlation_id = parse_correlation_id(&buf, 8, HEADER);
+                println!("Correlation ID: {correlation_id}");
+
+                // let (message_size_bytes, correlation_id_bytes) = response(0, 7);
+                let (message_size_bytes, correlation_id_bytes) = response(0, correlation_id);
                 let _message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
                 // println!("Sent {:#?} byte(s) for message ID", message_id_bytes_sent);
                 let _correlation_id_bytes_sent = _stream.write(&correlation_id_bytes);
@@ -25,6 +42,32 @@ fn main() {
     }
 }
 
+fn read_bytes_from_stream(mut _stream: &TcpStream, buf: &mut [u8]) -> usize {
+    let mut total_bytes_read = 0;
+    while total_bytes_read <= buf.len() {
+        match _stream.read(buf) {
+            Ok(0) => {
+                println!("Connection closed by peer");
+                break
+            },
+            Ok(n) => {
+                println!("Read {} byte(s)", n);
+                total_bytes_read += n;
+            },
+            Err(e) => {
+                eprintln!("Failed to read: {}", e);
+                break
+            },
+        }
+    }
+    total_bytes_read
+}
+
+fn parse_correlation_id(bytes: &[u8], offset: usize, size: usize) -> i32 {
+    let correlation_id = i32::from_be_bytes(bytes[offset..size].try_into().unwrap());
+    correlation_id
+}
+
 fn response(message_size: i32, correlation_id: i32) -> ([u8; 4], [u8; 4]) {
     // Convert to bytes in big-endian order
     let message_size_bytes = message_size.to_be_bytes();
@@ -33,7 +76,7 @@ fn response(message_size: i32, correlation_id: i32) -> ([u8; 4], [u8; 4]) {
 }
 
 mod test {
-    use crate::response;
+    use crate::{parse_correlation_id, response, HEADER};
 
     #[test]
     fn response_is_converted_to_bytes_in_big_endian() {
@@ -42,5 +85,22 @@ mod test {
         let (message_id, correlation_id) = response(message_id, correlation_id);
         assert_eq!(message_id, [0x00, 0x00, 0x00, 0x00]); 
         assert_eq!(correlation_id, [0x00, 0x00, 0x00, 0x07]); 
+    }
+
+    #[test]
+    fn correlation_id_is_parsed_from_request_bytes() {
+        // 00 00 00 23  // message_size:        35
+        // 00 12        // request_api_key:     18
+        // 00 04        // request_api_version: 4
+        // 6f 7f c6 61  // correlation_id:      1870644833
+        let bytes: &[u8] = &[
+            0x00, 0x00, 0x00, 0x23,
+            0x00, 0x12,
+            0x00, 0x04,
+            0x6f, 0x7f, 0xc6, 0x61,
+        ];
+        assert_eq!(HEADER, 12);
+        let correlation_id = parse_correlation_id(bytes, 8, HEADER);
+        assert_eq!(correlation_id, 1870644833)
     }
 }
