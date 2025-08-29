@@ -29,10 +29,10 @@ fn main() {
                 println!("Correlation ID: {correlation_id}");
 
                 let (message_size_bytes, correlation_id_bytes) = response(0, correlation_id);
-                let _message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
-                // println!("Sent {:#?} byte(s) for message ID", message_id_bytes_sent);
-                let _correlation_id_bytes_sent = _stream.write(&correlation_id_bytes);
-                // println!("Sent {:#?} byte(s) for correlation ID", correlation_id_bytes_sent);
+                let message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
+                println!("Sent {:#?} byte(s) for message size", message_size_bytes_sent);
+                let correlation_id_bytes_sent = _stream.write(&correlation_id_bytes).unwrap();
+                println!("Sent {:#?} byte(s) for correlation ID", correlation_id_bytes_sent);
             }
             Err(e) => {
                 println!("error: {}", e);
