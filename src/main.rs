@@ -24,11 +24,10 @@ fn main() {
                 println!("accepted new connection");
 
                 let mut buf = [0u8; HEADER];
-                read_bytes_from_stream(&_stream, &mut buf);
+                read_bytes_from_stream(&mut _stream, &mut buf);
                 let correlation_id = parse_correlation_id(&buf, 8, HEADER);
                 println!("Correlation ID: {correlation_id}");
 
-                // let (message_size_bytes, correlation_id_bytes) = response(0, 7);
                 let (message_size_bytes, correlation_id_bytes) = response(0, correlation_id);
                 let _message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
                 // println!("Sent {:#?} byte(s) for message ID", message_id_bytes_sent);
@@ -42,9 +41,10 @@ fn main() {
     }
 }
 
-fn read_bytes_from_stream(mut _stream: &TcpStream, buf: &mut [u8]) -> usize {
+fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
     let mut total_bytes_read = 0;
-    while total_bytes_read <= buf.len() {
+    println!("Buffer length: {}", buf.len());
+    while total_bytes_read < buf.len() {
         match _stream.read(buf) {
             Ok(0) => {
                 println!("Connection closed by peer");
