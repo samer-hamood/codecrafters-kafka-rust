@@ -28,7 +28,7 @@ fn main() {
                 let correlation_id = parse_correlation_id(&buf, 8, HEADER);
                 println!("Correlation ID: {correlation_id}");
 
-                let (message_size_bytes, correlation_id_bytes) = convert_to_be_bytes(0, correlation_id);
+                let (message_size_bytes, correlation_id_bytes) = convert_to_bytes(0, correlation_id);
                 let message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
                 println!("Sent {:#?} byte(s) for message size", message_size_bytes_sent);
                 let correlation_id_bytes_sent = _stream.write(&correlation_id_bytes).unwrap();
@@ -69,7 +69,7 @@ fn parse_correlation_id(bytes: &[u8], offset: usize, size: usize) -> i32 {
     correlation_id
 }
 
-fn convert_to_be_bytes(message_size: i32, correlation_id: i32) -> ([u8; 4], [u8; 4]) {
+fn convert_to_bytes(message_size: i32, correlation_id: i32) -> ([u8; 4], [u8; 4]) {
     // Convert to bytes in big-endian order
     let message_size_bytes = message_size.to_be_bytes();
     let correlation_id_bytes = correlation_id.to_be_bytes();
@@ -77,13 +77,13 @@ fn convert_to_be_bytes(message_size: i32, correlation_id: i32) -> ([u8; 4], [u8;
 }
 
 mod test {
-    use crate::{parse_correlation_id, convert_to_be_bytes, HEADER};
+    use crate::{parse_correlation_id, convert_to_bytes, HEADER};
 
     #[test]
-    fn converts_message_size_and_correlation_id_to_bytes_in_big_endian() {
+    fn converts_message_size_and_correlation_id_to_big_endian_bytes() {
         let message_size = 0;
         let correlation_id = 7;
-        let (message_size, correlation_id) = convert_to_be_bytes(message_size, correlation_id);
+        let (message_size, correlation_id) = convert_to_bytes(message_size, correlation_id);
         assert_eq!(message_size, [0x00, 0x00, 0x00, 0x00]); 
         assert_eq!(correlation_id, [0x00, 0x00, 0x00, 0x07]); 
     }
