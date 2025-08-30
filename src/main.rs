@@ -28,7 +28,7 @@ fn main() {
                 let correlation_id = parse_correlation_id(&buf, 8, HEADER);
                 println!("Correlation ID: {correlation_id}");
 
-                let (message_size_bytes, correlation_id_bytes) = response(0, correlation_id);
+                let (message_size_bytes, correlation_id_bytes) = convert_to_be_bytes(0, correlation_id);
                 let message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
                 println!("Sent {:#?} byte(s) for message size", message_size_bytes_sent);
                 let correlation_id_bytes_sent = _stream.write(&correlation_id_bytes).unwrap();
@@ -60,6 +60,7 @@ fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
             },
         }
     }
+    println!("Total bytes read: {}", total_bytes_read);
     total_bytes_read
 }
 
@@ -68,7 +69,7 @@ fn parse_correlation_id(bytes: &[u8], offset: usize, size: usize) -> i32 {
     correlation_id
 }
 
-fn response(message_size: i32, correlation_id: i32) -> ([u8; 4], [u8; 4]) {
+fn convert_to_be_bytes(message_size: i32, correlation_id: i32) -> ([u8; 4], [u8; 4]) {
     // Convert to bytes in big-endian order
     let message_size_bytes = message_size.to_be_bytes();
     let correlation_id_bytes = correlation_id.to_be_bytes();
@@ -76,19 +77,19 @@ fn response(message_size: i32, correlation_id: i32) -> ([u8; 4], [u8; 4]) {
 }
 
 mod test {
-    use crate::{parse_correlation_id, response, HEADER};
+    use crate::{parse_correlation_id, convert_to_be_bytes, HEADER};
 
     #[test]
-    fn response_is_converted_to_bytes_in_big_endian() {
-        let message_id = 0;
+    fn converts_message_size_and_correlation_id_to_bytes_in_big_endian() {
+        let message_size = 0;
         let correlation_id = 7;
-        let (message_id, correlation_id) = response(message_id, correlation_id);
-        assert_eq!(message_id, [0x00, 0x00, 0x00, 0x00]); 
+        let (message_size, correlation_id) = convert_to_be_bytes(message_size, correlation_id);
+        assert_eq!(message_size, [0x00, 0x00, 0x00, 0x00]); 
         assert_eq!(correlation_id, [0x00, 0x00, 0x00, 0x07]); 
     }
 
     #[test]
-    fn correlation_id_is_parsed_from_request_bytes() {
+    fn parses_correlation_id_from_request_bytes() {
         // 00 00 00 23  // message_size:        35
         // 00 12        // request_api_key:     18
         // 00 04        // request_api_version: 4
@@ -104,3 +105,4 @@ mod test {
         assert_eq!(correlation_id, 1870644833)
     }
 }
+
