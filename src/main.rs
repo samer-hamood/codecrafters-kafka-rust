@@ -21,19 +21,21 @@ fn main() {
     for stream in listener.incoming() {
         match stream {
             Ok(mut _stream) => {
-                println!("accepted new connection");
+                println!("\nAccepted new connection");
 
-                // let mut buf = [0u8; HEADER];
-                let mut buf = Vec::new(); 
+                let mut buf = [0u8; 1024];
+                // let mut buf = Vec::new(); 
                 read_bytes_from_stream(&mut _stream, &mut buf);
                 let correlation_id = parse_correlation_id(&buf, 8, HEADER);
                 println!("Correlation ID: {correlation_id}");
 
-                let (message_size_bytes, correlation_id_bytes) = convert_to_bytes(8, correlation_id);
-                let message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
-                println!("Sent {:#?} byte(s) for message size", message_size_bytes_sent);
-                let correlation_id_bytes_sent = _stream.write(&correlation_id_bytes).unwrap();
-                println!("Sent {:#?} byte(s) for correlation ID", correlation_id_bytes_sent);
+                // let (message_size_bytes, correlation_id_bytes) = convert_to_bytes(8, correlation_id);
+                // let message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
+                // println!("Sent {:#?} byte(s) for message size", message_size_bytes_sent);
+                // let correlation_id_bytes_sent = _stream.write(&correlation_id_bytes).unwrap();
+                // println!("Sent {:#?} byte(s) for correlation ID", correlation_id_bytes_sent);
+                let message_size_and_correlation_id_bytes = convert_to_bytes2(8, correlation_id);
+                write_bytes_to_stream(&mut _stream, &message_size_and_correlation_id_bytes);
             }
             Err(e) => {
                 println!("error: {}", e);
@@ -42,17 +44,26 @@ fn main() {
     }
 }
 
-// fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
-fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut Vec<u8>) -> usize {
+fn write_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) {
+    match _stream.write_all(&bytes) {
+        Ok(_) => println!("Wrote {:#?} byte(s) successfully", bytes.len()),
+        Err(e) => {
+            println!("Write failed: {}", e);
+        }
+    }
+}
+
+fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
+// fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut Vec<u8>) -> usize {
     let mut total_bytes_read = 0;
     // println!("Buffer length: {}", buf.len());
     // while total_bytes_read < buf.len() {
-    // loop {
-        // match _stream.read(&mut buf[total_bytes_read..]) {
-        match _stream.read_to_end(buf) {
+    loop {
+        match _stream.read(&mut buf[total_bytes_read..]) {
+        // match _stream.read_to_end(buf) {
             Ok(0) => {
                 println!("Connection closed by peer");
-                // break
+                break
             },
             Ok(n) => {
                 println!("Read {} byte(s)", n);
@@ -60,10 +71,10 @@ fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut Vec<u8>) -> usize {
             },
             Err(e) => {
                 eprintln!("Failed to read: {}", e);
-                // break
+                break
             },
         }
-    // }
+    }
     println!("Total bytes read: {}", total_bytes_read);
     total_bytes_read
 }
@@ -80,8 +91,25 @@ fn convert_to_bytes(message_size: i32, correlation_id: i32) -> ([u8; 4], [u8; 4]
     (message_size_bytes, correlation_id_bytes)
 }
 
+fn convert_to_bytes2(message_size: i32, correlation_id: i32) -> [u8; 8] {
+    // Convert to bytes in big-endian order
+    let message_size_bytes = message_size.to_be_bytes();
+    let correlation_id_bytes = correlation_id.to_be_bytes();
+    let mut bytes = [0u8; 8];
+    let mut index = 0;
+    for i in 0..message_size_bytes.len() {
+        bytes[index] = message_size_bytes[i];
+        index += 1;
+    }
+    for j in 0..correlation_id_bytes.len() {
+        bytes[index] = correlation_id_bytes[j];
+        index += 1;
+    }
+    bytes
+}
+
 mod test {
-    use crate::{parse_correlation_id, convert_to_bytes, HEADER};
+    use crate::{parse_correlation_id, convert_to_bytes, convert_to_bytes2, HEADER};
 
     #[test]
     fn converts_message_size_and_correlation_id_to_big_endian_bytes() {
@@ -90,6 +118,14 @@ mod test {
         let (message_size, correlation_id) = convert_to_bytes(message_size, correlation_id);
         assert_eq!(message_size, [0x00, 0x00, 0x00, 0x00]); 
         assert_eq!(correlation_id, [0x00, 0x00, 0x00, 0x07]); 
+    }
+
+    #[test]
+    fn converts_message_size_and_correlation_id_to_big_endian_bytes_2() {
+        let message_size = 0;
+        let correlation_id = 7;
+        let bytes = convert_to_bytes2(message_size, correlation_id);
+        assert_eq!(bytes, [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07]); 
     }
 
     #[test]
