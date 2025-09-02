@@ -44,7 +44,8 @@ fn main() {
 fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
     let mut total_bytes_read = 0;
     println!("Buffer length: {}", buf.len());
-    while total_bytes_read < buf.len() {
+    // while total_bytes_read < buf.len() {
+    loop {
         match _stream.read(&mut buf[total_bytes_read..]) {
             Ok(0) => {
                 println!("Connection closed by peer");
