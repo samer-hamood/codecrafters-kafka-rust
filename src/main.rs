@@ -30,12 +30,14 @@ fn main() {
                 println!("Correlation ID: {correlation_id}");
 
                 let (message_size_bytes, correlation_id_bytes) = convert_to_bytes(8, correlation_id);
-                let message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
+                // let message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
+                let message_size_bytes_sent = write_bytes_to_stream(&mut _stream, &message_size_bytes);
                 println!("Sent {:#?} byte(s) for message size", message_size_bytes_sent);
-                let correlation_id_bytes_sent = _stream.write(&correlation_id_bytes).unwrap();
+                // let correlation_id_bytes_sent = _stream.write(&correlation_id_bytes).unwrap();
+                let correlation_id_bytes_sent = write_bytes_to_stream(&mut _stream, &correlation_id_bytes);
                 println!("Sent {:#?} byte(s) for correlation ID", correlation_id_bytes_sent);
                 // let message_size_and_correlation_id_bytes = convert_to_bytes2(8, correlation_id);
-                // write_bytes_to_stream(&mut _stream, &message_size_and_correlation_id_bytes);
+                // write_all_bytes_to_stream(&mut _stream, &message_size_and_correlation_id_bytes);
             }
             Err(e) => {
                 println!("error: {}", e);
@@ -44,7 +46,20 @@ fn main() {
     }
 }
 
-fn write_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) {
+fn write_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) -> usize {
+    match _stream.write(&bytes) {
+        Ok(n) => {
+            println!("Wrote {:#?} byte(s) successfully", n);
+            n 
+        },
+        Err(e) => {
+            println!("Write failed: {}", e);
+            0
+        }
+    }
+}
+
+fn write_all_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) {
     match _stream.write_all(&bytes) {
         Ok(_) => println!("Wrote {:#?} byte(s) successfully", bytes.len()),
         Err(e) => {
