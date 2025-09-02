@@ -29,13 +29,13 @@ fn main() {
                 let correlation_id = parse_correlation_id(&buf, 8, HEADER);
                 println!("Correlation ID: {correlation_id}");
 
-                // let (message_size_bytes, correlation_id_bytes) = convert_to_bytes(8, correlation_id);
-                // let message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
-                // println!("Sent {:#?} byte(s) for message size", message_size_bytes_sent);
-                // let correlation_id_bytes_sent = _stream.write(&correlation_id_bytes).unwrap();
-                // println!("Sent {:#?} byte(s) for correlation ID", correlation_id_bytes_sent);
-                let message_size_and_correlation_id_bytes = convert_to_bytes2(8, correlation_id);
-                write_bytes_to_stream(&mut _stream, &message_size_and_correlation_id_bytes);
+                let (message_size_bytes, correlation_id_bytes) = convert_to_bytes(8, correlation_id);
+                let message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
+                println!("Sent {:#?} byte(s) for message size", message_size_bytes_sent);
+                let correlation_id_bytes_sent = _stream.write(&correlation_id_bytes).unwrap();
+                println!("Sent {:#?} byte(s) for correlation ID", correlation_id_bytes_sent);
+                // let message_size_and_correlation_id_bytes = convert_to_bytes2(8, correlation_id);
+                // write_bytes_to_stream(&mut _stream, &message_size_and_correlation_id_bytes);
             }
             Err(e) => {
                 println!("error: {}", e);
