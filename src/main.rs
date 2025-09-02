@@ -59,6 +59,7 @@ fn write_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) -> usize {
     }
 }
 
+#[allow(dead_code)]
 fn write_all_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) {
     match _stream.write_all(&bytes) {
         Ok(_) => println!("Wrote {:#?} byte(s) successfully", bytes.len()),
@@ -106,6 +107,7 @@ fn convert_to_bytes(message_size: i32, correlation_id: i32) -> ([u8; 4], [u8; 4]
     (message_size_bytes, correlation_id_bytes)
 }
 
+#[allow(dead_code)]
 fn convert_to_bytes2(message_size: i32, correlation_id: i32) -> [u8; 8] {
     // Convert to bytes in big-endian order
     let message_size_bytes = message_size.to_be_bytes();
