@@ -23,7 +23,8 @@ fn main() {
             Ok(mut _stream) => {
                 println!("accepted new connection");
 
-                let mut buf = [0u8; HEADER];
+                // let mut buf = [0u8; HEADER];
+                let mut buf = Vec::new(); 
                 read_bytes_from_stream(&mut _stream, &mut buf);
                 let correlation_id = parse_correlation_id(&buf, 8, HEADER);
                 println!("Correlation ID: {correlation_id}");
@@ -41,15 +42,17 @@ fn main() {
     }
 }
 
-fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
+// fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
+fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut Vec<u8>) -> usize {
     let mut total_bytes_read = 0;
     println!("Buffer length: {}", buf.len());
     // while total_bytes_read < buf.len() {
-    loop {
-        match _stream.read(&mut buf[total_bytes_read..]) {
+    // loop {
+        // match _stream.read(&mut buf[total_bytes_read..]) {
+        match _stream.read_to_end(buf) {
             Ok(0) => {
                 println!("Connection closed by peer");
-                break
+                // break
             },
             Ok(n) => {
                 println!("Read {} byte(s)", n);
@@ -57,10 +60,10 @@ fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
             },
             Err(e) => {
                 eprintln!("Failed to read: {}", e);
-                break
+                // break
             },
         }
-    }
+    // }
     println!("Total bytes read: {}", total_bytes_read);
     total_bytes_read
 }
