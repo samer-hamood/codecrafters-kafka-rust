@@ -29,7 +29,7 @@ fn main() {
                 let correlation_id = parse_correlation_id(&buf, 8, HEADER);
                 println!("Correlation ID: {correlation_id}");
 
-                let (message_size_bytes, correlation_id_bytes) = convert_to_bytes(0, correlation_id);
+                let (message_size_bytes, correlation_id_bytes) = convert_to_bytes(8, correlation_id);
                 let message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
                 println!("Sent {:#?} byte(s) for message size", message_size_bytes_sent);
                 let correlation_id_bytes_sent = _stream.write(&correlation_id_bytes).unwrap();
@@ -45,7 +45,7 @@ fn main() {
 // fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
 fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut Vec<u8>) -> usize {
     let mut total_bytes_read = 0;
-    println!("Buffer length: {}", buf.len());
+    // println!("Buffer length: {}", buf.len());
     // while total_bytes_read < buf.len() {
     // loop {
         // match _stream.read(&mut buf[total_bytes_read..]) {
