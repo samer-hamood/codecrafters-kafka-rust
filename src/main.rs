@@ -24,7 +24,7 @@ fn main() {
                 println!("\nAccepted new connection");
 
                 let mut buf = [0u8; 1024];
-                read_bytes_from_stream(&mut _stream, &mut buf);
+                process_bytes_from_stream(&mut _stream, &mut buf);
             }
             Err(e) => {
                 println!("error: {}", e);
@@ -33,7 +33,7 @@ fn main() {
     }
 }
 
-fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
+fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
     let mut total_bytes_read = 0;
     println!("Buffer length: {}", buf.len());
     loop {
