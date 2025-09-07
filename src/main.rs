@@ -10,7 +10,7 @@ const MESSAGE_SIZE: usize = 4;
 const REQUEST_API_KEY: usize = 2;
 const REQUEST_API_VERSION: usize = 2;
 const CORRELATION_ID: usize = 4;
-const HEADER: usize = MESSAGE_SIZE + REQUEST_API_KEY + REQUEST_API_VERSION + CORRELATION_ID;
+const HEADER_SIZE: usize = MESSAGE_SIZE + REQUEST_API_KEY + REQUEST_API_VERSION + CORRELATION_ID;
 
 fn main() {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -26,16 +26,16 @@ fn main() {
                 let mut buf = [0u8; 1024];
                 // let mut buf = Vec::new(); 
                 read_bytes_from_stream(&mut _stream, &mut buf);
-                let correlation_id = parse_correlation_id(&buf, 8, HEADER);
-                println!("Correlation ID: {correlation_id}");
+                // let correlation_id = parse_correlation_id(&buf, 8, HEADER_SIZE);
+                // println!("Correlation ID: {correlation_id}");
 
-                let (message_size_bytes, correlation_id_bytes) = convert_to_bytes(8, correlation_id);
+                // let (message_size_bytes, correlation_id_bytes) = convert_to_bytes(8, correlation_id);
                 // let message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
-                let message_size_bytes_sent = write_bytes_to_stream(&mut _stream, &message_size_bytes);
-                println!("Sent {:#?} byte(s) for message size", message_size_bytes_sent);
+                // let message_size_bytes_sent = write_bytes_to_stream(&mut _stream, &message_size_bytes);
+                // println!("Sent {:#?} byte(s) for message size", message_size_bytes_sent);
                 // let correlation_id_bytes_sent = _stream.write(&correlation_id_bytes).unwrap();
-                let correlation_id_bytes_sent = write_bytes_to_stream(&mut _stream, &correlation_id_bytes);
-                println!("Sent {:#?} byte(s) for correlation ID", correlation_id_bytes_sent);
+                // let correlation_id_bytes_sent = write_bytes_to_stream(&mut _stream, &correlation_id_bytes);
+                // println!("Sent {:#?} byte(s) for correlation ID", correlation_id_bytes_sent);
                 // let message_size_and_correlation_id_bytes = convert_to_bytes2(8, correlation_id);
                 // write_all_bytes_to_stream(&mut _stream, &message_size_and_correlation_id_bytes);
             }
@@ -84,6 +84,15 @@ fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
             Ok(n) => {
                 println!("Read {} byte(s)", n);
                 total_bytes_read += n;
+                if total_bytes_read >= HEADER_SIZE {
+                    let correlation_id = parse_correlation_id(&buf, 8, HEADER_SIZE);
+                    println!("Correlation ID: {correlation_id}");
+                    let (message_size_bytes, correlation_id_bytes) = convert_to_bytes(8, correlation_id);
+                    let message_size_bytes_sent = write_bytes_to_stream(_stream, &message_size_bytes);
+                    println!("Sent {:#?} byte(s) for message size", message_size_bytes_sent);
+                    let correlation_id_bytes_sent = write_bytes_to_stream(_stream, &correlation_id_bytes);
+                    println!("Sent {:#?} byte(s) for correlation ID", correlation_id_bytes_sent);
+                }
             },
             Err(e) => {
                 println!("Failed to read: {}", e);
@@ -126,7 +135,7 @@ fn convert_to_bytes2(message_size: i32, correlation_id: i32) -> [u8; 8] {
 }
 
 mod test {
-    use crate::{parse_correlation_id, convert_to_bytes, convert_to_bytes2, HEADER};
+    use crate::{parse_correlation_id, convert_to_bytes, convert_to_bytes2, HEADER_SIZE};
 
     #[test]
     fn converts_message_size_and_correlation_id_to_big_endian_bytes() {
@@ -157,8 +166,8 @@ mod test {
             0x00, 0x04,
             0x6f, 0x7f, 0xc6, 0x61,
         ];
-        assert_eq!(HEADER, 12);
-        let correlation_id = parse_correlation_id(bytes, 8, HEADER);
+        assert_eq!(HEADER_SIZE, 12);
+        let correlation_id = parse_correlation_id(bytes, 8, HEADER_SIZE);
         assert_eq!(correlation_id, 1870644833)
     }
 }
