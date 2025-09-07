@@ -24,20 +24,7 @@ fn main() {
                 println!("\nAccepted new connection");
 
                 let mut buf = [0u8; 1024];
-                // let mut buf = Vec::new(); 
                 read_bytes_from_stream(&mut _stream, &mut buf);
-                // let correlation_id = parse_correlation_id(&buf, 8, HEADER_SIZE);
-                // println!("Correlation ID: {correlation_id}");
-
-                // let (message_size_bytes, correlation_id_bytes) = convert_to_bytes(8, correlation_id);
-                // let message_size_bytes_sent = _stream.write(&message_size_bytes).unwrap();
-                // let message_size_bytes_sent = write_bytes_to_stream(&mut _stream, &message_size_bytes);
-                // println!("Sent {:#?} byte(s) for message size", message_size_bytes_sent);
-                // let correlation_id_bytes_sent = _stream.write(&correlation_id_bytes).unwrap();
-                // let correlation_id_bytes_sent = write_bytes_to_stream(&mut _stream, &correlation_id_bytes);
-                // println!("Sent {:#?} byte(s) for correlation ID", correlation_id_bytes_sent);
-                // let message_size_and_correlation_id_bytes = convert_to_bytes2(8, correlation_id);
-                // write_all_bytes_to_stream(&mut _stream, &message_size_and_correlation_id_bytes);
             }
             Err(e) => {
                 println!("error: {}", e);
@@ -70,13 +57,10 @@ fn write_all_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) {
 }
 
 fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
-// fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut Vec<u8>) -> usize {
     let mut total_bytes_read = 0;
-    // println!("Buffer length: {}", buf.len());
-    // while total_bytes_read < buf.len() {
+    println!("Buffer length: {}", buf.len());
     loop {
         match _stream.read(&mut buf[total_bytes_read..]) {
-        // match _stream.read_to_end(buf) {
             Ok(0) => {
                 println!("Connection closed by peer");
                 break
