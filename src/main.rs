@@ -33,29 +33,6 @@ fn main() {
     }
 }
 
-fn write_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) -> usize {
-    match _stream.write(&bytes) {
-        Ok(n) => {
-            println!("Wrote {:#?} byte(s) successfully", n);
-            n 
-        },
-        Err(e) => {
-            println!("Write failed: {}", e);
-            0
-        }
-    }
-}
-
-#[allow(dead_code)]
-fn write_all_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) {
-    match _stream.write_all(&bytes) {
-        Ok(_) => println!("Wrote {:#?} byte(s) successfully", bytes.len()),
-        Err(e) => {
-            println!("Write failed: {}", e);
-        }
-    }
-}
-
 fn read_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
     let mut total_bytes_read = 0;
     println!("Buffer length: {}", buf.len());
@@ -116,6 +93,29 @@ fn convert_to_bytes2(message_size: i32, correlation_id: i32) -> [u8; 8] {
         index += 1;
     }
     bytes
+}
+
+fn write_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) -> usize {
+    match _stream.write(&bytes) {
+        Ok(n) => {
+            println!("Wrote {:#?} byte(s) successfully", n);
+            n 
+        },
+        Err(e) => {
+            println!("Write failed: {}", e);
+            0
+        }
+    }
+}
+
+#[allow(dead_code)]
+fn write_all_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) {
+    match _stream.write_all(&bytes) {
+        Ok(_) => println!("Wrote {:#?} byte(s) successfully", bytes.len()),
+        Err(e) => {
+            println!("Write failed: {}", e);
+        }
+    }
 }
 
 mod test {
