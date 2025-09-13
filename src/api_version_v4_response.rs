@@ -76,7 +76,6 @@ mod test {
 
         let api_version_response = ApiVersionsV4Response::new(0, 1333056139, UNSUPPORTED_VERSION);
 
-        // assert_eq!(HEADER_SIZE, 12);
         let actual_bytes = api_version_response.to_bytes();
 
         assert_eq!(expected_bytes, actual_bytes);

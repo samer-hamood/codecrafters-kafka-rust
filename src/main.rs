@@ -55,7 +55,7 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                 total_bytes_read += n;
                 if total_bytes_read >= HEADER_SIZE {
                     let api_versions_request = ApiVersionsRequest::parse(buf);
-                    println!("ApiVersions request: {:#?}", api_versions_request);
+                    println!("{:#?}", api_versions_request);
 
                     let api_versions_response = 
                         ApiVersionsV4Response::new(
@@ -66,14 +66,6 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
 
                     let response_bytes_sent = write_bytes_to_stream(_stream, &api_versions_response.to_bytes());
                     println!("Sent {:#?} byte(s) for response", response_bytes_sent);
-                    
-                    // let correlation_id = parse_correlation_id(&buf, 8, HEADER_SIZE);
-                    // println!("Correlation ID: {correlation_id}");
-                    // let (message_size_bytes, correlation_id_bytes) = convert_to_bytes(8, correlation_id);
-                    // let message_size_bytes_sent = write_bytes_to_stream(_stream, &message_size_bytes);
-                    // println!("Sent {:#?} byte(s) for message size", message_size_bytes_sent);
-                    // let correlation_id_bytes_sent = write_bytes_to_stream(_stream, &correlation_id_bytes);
-                    // println!("Sent {:#?} byte(s) for correlation ID", correlation_id_bytes_sent);
                 }
             },
             Err(e) => {
@@ -87,7 +79,7 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
 }
 
 fn check_supported_version(version: i16) -> i16 {
-    let version_is_supported = SUPPORTED_API_VERSIONS.iter().any(|&supported_version| supported_version == version);
+    let version_is_supported = SUPPORTED_API_VERSIONS.contains(&version);
     if version_is_supported {
         0
     } else {
@@ -107,24 +99,6 @@ fn convert_to_bytes(message_size: i32, correlation_id: i32) -> ([u8; 4], [u8; 4]
     let message_size_bytes = message_size.to_be_bytes();
     let correlation_id_bytes = correlation_id.to_be_bytes();
     (message_size_bytes, correlation_id_bytes)
-}
-
-#[allow(dead_code)]
-fn convert_to_bytes2(message_size: i32, correlation_id: i32) -> [u8; 8] {
-    // Convert to bytes in big-endian order
-    let message_size_bytes = message_size.to_be_bytes();
-    let correlation_id_bytes = correlation_id.to_be_bytes();
-    let mut bytes = [0u8; 8];
-    let mut index = 0;
-    for i in 0..message_size_bytes.len() {
-        bytes[index] = message_size_bytes[i];
-        index += 1;
-    }
-    for j in 0..correlation_id_bytes.len() {
-        bytes[index] = correlation_id_bytes[j];
-        index += 1;
-    }
-    bytes
 }
 
 fn write_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) -> usize {
@@ -161,14 +135,6 @@ mod test {
         let (message_size, correlation_id) = convert_to_bytes(message_size, correlation_id);
         assert_eq!(message_size, [0x00, 0x00, 0x00, 0x00]); 
         assert_eq!(correlation_id, [0x00, 0x00, 0x00, 0x07]); 
-    }
-
-    #[test]
-    fn converts_message_size_and_correlation_id_to_big_endian_bytes_2() {
-        let message_size = 0;
-        let correlation_id = 7;
-        let bytes = convert_to_bytes2(message_size, correlation_id);
-        assert_eq!(bytes, [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07]); 
     }
 
     #[test]

@@ -4,8 +4,6 @@ const MESSAGE_SIZE: usize = 4;
 const REQUEST_API_KEY: usize = 2;
 const REQUEST_API_VERSION: usize = 2;
 const CORRELATION_ID: usize = 4;
-#[allow(dead_code)]
-const HEADER_SIZE: usize = MESSAGE_SIZE + REQUEST_API_KEY + REQUEST_API_VERSION + CORRELATION_ID;
 
 #[allow(dead_code)]
 #[derive(Debug)]
@@ -44,6 +42,9 @@ impl ApiVersionsRequest {
 mod test {
     use super::*;
 
+    #[allow(dead_code)]
+    const HEADER_SIZE: usize = MESSAGE_SIZE + REQUEST_API_KEY + REQUEST_API_VERSION + CORRELATION_ID;
+
     #[test]
     fn calculates_header_size_from_field_types() {
         assert_eq!(HEADER_SIZE, ApiVersionsRequest::header_size());
@@ -61,7 +62,6 @@ mod test {
             0x67, 0x4a,
             0x4f, 0x74, 0xd2, 0x8b,
         ];
-        assert_eq!(HEADER_SIZE, 12);
         let api_version_request = ApiVersionsRequest::parse(bytes);
         assert_eq!(api_version_request.message_size, 35);
         assert_eq!(api_version_request.request_api_key, 18);
