@@ -1,0 +1,148 @@
+
+// Common Bytes
+const MESSAGE_SIZE: usize = 4;
+
+// Header Bytes
+const CORRELATION_ID: usize = 4;
+// Body Bytes
+const ERROR_CODE: usize = 2;
+const API_KEY_SIZE: usize = 6;
+const THROTTLE_TIME_MS: usize = 4;
+const API_KEYS: usize = 1 * API_KEY_SIZE;
+
+const SIZE: usize = MESSAGE_SIZE + CORRELATION_ID + ERROR_CODE + API_KEYS + THROTTLE_TIME_MS; 
+
+// Error Codes 
+pub const SUPPORTED_VERSION: i16 = 0;
+pub const UNSUPPORTED_VERSION: i16 = 35;
+
+#[derive(Debug)]
+pub struct ApiVersionsV4Response {
+    pub message_size: i32,
+    pub correlation_id: i32,
+    pub error_code: i16,
+    pub api_keys: [ApiKey; 1],
+    pub throttle_time_ms: i32,
+}
+
+impl ApiVersionsV4Response {
+
+    pub fn new(message_size: i32, correlation_id: i32, error_code: i16, api_keys: [ApiKey; 1], throttle_time_ms: i32) -> ApiVersionsV4Response {
+        ApiVersionsV4Response {
+            message_size: message_size,
+            correlation_id: correlation_id,
+            error_code: error_code,
+            api_keys: api_keys,
+            throttle_time_ms: throttle_time_ms,
+        }
+    }
+
+    #[allow(dead_code)]
+    pub fn size() -> usize {
+        size_of::<i32>() + size_of::<i32>() + size_of::<i16>() + size_of::<ApiKey>() + size_of::<i32>()
+    }
+
+    pub fn to_bytes(&self) -> [u8; SIZE] {
+        // Convert to bytes in big-endian order
+        let message_size_bytes = self.message_size.to_be_bytes();
+        let correlation_id_bytes = self.correlation_id.to_be_bytes();
+        let error_code_bytes = self.error_code.to_be_bytes();
+        let api_key_bytes = self.api_keys[0].to_bytes();
+        let throttle_time_ms_bytes = self.throttle_time_ms.to_be_bytes();
+        let mut bytes = [0u8; SIZE];
+        let mut index = 0;
+        for i in 0..message_size_bytes.len() {
+            bytes[index] = message_size_bytes[i];
+            index += 1;
+        }
+        for j in 0..correlation_id_bytes.len() {
+            bytes[index] = correlation_id_bytes[j];
+            index += 1;
+        }
+        for k in 0..error_code_bytes.len() {
+            bytes[index] = error_code_bytes[k];
+            index += 1;
+        }
+        for k in 0..api_key_bytes.len() {
+            bytes[index] = api_key_bytes[k];
+            index += 1;
+        }
+        for k in 0..throttle_time_ms_bytes.len() {
+            bytes[index] = throttle_time_ms_bytes[k];
+            index += 1;
+        }
+        bytes
+    }
+}
+
+#[derive(Debug)]
+pub struct ApiKey {
+    api_key: i16,
+    min_version: i16,
+    max_version: i16,
+}
+
+impl ApiKey {
+    pub fn new(api_key: i16, min_version: i16, max_version: i16) -> ApiKey {
+        ApiKey {
+            api_key: api_key,
+            min_version: min_version,
+            max_version: max_version,
+        }
+    }
+
+    pub fn api_versions() -> ApiKey {
+        ApiKey::new(18, 0, 4)
+    }
+
+    pub fn to_bytes(&self) -> [u8; API_KEY_SIZE] {
+        // Convert to bytes in big-endian order
+        let api_key_bytes = self.api_key.to_be_bytes();
+        let min_version_bytes = self.min_version.to_be_bytes();
+        let max_version_bytes = self.max_version.to_be_bytes();
+        let mut bytes = [0u8; API_KEY_SIZE];
+        let mut index = 0;
+        for i in 0..api_key_bytes.len() {
+            bytes[index] = api_key_bytes[i];
+            index += 1;
+        }
+        for j in 0..min_version_bytes.len() {
+            bytes[index] = min_version_bytes[j];
+            index += 1;
+        }
+        for k in 0..max_version_bytes.len() {
+            bytes[index] = max_version_bytes[k];
+            index += 1;
+        }
+        bytes
+    }
+}
+
+mod test {
+    use super::*;
+
+    #[test]
+    fn calculates_header_size_from_field_types() {
+        assert_eq!(SIZE, ApiVersionsV4Response::size());
+    }
+
+    #[ignore = "need correct for new response"]
+    #[test]
+    fn converts_to_bytes() {
+        // 00 00 00 00  // message_size:   0 (any value works)
+        // 4f 74 d2 8b  // correlation_id: 1333056139
+        // 00 23        // error_code:     35
+        let expected_bytes: &[u8] = &[
+            0x00, 0x00, 0x00, 0x00,
+            0x4f, 0x74, 0xd2, 0x8b,
+            0x00, 0x23,
+        ];
+
+        let api_version_response = ApiVersionsV4Response::new(0, 1333056139, UNSUPPORTED_VERSION, [ApiKey::api_versions()], 0);
+
+        let actual_bytes = api_version_response.to_bytes();
+
+        assert_eq!(expected_bytes, actual_bytes);
+    }
+}
+

@@ -6,7 +6,7 @@ use std::{cmp::Ordering, net::TcpListener};
 use std::io::{Read, Write};
 
 use crate::api_version_request::ApiVersionsRequest;
-use crate::api_version_v4_response::{ApiVersionsV4Response, UNSUPPORTED_VERSION};
+use crate::api_version_v4_response::{ApiKey, ApiVersionsV4Response, TagSection, SUPPORTED_VERSION, UNSUPPORTED_VERSION};
 
 mod api_version_request;
 mod api_version_v4_response;
@@ -59,12 +59,15 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
 
                     let api_versions_response = 
                         ApiVersionsV4Response::new(
-                            0, 
+                            // 0, 
                             api_versions_request.correlation_id, 
-                            check_supported_version(api_versions_request.request_api_version)
+                            check_supported_version(api_versions_request.request_api_version),
+                            vec![ApiKey::api_versions()],
+                            0,
+                            TagSection::new(),
                         );
 
-                    let response_bytes_sent = write_bytes_to_stream(_stream, &api_versions_response.to_bytes());
+                    let response_bytes_sent = write_bytes_to_stream(_stream, &api_versions_response.to_be_bytes());
                     println!("Sent {:#?} byte(s) for response", response_bytes_sent);
                 }
             },
@@ -79,9 +82,8 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
 }
 
 fn check_supported_version(version: i16) -> i16 {
-    let version_is_supported = SUPPORTED_API_VERSIONS.contains(&version);
-    if version_is_supported {
-        0
+    if SUPPORTED_API_VERSIONS.contains(&version) {
+        SUPPORTED_VERSION
     } else {
         UNSUPPORTED_VERSION
     }
@@ -127,6 +129,21 @@ fn write_all_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) {
 
 mod test {
     use super::*;
+    use parameterized::parameterized;
+
+    #[parameterized(
+        version = {
+            0, 1, 2, 3, 4
+        }
+    )]
+    fn checks_supported_version(version: i16) {
+        assert_eq!(SUPPORTED_VERSION, check_supported_version(version)); 
+    }
+    
+    #[test]
+    fn checks_unsupported_version() {
+        assert_eq!(UNSUPPORTED_VERSION, check_supported_version(6)); 
+    }
 
     #[test]
     fn converts_message_size_and_correlation_id_to_big_endian_bytes() {
