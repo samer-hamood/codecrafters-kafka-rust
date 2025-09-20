@@ -150,15 +150,13 @@ impl TagSection {
     }
 
     pub fn to_be_bytes(&self) -> Vec<u8> {
-        // Convert to bytes in big-endian order
-        // let mut bytes = [0u8; 1];
-        // bytes[0] = 0;
         let mut bytes = Vec::new();
         if self.number_of_tagged_fields == 0 {
             bytes.push(0);
         }
         bytes
     }
+
 }
 
 mod test {
@@ -170,14 +168,14 @@ mod test {
 
         let api_version_response = 
             ApiVersionsV4Response::new(
-                7,                                                   // 4 bytes 
-                SUPPORTED_VERSION,                                   // 2 bytes
+                7,                                              // 4 bytes 
+                SUPPORTED_VERSION,                              // 2 bytes
                 vec![
                     ApiKey::new(1, 0, 17, TagSection::empty()), // 7 bytes
                     ApiKey::new(18, 0, 4, TagSection::empty()), // 7 bytes
                     ApiKey::new(75, 0, 0, TagSection::empty()), // 7 bytes
                 ], 
-                0,                                                   // 4 bytes 
+                0,                                              // 4 bytes 
                 TagSection::empty(),                            // 1 bytes
             );
 
@@ -186,24 +184,24 @@ mod test {
 
     #[test]
     fn converts_to_bytes() {
-        // 00 00 00 21  // message_size:   33
-        // 00 00 00 07  // correlation_id: 7
-        // 00 00        // error_code:     0
-        // 04           // array length:   4
-        // 00 01        // api_key:        1
-        // 00 00        // min_version:    0
-        // 00 11        // max_version:    17
-        // 00           // tag buffer      0
-        // 00 12        // api_key:        18
-        // 00 00        // min_version:    0
-        // 00 04        // max_version:    4
-        // 00           // tag buffer      0
-        // 00 4b        // api_key:        75
-        // 00 00        // min_version:    0
-        // 00 00        // max_version:    0 
-        // 00           // tag buffer      0
+        // 00 00 00 21  // message_size:     33
+        // 00 00 00 07  // correlation_id:   7
+        // 00 00        // error_code:       0
+        // 04           // array length:     4
+        // 00 01        // api_key:          1
+        // 00 00        // min_version:      0
+        // 00 11        // max_version:      17
+        // 00           // tag buffer        0
+        // 00 12        // api_key:          18
+        // 00 00        // min_version:      0
+        // 00 04        // max_version:      4
+        // 00           // tag buffer        0
+        // 00 4b        // api_key:          75
+        // 00 00        // min_version:      0
+        // 00 00        // max_version:      0 
+        // 00           // tag buffer        0
         // 00 00 00 00  // throttle_time_ms: 0
-        // 00           // tag buffer      0
+        // 00           // tag buffer        0
         let expected_bytes: &[u8] = &[
             // message_size
             0x00, 0x00, 0x00, 0x21,
@@ -225,15 +223,15 @@ mod test {
 
         let api_version_response = 
             ApiVersionsV4Response::new(
-                7,                                                   // 4 bytes 
-                SUPPORTED_VERSION,                                   // 2 bytes
+                7,                                                  // 4 bytes 
+                SUPPORTED_VERSION,                                  // 2 bytes
                 vec![
-                    ApiKey::new(1, 0, 17, TagSection::empty()), // 7 bytes
-                    ApiKey::new(18, 0, 4, TagSection::empty()), // 7 bytes
-                    ApiKey::new(75, 0, 0, TagSection::empty()), // 7 bytes
+                    ApiKey::new(1, 0, 17, TagSection::empty()),     // 7 bytes
+                    ApiKey::new(18, 0, 4, TagSection::empty()),     // 7 bytes
+                    ApiKey::new(75, 0, 0, TagSection::empty()),     // 7 bytes
                 ], 
-                0,                                                   // 4 bytes 
-                TagSection::empty(),                            // 1 bytes
+                0,                                                  // 4 bytes 
+                TagSection::empty(),                                // 1 bytes
             );
 
 
