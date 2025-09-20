@@ -145,10 +145,6 @@ impl TagSection {
         }
     }
 
-    pub fn tag_buffer() -> TagSection {
-        TagSection::empty()
-    }
-
     pub fn len() -> usize {
         1
     }
@@ -177,12 +173,12 @@ mod test {
                 7,                                                   // 4 bytes 
                 SUPPORTED_VERSION,                                   // 2 bytes
                 vec![
-                    ApiKey::new(1, 0, 17, TagSection::tag_buffer()), // 7 bytes
-                    ApiKey::new(18, 0, 4, TagSection::tag_buffer()), // 7 bytes
-                    ApiKey::new(75, 0, 0, TagSection::tag_buffer()), // 7 bytes
+                    ApiKey::new(1, 0, 17, TagSection::empty()), // 7 bytes
+                    ApiKey::new(18, 0, 4, TagSection::empty()), // 7 bytes
+                    ApiKey::new(75, 0, 0, TagSection::empty()), // 7 bytes
                 ], 
                 0,                                                   // 4 bytes 
-                TagSection::tag_buffer(),                            // 1 bytes
+                TagSection::empty(),                            // 1 bytes
             );
 
         assert_eq!(expected_size, api_version_response.message_size());
@@ -232,12 +228,12 @@ mod test {
                 7,                                                   // 4 bytes 
                 SUPPORTED_VERSION,                                   // 2 bytes
                 vec![
-                    ApiKey::new(1, 0, 17, TagSection::tag_buffer()), // 7 bytes
-                    ApiKey::new(18, 0, 4, TagSection::tag_buffer()), // 7 bytes
-                    ApiKey::new(75, 0, 0, TagSection::tag_buffer()), // 7 bytes
+                    ApiKey::new(1, 0, 17, TagSection::empty()), // 7 bytes
+                    ApiKey::new(18, 0, 4, TagSection::empty()), // 7 bytes
+                    ApiKey::new(75, 0, 0, TagSection::empty()), // 7 bytes
                 ], 
                 0,                                                   // 4 bytes 
-                TagSection::tag_buffer(),                            // 1 bytes
+                TagSection::empty(),                            // 1 bytes
             );
 
 

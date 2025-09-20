@@ -16,7 +16,6 @@ pub struct ApiVersionsRequest {
 
 impl ApiVersionsRequest {
 
-    #[allow(dead_code)]
     pub fn header_size() -> usize {
         size_of::<i32>() + size_of::<i16>() + size_of::<i16>() + size_of::<i32>()
     }

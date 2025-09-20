@@ -5,18 +5,13 @@ use std::process::exit;
 use std::{cmp::Ordering, net::TcpListener};
 use std::io::{Read, Write};
 
-use crate::api_version_request::ApiVersionsRequest;
+use crate::api_keys::{FETCH, API_VERSIONS};
+use crate::api_version_request::{ApiVersionsRequest};
 use crate::api_version_v4_response::{ApiKey, ApiVersionsV4Response, TagSection, SUPPORTED_VERSION, UNSUPPORTED_VERSION};
 
+mod api_keys;
 mod api_version_request;
 mod api_version_v4_response;
-
-// Header Bytes
-const MESSAGE_SIZE: usize = 4;
-const REQUEST_API_KEY: usize = 2;
-const REQUEST_API_VERSION: usize = 2;
-const CORRELATION_ID: usize = 4;
-const HEADER_SIZE: usize = MESSAGE_SIZE + REQUEST_API_KEY + REQUEST_API_VERSION + CORRELATION_ID;
 
 const SUPPORTED_API_VERSIONS: [i16; 5] = [0, 1, 2, 3, 4];
 
@@ -53,7 +48,7 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
             Ok(n) => {
                 println!("Read {} byte(s)", n);
                 total_bytes_read += n;
-                if total_bytes_read >= HEADER_SIZE {
+                if total_bytes_read >= ApiVersionsRequest::header_size() {
                     let api_versions_request = ApiVersionsRequest::parse(buf);
                     println!("{:#?}", api_versions_request);
 
@@ -61,7 +56,10 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                         ApiVersionsV4Response::new(
                             api_versions_request.correlation_id, 
                             check_supported_version(api_versions_request.request_api_version),
-                            vec![ApiKey::new(18, 0, 4, TagSection::tag_buffer())],
+                            vec![
+                                ApiKey::new(API_VERSIONS, 0, 4, TagSection::empty()),
+                                ApiKey::new(FETCH, 0, 16, TagSection::empty()),
+                            ],
                             0,
                             TagSection::empty(),
                         );
