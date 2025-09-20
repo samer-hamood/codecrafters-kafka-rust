@@ -59,12 +59,11 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
 
                     let api_versions_response = 
                         ApiVersionsV4Response::new(
-                            // 0, 
                             api_versions_request.correlation_id, 
                             check_supported_version(api_versions_request.request_api_version),
-                            vec![ApiKey::api_versions()],
+                            vec![ApiKey::new(18, 0, 4, TagSection::tag_buffer())],
                             0,
-                            TagSection::new(),
+                            TagSection::empty(),
                         );
 
                     let response_bytes_sent = write_bytes_to_stream(_stream, &api_versions_response.to_be_bytes());
@@ -89,20 +88,6 @@ fn check_supported_version(version: i16) -> i16 {
     }
 }
 
-#[allow(dead_code)]
-fn parse_correlation_id(bytes: &[u8], offset: usize, size: usize) -> i32 {
-    let correlation_id = i32::from_be_bytes(bytes[offset..size].try_into().unwrap());
-    correlation_id
-}
-
-#[allow(dead_code)]
-fn convert_to_bytes(message_size: i32, correlation_id: i32) -> ([u8; 4], [u8; 4]) {
-    // Convert to bytes in big-endian order
-    let message_size_bytes = message_size.to_be_bytes();
-    let correlation_id_bytes = correlation_id.to_be_bytes();
-    (message_size_bytes, correlation_id_bytes)
-}
-
 fn write_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) -> usize {
     println!("Writing the following bytes to stream: {:X?}", bytes);
     match _stream.write(&bytes) {
@@ -117,15 +102,6 @@ fn write_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) -> usize {
     }
 }
 
-#[allow(dead_code)]
-fn write_all_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) {
-    match _stream.write_all(&bytes) {
-        Ok(_) => println!("Wrote {:#?} byte(s) successfully", bytes.len()),
-        Err(e) => {
-            println!("Write failed: {}", e);
-        }
-    }
-}
 
 mod test {
     use super::*;
@@ -143,32 +119,6 @@ mod test {
     #[test]
     fn checks_unsupported_version() {
         assert_eq!(UNSUPPORTED_VERSION, check_supported_version(6)); 
-    }
-
-    #[test]
-    fn converts_message_size_and_correlation_id_to_big_endian_bytes() {
-        let message_size = 0;
-        let correlation_id = 7;
-        let (message_size, correlation_id) = convert_to_bytes(message_size, correlation_id);
-        assert_eq!(message_size, [0x00, 0x00, 0x00, 0x00]); 
-        assert_eq!(correlation_id, [0x00, 0x00, 0x00, 0x07]); 
-    }
-
-    #[test]
-    fn parses_correlation_id_from_request_bytes() {
-        // 00 00 00 23  // message_size:        35
-        // 00 12        // request_api_key:     18
-        // 00 04        // request_api_version: 4
-        // 6f 7f c6 61  // correlation_id:      1870644833
-        let bytes: &[u8] = &[
-            0x00, 0x00, 0x00, 0x23,
-            0x00, 0x12,
-            0x00, 0x04,
-            0x6f, 0x7f, 0xc6, 0x61,
-        ];
-        // assert_eq!(HEADER_SIZE, 12);
-        let correlation_id = parse_correlation_id(bytes, 8, HEADER_SIZE);
-        assert_eq!(correlation_id, 1870644833)
     }
 }
 
