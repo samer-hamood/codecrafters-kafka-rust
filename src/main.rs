@@ -84,7 +84,8 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                         FetchV16Response::new(
                             request.header.correlation_id, 
                             0,
-                            check_supported_version(request.header.request_api_version),
+                            // check_supported_version(request.header.request_api_version),
+                            0,
                             0,
                             Vec::new(),
                             TagSection::empty(),
