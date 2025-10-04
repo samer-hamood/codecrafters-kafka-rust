@@ -4,14 +4,11 @@ use crate::size::Size;
 use crate::serializable::Serializable;
 use crate::tag_section::TagSection;
 use crate::compact_array::CompactArray;                        
-
-// Error Codes 
-pub const SUPPORTED_VERSION: i16 = 0;
-pub const UNSUPPORTED_VERSION: i16 = 35;
+use crate::error_codes::SUPPORTED_VERSION;
 
 #[allow(dead_code)]
 #[derive(Debug)]
-pub struct ApiVersionsV4Response {
+pub struct ApiVersionsResponseV4 {
     pub correlation_id: i32,
     pub error_code: i16,
     pub api_keys: CompactArray<ApiKey>,
@@ -19,11 +16,10 @@ pub struct ApiVersionsV4Response {
     pub _tagged_fields: TagSection,
 }
 
-#[allow(dead_code)]
-impl ApiVersionsV4Response {
+impl ApiVersionsResponseV4 {
 
-    pub fn new(correlation_id: i32, error_code: i16, api_keys: Vec<ApiKey>, throttle_time_ms: i32, _tagged_fields: TagSection) -> ApiVersionsV4Response {
-        ApiVersionsV4Response {
+    pub fn new(correlation_id: i32, error_code: i16, api_keys: Vec<ApiKey>, throttle_time_ms: i32, _tagged_fields: TagSection) -> ApiVersionsResponseV4 {
+        ApiVersionsResponseV4 {
             correlation_id: correlation_id,
             error_code: error_code,                              
             api_keys: CompactArray::new(api_keys),
@@ -34,7 +30,7 @@ impl ApiVersionsV4Response {
 
 }
 
-impl Serializable for ApiVersionsV4Response {
+impl Serializable for ApiVersionsResponseV4 {
 
     fn to_be_bytes(&self) -> Vec<u8> {
         // Convert to bytes in big-endian order
@@ -69,7 +65,7 @@ impl Serializable for ApiVersionsV4Response {
 
 }
 
-impl Size for ApiVersionsV4Response {
+impl Size for ApiVersionsResponseV4 {
 
     fn size(&self) -> i32 {
         <usize as TryInto<i32>>::try_into(size_of::<i32>() + size_of::<i16>() + size_of::<i32>())
@@ -143,7 +139,7 @@ mod test {
         let expected_size = 33;
 
         let api_version_response = 
-            ApiVersionsV4Response::new(
+            ApiVersionsResponseV4::new(
                 7,                                              // 4 bytes 
                 SUPPORTED_VERSION,                              // 2 bytes
                 vec![
@@ -198,7 +194,7 @@ mod test {
         ];
 
         let api_version_response = 
-            ApiVersionsV4Response::new(
+            ApiVersionsResponseV4::new(
                 7,                                                  // 4 bytes 
                 SUPPORTED_VERSION,                                  // 2 bytes
                 vec![

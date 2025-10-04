@@ -28,14 +28,14 @@ pub struct FetchV16Response {
     header: ResponseHeaderV1,
     throttle_time_ms: i32,
     error_code: i16,
-    session_id: i16,
+    session_id: i32,
     responses: CompactArray<Topic>,
     _tagged_fields: TagSection
 }
 
 impl FetchV16Response {
 
-    pub fn new(correlation_id: i32, throttle_time_ms: i32, error_code: i16, session_id: i16, responses: Vec<Topic>, _tagged_fields: TagSection) -> FetchV16Response {
+    pub fn new(correlation_id: i32, throttle_time_ms: i32, error_code: i16, session_id: i32, responses: Vec<Topic>, _tagged_fields: TagSection) -> FetchV16Response {
         FetchV16Response {
             header: ResponseHeaderV1::new(correlation_id),
             throttle_time_ms: throttle_time_ms,
@@ -52,8 +52,7 @@ impl Serializable for FetchV16Response {
 
     fn to_be_bytes(&self) -> Vec<u8> {
         // Convert to bytes in big-endian order
-        let message_size = self.size();
-        let message_size_bytes = message_size.to_be_bytes();
+        let message_size_bytes = self.size().to_be_bytes();
         let header_bytes = self.header.to_be_bytes();
         let throttle_time_ms_bytes = self.throttle_time_ms.to_be_bytes();
         let error_code_bytes = self.error_code.to_be_bytes();
@@ -92,7 +91,7 @@ impl Size for FetchV16Response {
     fn size(&self) -> i32 {
         self.header.size() + 
             <usize as TryInto<i32>>::try_into(
-                size_of::<i32>() + size_of::<i16>() + size_of::<i16>()
+                2 * size_of::<i32>() + size_of::<i16>() 
             )
             .unwrap() + self.responses.size() + self._tagged_fields.size()
     }
@@ -183,6 +182,30 @@ impl Size for Transaction {
 
     fn size(&self) -> i32 {
         <usize as TryInto<i32>>::try_into(2 * size_of::<i64>()).unwrap() + self._tagged_fields.size()
+    }
+
+}
+
+mod test {
+
+    use super::*;
+
+    #[test]
+    fn computes_message_size() {
+        let expected_size = (4 + 1) + 4 + 2 + 4 + (1 + 0) + 1;
+
+        let correlation_id = 1519289319;
+        let response = 
+            FetchV16Response::new(
+                correlation_id,                 // 4 + 1 (tag buffer) bytes
+                0,                              // 4 bytes
+                0,                              // 2 bytes
+                0,                              // 4 bytes
+                Vec::new(),                     // 1 byte
+                TagSection::empty(),            // 1 byte
+            );
+
+        assert_eq!(expected_size, response.size());
     }
 
 }

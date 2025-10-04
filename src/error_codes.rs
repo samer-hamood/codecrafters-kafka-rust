@@ -1,0 +1,3 @@
+
+pub const SUPPORTED_VERSION: i16 = 0;
+pub const UNSUPPORTED_VERSION: i16 = 35;

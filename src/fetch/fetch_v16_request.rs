@@ -3,6 +3,7 @@ use crate::tag_section::TagSection;
 use crate::headers::request_header_v1::RequestHeaderV1;
 use crate::size::Size;
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub struct FetchV16Request {
     pub header: RequestHeaderV1,
@@ -11,16 +12,7 @@ pub struct FetchV16Request {
 
 impl FetchV16Request {
 
-    pub fn header_size() -> usize {
-        RequestHeaderV1::size()
-    }
 
-    pub fn parse(bytes: &[u8]) -> FetchV16Request {
-        FetchV16Request {
-            header: RequestHeaderV1::parse(bytes),
-            _tagged_fields: TagSection::empty(),
-        }
-    }
 
 }
 
