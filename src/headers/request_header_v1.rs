@@ -1,8 +1,8 @@
-// Request Header v1 => request_api_key request_api_version correlation_id client_id 
-//   request_api_key => INT16
-//   request_api_version => INT16
-//   correlation_id => INT32
-//   client_id => NULLABLE_STRING
+/// Request Header v1 => request_api_key request_api_version correlation_id client_id 
+///   request_api_key => INT16
+///   request_api_version => INT16
+///   correlation_id => INT32
+///   client_id => NULLABLE_STRING
 
 use std::i32;
 

@@ -24,7 +24,7 @@ use crate::size::Size;
 ///       preferred_read_replica => INT32
 ///       records => COMPACT_RECORDS
 #[derive(Debug)]
-pub struct FetchV16Response {
+pub struct FetchResponseV16 {
     header: ResponseHeaderV1,
     throttle_time_ms: i32,
     error_code: i16,
@@ -33,10 +33,10 @@ pub struct FetchV16Response {
     _tagged_fields: TagSection
 }
 
-impl FetchV16Response {
+impl FetchResponseV16 {
 
-    pub fn new(correlation_id: i32, throttle_time_ms: i32, error_code: i16, session_id: i32, responses: Vec<Topic>, _tagged_fields: TagSection) -> FetchV16Response {
-        FetchV16Response {
+    pub fn new(correlation_id: i32, throttle_time_ms: i32, error_code: i16, session_id: i32, responses: Vec<Topic>, _tagged_fields: TagSection) -> FetchResponseV16 {
+        FetchResponseV16 {
             header: ResponseHeaderV1::new(correlation_id),
             throttle_time_ms: throttle_time_ms,
             error_code: error_code,                              
@@ -48,7 +48,7 @@ impl FetchV16Response {
 
 }
 
-impl Serializable for FetchV16Response {
+impl Serializable for FetchResponseV16 {
 
     fn to_be_bytes(&self) -> Vec<u8> {
         // Convert to bytes in big-endian order
@@ -86,7 +86,7 @@ impl Serializable for FetchV16Response {
 
 }
 
-impl Size for FetchV16Response {
+impl Size for FetchResponseV16 {
     
     fn size(&self) -> i32 {
         self.header.size() + 
@@ -196,7 +196,7 @@ mod test {
 
         let correlation_id = 1519289319;
         let response = 
-            FetchV16Response::new(
+            FetchResponseV16::new(
                 correlation_id,                 // 4 + 1 (tag buffer) bytes
                 0,                              // 4 bytes
                 0,                              // 2 bytes

@@ -9,8 +9,8 @@ use crate::headers::request_header_v1::{self, RequestHeaderV1};
 use crate::serializable::Serializable;
 use crate::tag_section::{TagSection};
 use crate::error_codes::{SUPPORTED_VERSION, UNSUPPORTED_VERSION};
-use crate::fetch::fetch_v16_request::{FetchV16Request};
-use crate::fetch::fetch_v16_response::{FetchV16Response};
+use crate::fetch::fetch_request_v16::{FetchRequestV16};
+use crate::fetch::fetch_response_v16::{FetchResponseV16};
 use crate::api_keys::{FETCH, API_VERSIONS};
 use crate::api_versions::api_versions_request_v4::{ApiVersionsRequestV4};
 use crate::api_versions::api_versions_response_v4::{ApiKey, ApiVersionsResponseV4};
@@ -78,7 +78,7 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                                 TagSection::empty(),
                             ).to_be_bytes()
                         } else if request_header.request_api_key == FETCH {
-                            FetchV16Response::new(
+                            FetchResponseV16::new(
                                 request_header.correlation_id, 
                                 0,
                                 0,

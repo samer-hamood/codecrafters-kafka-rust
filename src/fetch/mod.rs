@@ -1,3 +1,3 @@
-pub mod fetch_v16_request;
-pub mod fetch_v16_response;
+pub mod fetch_request_v16;
+pub mod fetch_response_v16;
 
