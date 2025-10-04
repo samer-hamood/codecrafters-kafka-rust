@@ -1,42 +1,48 @@
 use std::array;
 
+use crate::size::Size;
+use crate::serializable::Serializable;
+use crate::tag_section::TagSection;
+use crate::compact_array::CompactArray;                        
+
 // Error Codes 
 pub const SUPPORTED_VERSION: i16 = 0;
 pub const UNSUPPORTED_VERSION: i16 = 35;
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub struct ApiVersionsV4Response {
     pub correlation_id: i32,
     pub error_code: i16,
-    pub api_keys: Vec<ApiKey>,
+    pub api_keys: CompactArray<ApiKey>,
     pub throttle_time_ms: i32,
     pub _tagged_fields: TagSection,
 }
 
+#[allow(dead_code)]
 impl ApiVersionsV4Response {
 
     pub fn new(correlation_id: i32, error_code: i16, api_keys: Vec<ApiKey>, throttle_time_ms: i32, _tagged_fields: TagSection) -> ApiVersionsV4Response {
         ApiVersionsV4Response {
             correlation_id: correlation_id,
-            error_code: error_code,
-            api_keys: api_keys,
+            error_code: error_code,                              
+            api_keys: CompactArray::new(api_keys),
             throttle_time_ms: throttle_time_ms,
             _tagged_fields: _tagged_fields,
         }
     }
 
-    fn message_size(&self) -> i32 {
-        let array_length_size = 1;  
-        (size_of::<i32>() + size_of::<i16>() + array_length_size + self.api_keys.len() * ApiKey::len() + size_of::<i32>() + TagSection::len()).try_into().unwrap()
-    }
+}
 
-    pub fn to_be_bytes(&self) -> Vec<u8> {
+impl Serializable for ApiVersionsV4Response {
+
+    fn to_be_bytes(&self) -> Vec<u8> {
         // Convert to bytes in big-endian order
-        let message_size = self.message_size();
+        let message_size = self.size();
         let message_size_bytes = message_size.to_be_bytes();
         let correlation_id_bytes = self.correlation_id.to_be_bytes();
         let error_code_bytes = self.error_code.to_be_bytes();
-        let api_key_bytes = self.api_keys_bytes();
+        let api_key_bytes = self.api_keys.to_be_bytes();
         let throttle_time_ms_bytes = self.throttle_time_ms.to_be_bytes();
         let tagged_fields_bytes = self._tagged_fields.to_be_bytes();
         let mut bytes = Vec::new();
@@ -61,26 +67,18 @@ impl ApiVersionsV4Response {
         bytes
     }
 
-    fn api_keys_bytes(&self) -> Vec<u8> {
-        let array_length_bytes = self.array_length().to_be_bytes();
-        let mut bytes: Vec<u8> = Vec::new();
-        for i in 0..array_length_bytes.len() {
-            bytes.push(array_length_bytes[i]);
-        }
-        for i in 0..self.api_keys.len() {
-            let api_key_bytes = self.api_keys[i].to_be_bytes();
-            for j in 0..api_key_bytes.len() {
-                bytes.push(api_key_bytes[j]);
-            }
-        }
-        bytes
-    }
-    
-    fn array_length(&self) -> u8 {
-        (1 + self.api_keys.len()).try_into().unwrap()
-    }
 }
 
+impl Size for ApiVersionsV4Response {
+
+    fn size(&self) -> i32 {
+        <usize as TryInto<i32>>::try_into(size_of::<i32>() + size_of::<i16>() + size_of::<i32>())
+            .unwrap() + self.api_keys.size() + self._tagged_fields.size()
+    }
+
+}
+
+#[allow(dead_code)]
 #[derive(Debug)]
 pub struct ApiKey {
     api_key: i16,
@@ -89,6 +87,7 @@ pub struct ApiKey {
     _tagged_fields: TagSection,
 }
 
+#[allow(dead_code)]
 impl ApiKey {
 
     pub fn new(api_key: i16, min_version: i16, max_version: i16, _tagged_fields: TagSection) -> ApiKey {
@@ -100,59 +99,36 @@ impl ApiKey {
         }
     }
 
-    pub fn len() -> usize {
-        3 * size_of::<i16>() + TagSection::len()
+}
+
+impl Size for ApiKey {
+
+    fn size(&self) -> i32 {
+        <usize as TryInto<i32>>::try_into(3 * size_of::<i16>()).unwrap() + self._tagged_fields.size()
     }
 
-    pub fn to_be_bytes(&self) -> [u8; 7] {
+}
+
+impl Serializable for ApiKey {
+
+    fn to_be_bytes(&self) -> Vec<u8> {
         // Convert to bytes in big-endian order
-        let api_key_bytes = self.api_key.to_be_bytes();
-        let min_version_bytes = self.min_version.to_be_bytes();
-        let max_version_bytes = self.max_version.to_be_bytes();
-        let tagged_field_bytes = self._tagged_fields.to_be_bytes();
-        let mut bytes = [0u8; 7];
-        let mut index = 0;
-        for i in 0..api_key_bytes.len() {
-            bytes[index] = api_key_bytes[i];
-            index += 1;
-        }
-        for j in 0..min_version_bytes.len() {
-            bytes[index] = min_version_bytes[j];
-            index += 1;
-        }
-        for k in 0..max_version_bytes.len() {
-            bytes[index] = max_version_bytes[k];
-            index += 1;
-        }
-        for l in 0..tagged_field_bytes.len() {
-            bytes[index] = tagged_field_bytes[l];
-            index += 1;
-        }
-        bytes
-    }
-}
-
-#[derive(Debug)]
-pub struct TagSection {
-    number_of_tagged_fields: u8,
-}
-
-impl TagSection {
-
-    pub fn empty() -> TagSection {
-        TagSection {
-            number_of_tagged_fields: 0,
-        }
-    }
-
-    pub fn len() -> usize {
-        1
-    }
-
-    pub fn to_be_bytes(&self) -> Vec<u8> {
+        let api_key_bytes = self.api_key.to_be_bytes();             // 2 bytes
+        let min_version_bytes = self.min_version.to_be_bytes();     // 2 bytes
+        let max_version_bytes = self.max_version.to_be_bytes();     // 2 bytes
+        let tagged_field_bytes = self._tagged_fields.to_be_bytes(); // 1 byte
         let mut bytes = Vec::new();
-        if self.number_of_tagged_fields == 0 {
-            bytes.push(0);
+        for i in 0..api_key_bytes.len() {
+            bytes.push(api_key_bytes[i]);
+        }
+        for i in 0..min_version_bytes.len() {
+            bytes.push(min_version_bytes[i]);
+        }
+        for i in 0..max_version_bytes.len() {
+            bytes.push(max_version_bytes[i]);
+        }
+        for i in 0..tagged_field_bytes.len() {
+            bytes.push(tagged_field_bytes[i]);
         }
         bytes
     }
@@ -179,7 +155,7 @@ mod test {
                 TagSection::empty(),                            // 1 bytes
             );
 
-        assert_eq!(expected_size, api_version_response.message_size());
+        assert_eq!(expected_size, api_version_response.size());
     }
 
     #[test]
