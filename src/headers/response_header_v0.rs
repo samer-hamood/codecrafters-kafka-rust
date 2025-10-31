@@ -15,19 +15,14 @@ impl ResponseHeaderV0 {
 
     pub fn to_be_bytes(&self) -> Vec<u8> {
         // Convert to bytes in big-endian order
-        let correlation_id_bytes = self.correlation_id.to_be_bytes();
-        let mut bytes = Vec::new();
-        for i in 0..correlation_id_bytes.len() {
-            bytes.push(correlation_id_bytes[i]);
-        }
-        bytes
+        self.correlation_id.to_be_bytes().to_vec()
     }
 }
 
 impl Size for ResponseHeaderV0 {
 
-    fn size(&self) -> i32 {
-        size_of::<i32>().try_into().unwrap()
+    fn size(&self) -> usize {
+        size_of::<i32>()
     }
 
 }

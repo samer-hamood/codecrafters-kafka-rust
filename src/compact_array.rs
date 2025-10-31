@@ -1,15 +1,20 @@
-use std::i32;
+use std::{i32, usize};
+use std::iter;
 use std::slice::Iter;
-use crate::serializable::Serializable;
+use crate::byte_parsable::ByteParsable;
+use crate::serializable::{BoxedSerializable, Serializable};
 use crate::size::Size;
 
-#[derive(Debug)]
-pub struct CompactArray<T: Serializable + Size> {
+#[allow(dead_code)]
+const LENGTH: usize = 1;
+
+#[derive(Debug, Clone)]
+pub struct CompactArray<T: Serializable + Size + ByteParsable<T> + Clone> {
     elements: Vec<T>,
 }
 
 #[allow(dead_code)]
-impl <T:Serializable + Size> CompactArray<T> {
+impl <T: Serializable + Size + ByteParsable<T> + Clone> CompactArray<T> {
 
     pub fn new(elements: Vec<T>) -> CompactArray<T> {
         CompactArray {
@@ -17,8 +22,16 @@ impl <T:Serializable + Size> CompactArray<T> {
         }
     }
 
-    pub fn len(&self) -> u8 {
-    // pub fn len(&self) -> i32 {
+    pub fn empty() -> Self {
+        CompactArray::new(Vec::new())
+    }
+
+    pub fn len(&self) -> usize {
+        self.elements.len()
+    }
+
+    pub fn length(&self) -> u8 {
+    // pub fn len(&self) -> u32 {
         (1 + self.elements.len()).try_into().unwrap()
     }
 
@@ -28,67 +41,87 @@ impl <T:Serializable + Size> CompactArray<T> {
 
 }
 
-impl <T:Serializable + Size> Serializable for CompactArray<T> {
+impl <T:Serializable + Size + ByteParsable<T> + Clone> Size for CompactArray<T> {
 
-    fn to_be_bytes(&self) -> Vec<u8> {
-        let array_length_bytes = self.len().to_be_bytes();
-        let mut bytes: Vec<u8> = Vec::new();
-        for i in 0..array_length_bytes.len() {
-            bytes.push(array_length_bytes[i]);
-        }
-        for i in 0..self.elements.len() {
-            let elements_bytes = self.elements[i].to_be_bytes();
-            for j in 0..elements_bytes.len() {
-                bytes.push(elements_bytes[j]);
+    fn size(&self) -> usize {
+        // TODO: Compute unsigned varint size of length: encode_unsigned_varint(1 + self.elements.len()).len()
+        size_of::<u8>() + self.elements.iter().map(|element| element.size()).sum::<usize>()
+    }
+
+}
+
+
+impl <T:Serializable + Size + ByteParsable<T> + Clone> ByteParsable<CompactArray<T>> for CompactArray<T> {
+
+    fn parse(bytes: &[u8], offset: usize) -> CompactArray<T> {
+        let mut offset = offset;
+        let length = u8::from_be_bytes(bytes[offset..offset + LENGTH].try_into().unwrap());
+        offset += LENGTH;
+
+        let compact_array =
+            if length == 0 {
+                CompactArray::<T>::empty()
             }
-        }
-        bytes
+            else if length == 1 {
+                CompactArray::<T>::empty()
+            }
+            else {
+                let mut elements = Vec::new();
+                for _ in 0..(length - 1) {
+                    let element = T::parse(bytes, offset);
+                    offset += element.size();
+                    elements.push(element);
+                }
+                CompactArray::<T>::new(elements)
+            };
+        return compact_array
+    }
+
+}
+
+impl <T:Serializable + Size + ByteParsable<T> + Clone + 'static> Serializable for CompactArray<T> {
+
+    fn serializable_fields(&self) -> Vec<BoxedSerializable> {
+        iter::once(Box::new(self.length()) as BoxedSerializable)
+            .chain(self.elements.iter().map(|x| Box::new(x.clone()) as BoxedSerializable))
+            .collect()
     }
     
 }
 
-impl <T:Serializable + Size> Size for CompactArray<T> {
+impl <T:Serializable + Size + ByteParsable<T> + Clone> std::ops::Index<usize> for CompactArray<T> {
+    type Output = T;
 
-    fn size(&self) -> i32 {
-        // TODO: Compute unsigned varint size of length: encode_unsigned_varint(1 + self.elements.len()).len()
-        <usize as TryInto<i32>>::try_into(size_of::<u8>()).unwrap() + self.elements.iter().map(|element| element.size()).sum::<i32>()
+    fn index(&self, offset: usize) -> &Self::Output {
+       &self.elements[offset]
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct CompactArrayElementI32(i32);
+
+impl Size for CompactArrayElementI32 {
+
+    fn size(&self) -> usize {
+       size_of::<i32>()
     }
 
 }
 
-// TODO: Test this
-#[allow(dead_code)]
-fn encode_unsigned_varint(mut n: u32) -> Vec<u8> {
-    let mut buf = Vec::new();
-    loop {
-        let mut byte = (n & 0x7F) as u8; // take 7 bits
-        n >>= 7;
-        if n != 0 {
-            // still have more bits, set continuation bit
-            byte |= 0x80;
-        }
-        buf.push(byte);
-        if n == 0 {
-            break;
-        }
+impl Serializable for CompactArrayElementI32 {
+
+    fn to_be_bytes(&self) -> Vec<u8> {
+        self.0.to_be_bytes().to_vec()
     }
-    buf
+
 }
 
+impl ByteParsable<CompactArrayElementI32> for CompactArrayElementI32 {
 
-mod test {
-    use super::*;
-
-
-    #[test]
-    fn converts_to_unsigned_varint() {
-        let expected_bytes = vec![0x01];
-        let actual_bytes = encode_unsigned_varint(1);
-
-        assert_eq!(1, actual_bytes.len());
-        assert_eq!(expected_bytes, actual_bytes);
+    fn parse(bytes: &[u8], offset: usize) -> Self {
+        let partition = i32::from_be_bytes(bytes[offset..offset + size_of::<i32>()].try_into().unwrap());
+        CompactArrayElementI32(partition)
     }
-
 
 }
 

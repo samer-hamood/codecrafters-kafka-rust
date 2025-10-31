@@ -1,8 +1,9 @@
 use std::i32;
 
 use crate::compact_array::CompactArray;
-use crate::serializable::Serializable;
-use crate::tag_section::TagSection;
+use crate::fetch::topic::ResponseTopic;
+use crate::serializable::{BoxedSerializable, Serializable};
+use crate::tagged_fields_section::TaggedFieldsSection;
 use crate::headers::response_header_v1::ResponseHeaderV1;
 use crate::size::Size;
 
@@ -19,175 +20,62 @@ use crate::size::Size;
 ///       last_stable_offset => INT64
 ///       log_start_offset => INT64
 ///       aborted_transactions => producer_id first_offset _tagged_fields 
-///         producer_id => INT64
-///         first_offset => INT64
+///         producer_id => INT64 first_offset => INT64
 ///       preferred_read_replica => INT32
 ///       records => COMPACT_RECORDS
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct FetchResponseV16 {
     header: ResponseHeaderV1,
     throttle_time_ms: i32,
     error_code: i16,
     session_id: i32,
-    responses: CompactArray<Topic>,
-    _tagged_fields: TagSection
+    responses: CompactArray<ResponseTopic>,
+    _tagged_fields: TaggedFieldsSection
 }
 
 impl FetchResponseV16 {
 
-    pub fn new(correlation_id: i32, throttle_time_ms: i32, error_code: i16, session_id: i32, responses: Vec<Topic>, _tagged_fields: TagSection) -> FetchResponseV16 {
+    pub fn new(correlation_id: i32, throttle_time_ms: i32, error_code: i16, session_id: i32, responses: CompactArray<ResponseTopic>, _tagged_fields: TaggedFieldsSection) -> FetchResponseV16 {
         FetchResponseV16 {
             header: ResponseHeaderV1::new(correlation_id),
             throttle_time_ms: throttle_time_ms,
             error_code: error_code,                              
             session_id: session_id,
-            responses: CompactArray::new(responses),
+            responses: responses,
             _tagged_fields: _tagged_fields,
         }
     }
 
 }
 
-impl Serializable for FetchResponseV16 {
-
-    fn to_be_bytes(&self) -> Vec<u8> {
-        // Convert to bytes in big-endian order
-        let message_size_bytes = self.size().to_be_bytes();
-        let header_bytes = self.header.to_be_bytes();
-        let throttle_time_ms_bytes = self.throttle_time_ms.to_be_bytes();
-        let error_code_bytes = self.error_code.to_be_bytes();
-        let session_id_bytes = self.session_id.to_be_bytes();
-        let responses_bytes = self.responses.to_be_bytes();
-        let tagged_fields_bytes = self._tagged_fields.to_be_bytes();
-        let mut bytes = Vec::new();
-        for i in 0..message_size_bytes.len() {
-            bytes.push(message_size_bytes[i]);
-        }
-        for i in 0..header_bytes.len() {
-            bytes.push(header_bytes[i]);
-        }
-        for i in 0..throttle_time_ms_bytes.len() {
-            bytes.push(throttle_time_ms_bytes[i]);
-        }
-        for i in 0..error_code_bytes.len() {
-            bytes.push(error_code_bytes[i]);
-        }
-        for i in 0..session_id_bytes.len() {
-            bytes.push(session_id_bytes[i]);
-        }
-        for i in 0..responses_bytes.len() {
-            bytes.push(responses_bytes[i]);
-        }
-        for i in 0..tagged_fields_bytes.len() {
-            bytes.push(tagged_fields_bytes[i]);
-        }
-        bytes
-    }
-
-}
-
 impl Size for FetchResponseV16 {
     
-    fn size(&self) -> i32 {
-        self.header.size() + 
-            <usize as TryInto<i32>>::try_into(
-                2 * size_of::<i32>() + size_of::<i16>() 
-            )
-            .unwrap() + self.responses.size() + self._tagged_fields.size()
+    fn size(&self) -> usize {
+        // NB: This is the messagge size and should not include message size (4 bytes) itself
+        self.header.size() + 2 * size_of::<i32>() + size_of::<i16>() + self.responses.size() + self._tagged_fields.size()
     }
 
 }
 
-#[allow(dead_code)]
-#[derive(Debug)]
-pub struct Topic {
-    topic_id: String, // UUID
-    partitions: CompactArray<Partition>,
-    _tagged_fields: TagSection
-}
+impl Serializable for FetchResponseV16 {
 
-impl Serializable for Topic {
-
-    fn to_be_bytes(&self) -> Vec<u8> {
-        // TODO: Implement serialization
-        let bytes = Vec::new();
-        bytes
+    fn serializable_fields(&self) -> Vec<BoxedSerializable> {
+        let mut fields: Vec<BoxedSerializable> = Vec::with_capacity(7);
+        let message_size = self.size() as i32;
+        fields.push(Box::new(message_size));
+        fields.push(Box::new(self.header.clone()));
+        fields.push(Box::new(self.throttle_time_ms));
+        fields.push(Box::new(self.error_code));
+        fields.push(Box::new(self.session_id));
+        fields.push(Box::new(self.responses.clone()));
+        fields.push(Box::new(self._tagged_fields.clone()));
+        fields
     }
 
 }
 
-impl Size for Topic {
-
-    fn size(&self) -> i32 {
-        let topic_id_size = 0; // TODO: Figure out actual size of topic_id UUID  
-        topic_id_size + self.partitions.size() + self._tagged_fields.size()
-    }
-
-}
-
-#[allow(dead_code)]
-#[derive(Debug)]
-pub struct Partition {
-    partition_index: i32,
-    error_code: i16,
-    high_watermark: i64,
-    last_stable_offset: i64,
-    log_start_offset: i64,
-    aborted_transactions: CompactArray<Transaction>,
-    preferred_read_replica: i32,
-    // records: COMPACT_RECORDS,
-    _tagged_fields: TagSection
-}
-
-impl Serializable for Partition {
-
-    fn to_be_bytes(&self) -> Vec<u8> {
-        // TODO: Implement serialization
-        let bytes = Vec::new();
-        bytes
-    }
-
-}
-
-impl Size for Partition {
-
-    fn size(&self) -> i32 {
-        let records = 0;
-        <usize as TryInto<i32>>::try_into(
-           2 * size_of::<i32>() + 3 * size_of::<i64>() + size_of::<i16>()
-        ).unwrap() + self.aborted_transactions.size() + records + self._tagged_fields.size()
-    }
-
-}
-
-#[allow(dead_code)]
-#[derive(Debug)]
-pub struct Transaction {
-    producer_id: i64,
-    first_offset: i64,
-    _tagged_fields: TagSection
-}
-
-impl Serializable for Transaction {
-
-    fn to_be_bytes(&self) -> Vec<u8> {
-        // TODO: Implement serialization
-        let bytes = Vec::new();
-        bytes
-    }
-
-}
-
-impl Size for Transaction {
-
-    fn size(&self) -> i32 {
-        <usize as TryInto<i32>>::try_into(2 * size_of::<i64>()).unwrap() + self._tagged_fields.size()
-    }
-
-}
-
+#[cfg(test)]
 mod test {
-
     use super::*;
 
     #[test]
@@ -201,12 +89,50 @@ mod test {
                 0,                              // 4 bytes
                 0,                              // 2 bytes
                 0,                              // 4 bytes
-                Vec::new(),                     // 1 byte
-                TagSection::empty(),            // 1 byte
+                CompactArray::empty(),          // 1 byte
+                TaggedFieldsSection::empty(),   // 1 byte
             );
 
         assert_eq!(expected_size, response.size());
     }
 
+    #[test]
+    fn converts_to_bytes() {
+        // 00 00 00 11  // message_size:                17
+        // 00 00 00 07  // correlation_id:              7
+        // 00 00 00 00  // throttle_time_ms:            0
+        // 00 00        // error_code:                  0
+        // 04           // responses (array length):    4
+        // 00           // tag buffer                   0
+        let expected_bytes: &[u8] = &[
+            // message_size
+            0x00, 0x00, 0x00, 0x11,
+            // header: correlation_id + tag buffer (4 + 1 bytes)
+            0x00, 0x00, 0x00, 0x00, 0x00,
+            // throttle_time_ms (4 bytes)
+            0x00, 0x00, 0x00, 0x00,
+            // error_code (2 bytes)
+            0x00, 0x00,
+            // session_id (4 bytes)
+            0x00, 0x00, 0x00, 0x00,
+            // responses: array length (1 byte)
+            0x01, 
+            // tag buffer (1 byte)
+            0x00, 
+        ];
+
+        let correlation_id = 0;
+        let response = 
+            FetchResponseV16::new(
+                correlation_id,         // 4 + 1 (tag buffer) bytes
+                0,                      // 4 bytes
+                0,                      // 2 bytes
+                0,                      // 4 bytes
+                CompactArray::empty(),  // 1 byte
+                TaggedFieldsSection::empty(),    // 1 byte
+            );
+
+        assert_eq!(expected_bytes, response.to_be_bytes());
+    }
 }
 

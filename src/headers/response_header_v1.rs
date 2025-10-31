@@ -1,13 +1,13 @@
 use std::i32;
 
-use crate::serializable::Serializable;
-use crate::tag_section::TagSection;
+use crate::serializable::{BoxedSerializable, Serializable};
+use crate::tagged_fields_section::TaggedFieldsSection;
 use crate::size::Size;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ResponseHeaderV1 {
     pub correlation_id: i32,
-    _tagged_fields: TagSection,
+    _tagged_fields: TaggedFieldsSection,
 }
 
 impl ResponseHeaderV1 {
@@ -15,34 +15,27 @@ impl ResponseHeaderV1 {
     pub fn new(correlation_id: i32) -> ResponseHeaderV1 {
         ResponseHeaderV1 {
             correlation_id: correlation_id,
-            _tagged_fields: TagSection::empty(),
+            _tagged_fields: TaggedFieldsSection::empty(),
         }
-    }
-
-}
-
-impl Serializable for ResponseHeaderV1 {
-
-    fn to_be_bytes(&self) -> Vec<u8> {
-        // Convert to bytes in big-endian order
-        let correlation_id_bytes = self.correlation_id.to_be_bytes();
-        let tagged_fields_bytes = self._tagged_fields.to_be_bytes();
-        let mut bytes = Vec::new();
-        for i in 0..correlation_id_bytes.len() {
-            bytes.push(correlation_id_bytes[i]);
-        }
-        for i in 0..tagged_fields_bytes.len() {
-            bytes.push(tagged_fields_bytes[i]);
-        }
-        bytes
     }
 
 }
 
 impl Size for ResponseHeaderV1 {
 
-    fn size(&self) -> i32 {
-        <usize as TryInto<i32>>::try_into(size_of::<i32>()).unwrap() + self._tagged_fields.size()
+    fn size(&self) -> usize {
+        size_of::<i32>() + self._tagged_fields.size()
+    }
+
+}
+
+impl Serializable for ResponseHeaderV1 {
+
+    fn serializable_fields(&self) -> Vec<BoxedSerializable> {
+        let mut fields: Vec<BoxedSerializable> = Vec::with_capacity(2);
+        fields.push(Box::new(self.correlation_id));
+        fields.push(Box::new(self._tagged_fields.clone()));
+        fields
     }
 
 }

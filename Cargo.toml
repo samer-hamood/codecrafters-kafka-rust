@@ -13,3 +13,10 @@ thiserror = "1.0.38"                             # error handling
 
 [dev-dependencies]
 parameterized = "2.0.0"
+
+[dependencies.uuid]
+version = "1.18.1"
+# Lets you generate random UUIDs
+features = [
+    "v4",
+]

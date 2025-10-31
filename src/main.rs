@@ -5,21 +5,31 @@ use std::process::exit;
 use std::{cmp::Ordering, net::TcpListener};
 use std::io::{Read, Write};
 
-use crate::headers::request_header_v1::{self, RequestHeaderV1};
+use crate::compact_array::CompactArray;
+use crate::compact_records::CompactRecords;
+use crate::fetch::partition::ResponsePartition;
+use crate::fetch::topic::{self, ResponseTopic};
+use crate::size::Size;
+use crate::byte_parsable::ByteParsable;
+use crate::headers::request_header_v2::{self, RequestHeaderV2};
 use crate::serializable::Serializable;
-use crate::tag_section::{TagSection};
-use crate::error_codes::{SUPPORTED_VERSION, UNSUPPORTED_VERSION};
+use crate::tagged_fields_section::TaggedFieldsSection;
+use crate::error_codes::{NONE, UNKNOWN_TOPIC_ID, UNSUPPORTED_VERSION};
 use crate::fetch::fetch_request_v16::{FetchRequestV16};
 use crate::fetch::fetch_response_v16::{FetchResponseV16};
 use crate::api_keys::{FETCH, API_VERSIONS};
 use crate::api_versions::api_versions_request_v4::{ApiVersionsRequestV4};
 use crate::api_versions::api_versions_response_v4::{ApiKey, ApiVersionsResponseV4};
 
+mod compact_records;
+mod byte_parsable;
+mod compact_string;
+mod nullable_string;
 mod size;
 mod serializable;
 mod headers;
 mod compact_array;
-mod tag_section;
+mod tagged_fields_section;
 mod error_codes;
 mod fetch;
 mod api_keys;
@@ -51,7 +61,7 @@ fn main() {
 fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
     let mut total_bytes_read = 0;
     println!("Buffer length: {}", buf.len());
-    let header_size = RequestHeaderV1::size();
+    let header_size = RequestHeaderV2::min_size();
     loop {
         match _stream.read(&mut buf[total_bytes_read..]) {
             Ok(0) => {
@@ -62,29 +72,43 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                 println!("Read {} byte(s)", n);
                 total_bytes_read += n;
                 if total_bytes_read >= header_size {
-                    let request_header = RequestHeaderV1::parse(buf);
-                    println!("{:#?}", request_header);
+                    let request_header = RequestHeaderV2::parse(buf, 0);
 
                     let response_bytes =
                         if request_header.request_api_key == API_VERSIONS {
+                            println!("Handling {} request...", "ApiVersions");
                             ApiVersionsResponseV4::new(
                                 request_header.correlation_id, 
                                 check_supported_version(request_header.request_api_version),
                                 vec![
-                                ApiKey::new(API_VERSIONS, 0, 4, TagSection::empty()),
-                                ApiKey::new(FETCH, 0, 16, TagSection::empty()),
+                                ApiKey::new(API_VERSIONS, 0, 4, TaggedFieldsSection::empty()),
+                                ApiKey::new(FETCH, 0, 16, TaggedFieldsSection::empty()),
                                 ],
                                 0,
-                                TagSection::empty(),
+                                TaggedFieldsSection::empty(),
                             ).to_be_bytes()
                         } else if request_header.request_api_key == FETCH {
+                            println!("Handling {} request...", "Fetch");
+                            let fetch_request = FetchRequestV16::parse(buf, request_header.size());
+                            let mut topics = Vec::new();
+                            for _ in 0..fetch_request.topics.len() {
+                                topics.push(
+                                    ResponseTopic::new(
+                                        fetch_request.topics[0].topic_id, 
+                                        vec![
+                                        ResponsePartition::new(0, UNKNOWN_TOPIC_ID, 0, 0, 0, CompactArray::empty(), 0, CompactRecords::empty(), TaggedFieldsSection::empty()),
+                                        ],
+                                        TaggedFieldsSection::empty(),
+                                    )
+                                );
+                            }
                             FetchResponseV16::new(
                                 request_header.correlation_id, 
                                 0,
+                                NONE,
                                 0,
-                                0,
-                                Vec::new(),
-                                TagSection::empty(),
+                                CompactArray::new(topics),
+                                TaggedFieldsSection::empty(),
                             ).to_be_bytes()
                         } else {
                             Vec::new()
@@ -107,7 +131,7 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
 
 fn check_supported_version(version: i16) -> i16 {
     if SUPPORTED_API_VERSIONS.contains(&version) {
-        SUPPORTED_VERSION
+        NONE
     } else {
         UNSUPPORTED_VERSION
     }
@@ -138,7 +162,7 @@ mod test {
         }
     )]
     fn checks_supported_version(version: i16) {
-        assert_eq!(SUPPORTED_VERSION, check_supported_version(version)); 
+        assert_eq!(NONE, check_supported_version(version)); 
     }
     
     #[test]
