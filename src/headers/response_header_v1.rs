@@ -24,7 +24,8 @@ impl ResponseHeaderV1 {
 impl Size for ResponseHeaderV1 {
 
     fn size(&self) -> usize {
-        size_of::<i32>() + self._tagged_fields.size()
+        // size_of::<i32>() + 
+        self.correlation_id.size() + self._tagged_fields.size()
     }
 
 }

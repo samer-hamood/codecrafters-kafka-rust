@@ -136,16 +136,7 @@ impl ResponsePartition {
 impl Size for ResponsePartition {
 
     fn size(&self) -> usize {
-        // 2 * size_of::<i32>() + 3 * size_of::<i64>() + size_of::<i16>() + 
-        self.partition_index.size() +
-            self.error_code.size() +
-            self.high_watermark.size() +
-            self.last_stable_offset.size() +
-            self.log_start_offset.size() +
-            self.aborted_transactions.size() + 
-            self.preferred_read_replica.size() +
-            self.records.size() + 
-            self._tagged_fields.size()
+        2 * size_of::<i32>() + 3 * size_of::<i64>() + size_of::<i16>() + self.aborted_transactions.size() + self.records.size() + self._tagged_fields.size()
     }
 
 }
@@ -190,10 +181,7 @@ pub struct Transaction {
 impl Size for Transaction {
 
     fn size(&self) -> usize {
-        // 2 * size_of::<i64>() + 
-        self.producer_id.size() +
-            self.first_offset.size() +
-            self._tagged_fields.size()
+        2 * size_of::<i64>() + self._tagged_fields.size()
     }
 
 }

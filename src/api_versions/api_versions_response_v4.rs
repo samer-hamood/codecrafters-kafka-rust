@@ -34,7 +34,12 @@ impl ApiVersionsResponseV4 {
 impl Size for ApiVersionsResponseV4 {
 
     fn size(&self) -> usize {
-        size_of::<i32>() + size_of::<i16>() + size_of::<i32>() + self.api_keys.size() + self._tagged_fields.size()
+        // size_of::<i32>() + size_of::<i16>() + size_of::<i32>() + self.api_keys.size() + self._tagged_fields.size()
+        self.correlation_id.size() + 
+            self.error_code.size() + 
+            self.api_keys.size() + 
+            self.throttle_time_ms.size() +
+            self._tagged_fields.size()
     }
 
 }
@@ -81,7 +86,8 @@ impl ApiKey {
 impl Size for ApiKey {
 
     fn size(&self) -> usize {
-        3 * size_of::<i16>() + self._tagged_fields.size()
+        // 3 * size_of::<i16>() + 
+        self.api_key.size() + self.min_version.size() + self.max_version.size() + self._tagged_fields.size()
     }
 
 }

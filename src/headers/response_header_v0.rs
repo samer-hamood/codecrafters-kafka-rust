@@ -22,7 +22,8 @@ impl ResponseHeaderV0 {
 impl Size for ResponseHeaderV0 {
 
     fn size(&self) -> usize {
-        size_of::<i32>()
+        // size_of::<i32>()
+        self.correlation_id.size()
     }
 
 }

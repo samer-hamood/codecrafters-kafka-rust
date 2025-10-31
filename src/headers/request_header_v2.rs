@@ -38,7 +38,13 @@ impl RequestHeaderV2 {
 impl Size for RequestHeaderV2 {
 
     fn size(&self) -> usize {
-        size_of::<i32>() + size_of::<i16>() + size_of::<i16>() + size_of::<i32>() + self.client_id.size() + self._tagged_fields.size()
+        // size_of::<i32>() + size_of::<i16>() + size_of::<i16>() + size_of::<i32>() + self.client_id.size() + self._tagged_fields.size()
+        self.message_size.size() + 
+            self.request_api_key.size() + 
+            self.request_api_version.size() +
+            self.correlation_id.size() + 
+            self.client_id.size() + 
+            self._tagged_fields.size()
     }
 
 }
@@ -47,17 +53,25 @@ impl ByteParsable<RequestHeaderV2> for RequestHeaderV2 {
 
     fn parse(bytes: &[u8], offset: usize) -> RequestHeaderV2 {
         let mut offset = offset;
-        let message_size = i32::from_be_bytes(bytes[offset..MESSAGE_SIZE].try_into().unwrap());
-        offset += MESSAGE_SIZE;
-        let request_api_key = i16::from_be_bytes(bytes[offset..offset + REQUEST_API_KEY].try_into().unwrap());
-        offset += REQUEST_API_KEY;
-        let request_api_version = i16::from_be_bytes(bytes[offset..offset + REQUEST_API_VERSION].try_into().unwrap());
-        offset += REQUEST_API_VERSION;
-        let correlation_id = i32::from_be_bytes(bytes[offset..offset + CORRELATION_ID].try_into().unwrap());
-        offset += CORRELATION_ID;
+        // let message_size = i32::from_be_bytes(bytes[offset..MESSAGE_SIZE].try_into().unwrap());
+        // offset += MESSAGE_SIZE;
+        // let request_api_key = i16::from_be_bytes(bytes[offset..offset + REQUEST_API_KEY].try_into().unwrap());
+        // offset += REQUEST_API_KEY;
+        // let request_api_version = i16::from_be_bytes(bytes[offset..offset + REQUEST_API_VERSION].try_into().unwrap());
+        // offset += REQUEST_API_VERSION;
+        // let correlation_id = i32::from_be_bytes(bytes[offset..offset + CORRELATION_ID].try_into().unwrap());
+        // offset += CORRELATION_ID;
+        let message_size = i32::parse(bytes, offset);
+        offset += message_size.size();
+        let request_api_key = i16::parse(bytes, offset);
+        offset += request_api_key.size();
+        let request_api_version = i16::parse(bytes, offset);
+        offset += request_api_key.size();
+        let correlation_id = i32::parse(bytes, offset);
+        offset += correlation_id.size();
         let client_id = NullableString::parse(bytes, offset);
-        offset += client_id.size();
-        let _tagged_fields = u8::from_be_bytes(bytes[offset..offset + EMPTY].try_into().unwrap());
+        // offset += client_id.size();
+        // let _tagged_fields = u8::from_be_bytes(bytes[offset..offset + EMPTY].try_into().unwrap());
 
         RequestHeaderV2 {
             message_size,

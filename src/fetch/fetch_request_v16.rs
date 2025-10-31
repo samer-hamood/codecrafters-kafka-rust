@@ -62,7 +62,16 @@ pub struct FetchRequestV16 {
 impl Size for FetchRequestV16 {
 
     fn size(&self) -> usize {
-        5 * size_of::<i32>() + size_of::<i8>() + self.topics.size() + self.forgotten_topics_data.size() + self.rack_id.size() + self._tagged_fields.size()
+        self.max_wait_ms.size() + 
+            self.min_bytes.size() + 
+            self.max_bytes.size() + 
+            self.isolation_level.size() + 
+            self.session_id.size() + 
+            self.session_epoch.size() + 
+            self.topics.size() + 
+            self.forgotten_topics_data.size() + 
+            self.rack_id.size() + 
+            self._tagged_fields.size()
     }
 
 }

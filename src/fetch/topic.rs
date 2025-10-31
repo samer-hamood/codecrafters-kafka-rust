@@ -23,7 +23,10 @@ pub struct RequestTopic {
 impl Size for RequestTopic {
 
     fn size(&self) -> usize {
-        size_of::<Uuid>() + self.partitions.size() + self._tagged_fields.size()
+        // size_of::<Uuid>() + 
+        self.topic_id.size() +
+            self.partitions.size() + 
+            self._tagged_fields.size()
     }
 
 }
@@ -33,8 +36,9 @@ impl ByteParsable<RequestTopic> for RequestTopic {
 
     fn parse(bytes: &[u8], offset: usize) -> Self {
         let mut offset = offset;
-        let topic_id = Uuid::from_bytes(bytes[offset..offset + UUID].try_into().unwrap());
-        offset += UUID; 
+        // let topic_id = Uuid::from_bytes(bytes[offset..offset + UUID].try_into().unwrap());
+        let topic_id = Uuid::parse(bytes, offset);
+        offset += topic_id.size(); 
         let partitions = CompactArray::<RequestPartition>::parse(bytes, offset);
         offset += partitions.size();
         let _tagged_fields = TaggedFieldsSection::parse(bytes, offset);
@@ -78,7 +82,8 @@ impl ResponseTopic {
 impl Size for ResponseTopic {
 
     fn size(&self) -> usize {
-        size_of::<Uuid>() + self.partitions.size() + self._tagged_fields.size()
+        // size_of::<Uuid>() + 
+        self.topic_id.size() + self.partitions.size() + self._tagged_fields.size()
     }
 
 }
@@ -122,7 +127,8 @@ pub struct ForgottenTopicsDatum {
 impl Size for ForgottenTopicsDatum {
 
     fn size(&self) -> usize {
-        size_of::<Uuid>() + self.partitions.size() + self._tagged_fields.size()
+        // size_of::<Uuid>() 
+        self.topic_id.size() + self.partitions.size() + self._tagged_fields.size()
     }
 
 }
@@ -131,8 +137,10 @@ impl ByteParsable<ForgottenTopicsDatum> for ForgottenTopicsDatum {
 
     fn parse(bytes: &[u8], offset: usize) -> ForgottenTopicsDatum {
         let mut offset = offset;
-        let topic_id = Uuid::from_bytes(bytes[offset..offset + UUID].try_into().unwrap());
-        offset += UUID; 
+        // let topic_id = Uuid::from_bytes(bytes[offset..offset + UUID].try_into().unwrap());
+        // offset += UUID; 
+        let topic_id = Uuid::parse(bytes, offset);
+        offset += topic_id.size(); 
         let partitions = CompactArray::<CompactArrayElementI32>::parse(bytes, offset);
         offset += partitions.size();
         let _tagged_fields = TaggedFieldsSection::parse(bytes, offset);

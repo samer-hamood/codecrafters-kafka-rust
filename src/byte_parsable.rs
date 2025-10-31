@@ -1,3 +1,5 @@
+use uuid::Uuid;
+
 use crate::serializable::Serializable;
 use crate::size::Size;
 
@@ -16,10 +18,26 @@ impl ByteParsable<i32> for i32 {
 
 }
 
+impl ByteParsable<i16> for i16 {
+
+    fn parse(bytes: &[u8], offset: usize) -> i16 {
+        i16::from_be_bytes(bytes[offset..offset + size_of::<i16>()].try_into().unwrap())
+    }
+
+}
+
 impl ByteParsable<i8> for i8 {
 
     fn parse(bytes: &[u8], offset: usize) -> i8 {
         i8::from_be_bytes(bytes[offset..offset + size_of::<i8>()].try_into().unwrap())
+    }
+
+}
+
+impl ByteParsable<Uuid> for Uuid {
+
+    fn parse(bytes: &[u8], offset: usize) -> Uuid {
+        Uuid::from_bytes(bytes[offset..offset + size_of::<Uuid>()].try_into().unwrap())
     }
 
 }
