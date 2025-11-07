@@ -112,26 +112,36 @@ impl Serializable for ApiKey {
 }
 
 mod test {
+    use crate::error_codes;
+
     use super::*;
+
+    #[allow(dead_code)]
+    fn api_versions_response() -> ApiVersionsResponseV4 {
+        let correlation_id = 7;
+        let api_keys: CompactArray<ApiKey> = vec![
+            ApiKey::new(1, 0, 17, TaggedFieldsSection::empty()), // 7 bytes
+            ApiKey::new(18, 0, 4, TaggedFieldsSection::empty()), // 7 bytes
+            ApiKey::new(75, 0, 0, TaggedFieldsSection::empty()), // 7 bytes
+        ]
+        .into();
+        let throttle_time_ms = 0;
+        ApiVersionsResponseV4::new(
+            correlation_id,               // 4 bytes
+            error_codes::NONE,            // 2 bytes
+            api_keys,                     // 1 + 21 bytes
+            throttle_time_ms,             // 4 bytes
+            TaggedFieldsSection::empty(), // 1 bytes
+        )
+    }
 
     #[test]
     fn calculates_message_size() {
         let expected_size = 33;
 
-        let api_version_response = 
-            ApiVersionsResponseV4::new(
-                7,                                              // 4 bytes 
-                NONE,                                           // 2 bytes
-                vec![
-                    ApiKey::new(1, 0, 17, TaggedFieldsSection::empty()), // 7 bytes
-                    ApiKey::new(18, 0, 4, TaggedFieldsSection::empty()), // 7 bytes
-                    ApiKey::new(75, 0, 0, TaggedFieldsSection::empty()), // 7 bytes
-                ], 
-                0,                                              // 4 bytes 
-                TaggedFieldsSection::empty(),                            // 1 bytes
-            );
+        let response = api_versions_response();
 
-        assert_eq!(expected_size, api_version_response.size());
+        assert_eq!(expected_size, response.size());
     }
 
     #[test]
@@ -173,20 +183,8 @@ mod test {
             0x00, 0x00, 0x00, 0x00, 0x00,
         ];
 
-        let api_version_response = 
-            ApiVersionsResponseV4::new(
-                7,                                                  // 4 bytes 
-                NONE,                                               // 2 bytes
-                vec![
-                    ApiKey::new(1, 0, 17, TaggedFieldsSection::empty()),     // 7 bytes
-                    ApiKey::new(18, 0, 4, TaggedFieldsSection::empty()),     // 7 bytes
-                    ApiKey::new(75, 0, 0, TaggedFieldsSection::empty()),     // 7 bytes
-                ], 
-                0,                                                  // 4 bytes 
-                TaggedFieldsSection::empty(),                                // 1 bytes
-            );
+        let response = api_versions_response();
 
-
-        assert_eq!(expected_bytes, api_version_response.to_be_bytes());
+        assert_eq!(expected_bytes, response.to_be_bytes());
     }
 }
