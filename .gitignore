@@ -11,3 +11,4 @@ target/
 
 tmux*.log
 
+.idea
