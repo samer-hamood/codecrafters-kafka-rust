@@ -7,9 +7,6 @@ use crate::byte_parsable::ByteParsable;
 use crate::compact_array::{CompactArray, CompactArrayElementI32};
 use crate::serializable::{BoxedSerializable, Serializable};
 use crate::size::Size;
-
-#[allow(dead_code)]
-const UUID: usize = size_of::<Uuid>();
 use crate::tagged_fields_section::{self, TaggedFieldsSection};
 
 #[allow(dead_code)]

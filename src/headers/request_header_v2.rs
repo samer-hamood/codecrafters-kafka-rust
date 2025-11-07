@@ -5,12 +5,6 @@ use crate::nullable_string::{self, NullableString};
 use crate::size::Size;
 use crate::tagged_fields_section::{self, TaggedFieldsSection, EMPTY};
 
-// Header Bytes
-const MESSAGE_SIZE: usize = 4;
-const REQUEST_API_KEY: usize = 2;
-const REQUEST_API_VERSION: usize = 2;
-const CORRELATION_ID: usize = 4;
-
 /// Request Header v2 => request_api_key request_api_version correlation_id client_id _tagged_fields
 ///   request_api_key => INT16
 ///   request_api_version => INT16
@@ -52,14 +46,6 @@ impl Size for RequestHeaderV2 {
 impl ByteParsable<RequestHeaderV2> for RequestHeaderV2 {
     fn parse(bytes: &[u8], offset: usize) -> RequestHeaderV2 {
         let mut offset = offset;
-        // let message_size = i32::from_be_bytes(bytes[offset..MESSAGE_SIZE].try_into().unwrap());
-        // offset += MESSAGE_SIZE;
-        // let request_api_key = i16::from_be_bytes(bytes[offset..offset + REQUEST_API_KEY].try_into().unwrap());
-        // offset += REQUEST_API_KEY;
-        // let request_api_version = i16::from_be_bytes(bytes[offset..offset + REQUEST_API_VERSION].try_into().unwrap());
-        // offset += REQUEST_API_VERSION;
-        // let correlation_id = i32::from_be_bytes(bytes[offset..offset + CORRELATION_ID].try_into().unwrap());
-        // offset += CORRELATION_ID;
         let message_size = i32::parse(bytes, offset);
         offset += message_size.size();
         let request_api_key = i16::parse(bytes, offset);
@@ -86,6 +72,12 @@ impl ByteParsable<RequestHeaderV2> for RequestHeaderV2 {
 #[cfg(test)]
 mod test {
     use super::*;
+
+    // Header Bytes
+    const MESSAGE_SIZE: usize = 4;
+    const REQUEST_API_KEY: usize = 2;
+    const REQUEST_API_VERSION: usize = 2;
+    const CORRELATION_ID: usize = 4;
 
     #[test]
     fn calculates_size_from_field_types() {

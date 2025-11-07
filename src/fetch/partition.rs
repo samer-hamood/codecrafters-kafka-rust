@@ -9,19 +9,6 @@ use crate::size::{self, Size};
 use crate::tagged_fields_section::TaggedFieldsSection;
 
 #[allow(dead_code)]
-const PARTITION: usize = size_of::<i32>();
-#[allow(dead_code)]
-const CURRENT_LEADER_EPOCH: usize = size_of::<i32>();
-#[allow(dead_code)]
-const FETCH_OFFSET: usize = size_of::<i64>();
-#[allow(dead_code)]
-const LAST_FETCHED_EPOCH : usize = size_of::<i32>();
-#[allow(dead_code)]
-const LOG_START_OFFSET: usize = size_of::<i64>();
-#[allow(dead_code)]
-const PARTITION_MAX_BYTES: usize = size_of::<i32>();
-
-#[allow(dead_code)]
 pub trait Partition: Serializable + Size {}
 
 #[allow(dead_code)]
@@ -51,18 +38,18 @@ impl Size for RequestPartition {
 impl ByteParsable<RequestPartition> for RequestPartition {
     fn parse(bytes: &[u8], offset: usize) -> Self {
         let mut offset = offset;
-        let partition = i32::from_be_bytes(bytes[offset..offset + PARTITION].try_into().unwrap());
-        offset += PARTITION;
-        let current_leader_epoch = i32::from_be_bytes(bytes[offset..offset + CURRENT_LEADER_EPOCH].try_into().unwrap());
-        offset += CURRENT_LEADER_EPOCH;
-        let fetch_offset = i64::from_be_bytes(bytes[offset..offset + FETCH_OFFSET].try_into().unwrap());
-        offset += FETCH_OFFSET;
-        let last_fetched_epoch = i32::from_be_bytes(bytes[offset..offset + LAST_FETCHED_EPOCH].try_into().unwrap());
-        offset += LAST_FETCHED_EPOCH;
-        let log_start_offset = i64::from_be_bytes(bytes[offset..offset + LOG_START_OFFSET].try_into().unwrap());
-        offset += LOG_START_OFFSET;
-        let partition_max_bytes = i32::from_be_bytes(bytes[offset..offset + PARTITION_MAX_BYTES].try_into().unwrap());
-        offset += PARTITION_MAX_BYTES;
+        let partition = i32::parse(bytes, offset);
+        offset += partition.size();
+        let current_leader_epoch = i32::parse(bytes, offset);
+        offset += current_leader_epoch.size();
+        let fetch_offset = i64::parse(bytes, offset);
+        offset += fetch_offset.size();
+        let last_fetched_epoch = i32::parse(bytes, offset);
+        offset += last_fetched_epoch.size();
+        let log_start_offset = i64::parse(bytes, offset);
+        offset += log_start_offset.size();
+        let partition_max_bytes = i32::parse(bytes, offset);
+        offset += partition_max_bytes.size();
         let _tagged_fields = TaggedFieldsSection::parse(bytes, offset);
         Self {
             partition,

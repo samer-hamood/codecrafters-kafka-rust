@@ -8,19 +8,6 @@ use crate::fetch::partition::{Partition, RequestPartition};
 use crate::fetch::topic::{self, ForgottenTopicsDatum, RequestTopic};
 use crate::headers::request_header_v2::RequestHeaderV2;
 use crate::size::Size;
-
-#[allow(dead_code)]
-const MAX_WAIT_MS: usize = 4;
-#[allow(dead_code)]
-const MIN_BYTES: usize = 4;
-#[allow(dead_code)]
-const MAX_BYTES: usize = 4;
-#[allow(dead_code)]
-const ISOLATION_LEVEL: usize = 1;
-#[allow(dead_code)]
-const SESSION_ID: usize = 4;
-#[allow(dead_code)]
-const SESSION_EPOCH: usize = 4;
 use crate::tagged_fields_section::TaggedFieldsSection;
 
 /// Fetch Request (Version: 16) => max_wait_ms min_bytes max_bytes isolation_level session_id session_epoch [topics] [forgotten_topics_data] rack_id _tagged_fields
