@@ -54,10 +54,14 @@ pub struct ResponseTopic {
 }
 
 impl ResponseTopic {
-    pub fn new(topic_id: Uuid, partitions: Vec<ResponsePartition>, _tagged_fields: TaggedFieldsSection) -> Self {
+    pub fn new(
+        topic_id: Uuid,
+        partitions: CompactArray<ResponsePartition>,
+        _tagged_fields: TaggedFieldsSection,
+    ) -> Self {
         Self {
             topic_id,
-            partitions: CompactArray::new(partitions),
+            partitions,
             _tagged_fields,
         }
     }
@@ -135,12 +139,11 @@ mod test {
     fn computes_message_size() {
         let expected_size = 16 + (1 + 0) + 1;
 
-        let topic = 
-            ResponseTopic::new(
-                Uuid::new_v4(),                 // 16 bytes
-                Vec::new(),                     // 1 byte
-                TaggedFieldsSection::empty(),   // 1 byte
-            );
+        let topic = ResponseTopic::new(
+            Uuid::new_v4(),               // 16 bytes
+            CompactArray::empty(),        // 1 byte
+            TaggedFieldsSection::empty(), // 1 byte
+        );
 
         assert_eq!(expected_size, topic.size());
     }

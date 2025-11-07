@@ -118,6 +118,7 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                                     records,
                                     TaggedFieldsSection::empty(),
                                 )]
+                                .into(),
                                 TaggedFieldsSection::empty(),
                             ));
                         }
