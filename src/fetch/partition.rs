@@ -4,9 +4,9 @@ use crate::byte_parsable::ByteParsable;
 use crate::compact_array::CompactArray;
 use crate::compact_records::CompactRecords;
 use crate::fetch::partition;
-use crate::tagged_fields_section::TaggedFieldsSection;
 use crate::serializable::{BoxedSerializable, Serializable};
 use crate::size::{self, Size};
+use crate::tagged_fields_section::TaggedFieldsSection;
 
 #[allow(dead_code)]
 const PARTITION: usize = size_of::<i32>();
@@ -22,9 +22,7 @@ const LOG_START_OFFSET: usize = size_of::<i64>();
 const PARTITION_MAX_BYTES: usize = size_of::<i32>();
 
 #[allow(dead_code)]
-pub trait Partition: Serializable + Size {
-
-}
+pub trait Partition: Serializable + Size {}
 
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
@@ -35,26 +33,22 @@ pub struct RequestPartition {
     pub last_fetched_epoch: i32,
     pub log_start_offset: i64,
     pub partition_max_bytes: i32,
-    pub _tagged_fields: TaggedFieldsSection
+    pub _tagged_fields: TaggedFieldsSection,
 }
 
 impl Size for RequestPartition {
-
     fn size(&self) -> usize {
-        // 4 * size_of::<i32>() + 2 * size_of::<i64>() + 
-        self.partition.size() +
-            self.current_leader_epoch.size() +
-            self.fetch_offset.size() +
-            self.last_fetched_epoch.size() +
-            self.log_start_offset.size() +
-            self.partition_max_bytes.size() +
-            self._tagged_fields.size()
+        self.partition.size()
+            + self.current_leader_epoch.size()
+            + self.fetch_offset.size()
+            + self.last_fetched_epoch.size()
+            + self.log_start_offset.size()
+            + self.partition_max_bytes.size()
+            + self._tagged_fields.size()
     }
-
 }
 
 impl ByteParsable<RequestPartition> for RequestPartition {
-
     fn parse(bytes: &[u8], offset: usize) -> Self {
         let mut offset = offset;
         let partition = i32::from_be_bytes(bytes[offset..offset + PARTITION].try_into().unwrap());
@@ -80,15 +74,12 @@ impl ByteParsable<RequestPartition> for RequestPartition {
             _tagged_fields,
         }
     }
-
 }
 
 impl Serializable for RequestPartition {
-
     fn to_be_bytes(&self) -> Vec<u8> {
-        todo!()    
+        todo!()
     }
-
 }
 
 #[allow(dead_code)]
@@ -102,11 +93,10 @@ pub struct ResponsePartition {
     aborted_transactions: CompactArray<Transaction>,
     preferred_read_replica: i32,
     records: CompactRecords,
-    _tagged_fields: TaggedFieldsSection
+    _tagged_fields: TaggedFieldsSection,
 }
 
 impl ResponsePartition {
-
     pub fn new(
         partition_index: i32,
         error_code: i16,
@@ -116,42 +106,37 @@ impl ResponsePartition {
         aborted_transactions: CompactArray<Transaction>,
         preferred_read_replica: i32,
         records: CompactRecords,
-        _tagged_fields: TaggedFieldsSection
+        _tagged_fields: TaggedFieldsSection,
     ) -> Self {
-        Self { 
-            partition_index: partition_index, 
-            error_code: error_code, 
-            high_watermark: high_watermark, 
-            last_stable_offset: last_stable_offset, 
-            log_start_offset: log_start_offset, 
-            aborted_transactions: aborted_transactions, 
-            preferred_read_replica: preferred_read_replica, 
-            records: records, 
-            _tagged_fields: _tagged_fields, 
+        Self {
+            partition_index,
+            error_code,
+            high_watermark,
+            last_stable_offset,
+            log_start_offset,
+            aborted_transactions,
+            preferred_read_replica,
+            records,
+            _tagged_fields,
         }
     }
-
 }
 
 impl Size for ResponsePartition {
-
     fn size(&self) -> usize {
-        // 2 * size_of::<i32>() + 3 * size_of::<i64>() + size_of::<i16>() + 
-        self.partition_index.size() +
-            self.error_code.size() +
-            self.high_watermark.size() +
-            self.last_stable_offset.size() +
-            self.log_start_offset.size() +
-            self.aborted_transactions.size() + 
-            self.preferred_read_replica.size() +
-            self.records.size() + 
-            self._tagged_fields.size()
+        self.partition_index.size()
+            + self.error_code.size()
+            + self.high_watermark.size()
+            + self.last_stable_offset.size()
+            + self.log_start_offset.size()
+            + self.aborted_transactions.size()
+            + self.preferred_read_replica.size()
+            + self.records.size()
+            + self._tagged_fields.size()
     }
-
 }
 
 impl Serializable for ResponsePartition {
-
     fn serializable_fields(&self) -> Vec<BoxedSerializable> {
         let mut fields: Vec<BoxedSerializable> = Vec::with_capacity(9);
         fields.push(Box::new(self.partition_index));
@@ -165,53 +150,40 @@ impl Serializable for ResponsePartition {
         fields.push(Box::new(self._tagged_fields.clone()));
         fields
     }
-
 }
 
 impl ByteParsable<ResponsePartition> for ResponsePartition {
-
     fn parse(_bytes: &[u8], _offset: usize) -> ResponsePartition {
-        todo!()    
+        todo!()
     }
-    
 }
 
-impl Partition for ResponsePartition {
-}
+impl Partition for ResponsePartition {}
 
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct Transaction {
     producer_id: i64,
     first_offset: i64,
-    _tagged_fields: TaggedFieldsSection
+    _tagged_fields: TaggedFieldsSection,
 }
 
 impl Size for Transaction {
-
     fn size(&self) -> usize {
-        // 2 * size_of::<i64>() + 
-        self.producer_id.size() +
-            self.first_offset.size() +
-            self._tagged_fields.size()
+        self.producer_id.size() + self.first_offset.size() + self._tagged_fields.size()
     }
-
 }
 
 impl ByteParsable<Transaction> for Transaction {
-
     fn parse(_bytes: &[u8], _offset: usize) -> Transaction {
-        todo!()    
+        todo!()
     }
-
 }
 
 impl Serializable for Transaction {
-
     fn to_be_bytes(&self) -> Vec<u8> {
-        todo!()    
+        todo!()
     }
-
 }
 
 #[cfg(test)]
@@ -224,20 +196,18 @@ mod test {
     fn computes_message_size() {
         let expected_size = 4 + 2 + 8 + 8 + 8 + (1 + 0) + 4 + 1 + 1;
 
-        let partition = 
-            ResponsePartition::new(
-                0,                              // 4 bytes
-                UNKNOWN_TOPIC_ID,               // 2 bytes
-                0,                              // 8 bytes
-                0,                              // 8 bytes
-                0,                              // 8 bytes
-                CompactArray::empty(),          // (1 + 0) byte
-                0,                              // 4 bytes
-                CompactRecords::empty(),        // 1 bytes
-                TaggedFieldsSection::empty()    // 1 bytes
-           );
+        let partition = ResponsePartition::new(
+            0,                            // 4 bytes
+            UNKNOWN_TOPIC_ID,             // 2 bytes
+            0,                            // 8 bytes
+            0,                            // 8 bytes
+            0,                            // 8 bytes
+            CompactArray::empty(),        // (1 + 0) byte
+            0,                            // 4 bytes
+            CompactRecords::empty(),      // 1 bytes
+            TaggedFieldsSection::empty(), // 1 bytes
+        );
 
         assert_eq!(expected_size, partition.size());
     }
-
 }

@@ -7,8 +7,4 @@ pub struct ApiVersionsRequestV4 {
 }
 
 #[allow(dead_code)]
-impl ApiVersionsRequestV4 {
-
-
-}
-
+impl ApiVersionsRequestV4 {}
