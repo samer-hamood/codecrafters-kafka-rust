@@ -8,6 +8,10 @@ pub trait ByteParsable<T> {
     fn parse(bytes: &[u8], offset: usize) -> T;
 }
 
+impl ByteParsable<i64> for i64 {
+    fn parse(bytes: &[u8], offset: usize) -> i64 {
+        i64::from_be_bytes(bytes[offset..offset + size_of::<i64>()].try_into().unwrap())
+    }
 }
 
 impl ByteParsable<i32> for i32 {
