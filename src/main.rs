@@ -13,7 +13,6 @@ use crate::api_versions::api_versions_response_v4::{ApiKey, ApiVersionsResponseV
 use crate::byte_parsable::ByteParsable;
 use crate::compact_array::CompactArray;
 use crate::compact_records::CompactRecords;
-use crate::error_codes::{NONE, UNKNOWN_TOPIC_ID, UNSUPPORTED_VERSION};
 use crate::fetch::fetch_request_v16::FetchRequestV16;
 use crate::fetch::fetch_response_v16::FetchResponseV16;
 use crate::fetch::partition::{ResponsePartition, Transaction};
@@ -83,8 +82,8 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                             request_header.correlation_id,
                             check_supported_version(request_header.request_api_version),
                             vec![
-                                ApiKey::new(API_VERSIONS, 0, 4, TaggedFieldsSection::empty()),
-                                ApiKey::new(FETCH, 0, 16, TaggedFieldsSection::empty()),
+                                ApiKey::new(API_VERSIONS, api_versions::MIN_VERSION, api_versions::MAX_VERSION, TaggedFieldsSection::empty()),
+                                ApiKey::new(FETCH, fetch::MIN_VERSION, fetch::MAX_VERSION, TaggedFieldsSection::empty()),
                             ]
                             .into(),
                             throttle_time_ms,
@@ -128,7 +127,7 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                         FetchResponseV16::new(
                             request_header.correlation_id,
                             throttle_time_ms,
-                            NONE,
+                            error_codes::NONE,
                             session_id,
                             responses,
                             TaggedFieldsSection::empty(),
@@ -155,9 +154,9 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
 
 fn check_supported_version(version: i16) -> i16 {
     if SUPPORTED_API_VERSIONS.contains(&version) {
-        NONE
+        error_codes::NONE
     } else {
-        UNSUPPORTED_VERSION
+        error_codes::UNSUPPORTED_VERSION
     }
 }
 
@@ -185,11 +184,11 @@ mod test {
         }
     )]
     fn checks_supported_version(version: i16) {
-        assert_eq!(NONE, check_supported_version(version));
+        assert_eq!(error_codes::NONE, check_supported_version(version));
     }
 
     #[test]
     fn checks_unsupported_version() {
-        assert_eq!(UNSUPPORTED_VERSION, check_supported_version(6));
+        assert_eq!(error_codes::UNSUPPORTED_VERSION, check_supported_version(6));
     }
 }
