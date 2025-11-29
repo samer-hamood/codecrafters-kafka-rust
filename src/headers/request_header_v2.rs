@@ -117,7 +117,6 @@ mod test {
         assert_eq!(request_header.request_api_key, 18);
         assert_eq!(request_header.request_api_version, 26442);
         assert_eq!(request_header.correlation_id, 1333056139);
-        // assert_eq!(request_header.client_id, NullableString::null());
         assert_eq!(request_header.client_id, NullableString::from("kafka-cli"));
         assert_eq!(request_header._tagged_fields, TaggedFieldsSection::empty());
     }
