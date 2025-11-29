@@ -81,8 +81,18 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                             request_header.correlation_id,
                             check_supported_version(request_header.request_api_version),
                             vec![
-                                ApiKey::new(API_VERSIONS, api_versions::MIN_VERSION, api_versions::MAX_VERSION, TaggedFieldsSection::empty()),
-                                ApiKey::new(FETCH, fetch::MIN_VERSION, fetch::MAX_VERSION, TaggedFieldsSection::empty()),
+                                ApiKey::new(
+                                    API_VERSIONS,
+                                    api_versions::MIN_VERSION,
+                                    api_versions::MAX_VERSION,
+                                    TaggedFieldsSection::empty(),
+                                ),
+                                ApiKey::new(
+                                    FETCH,
+                                    fetch::MIN_VERSION,
+                                    fetch::MAX_VERSION,
+                                    TaggedFieldsSection::empty(),
+                                ),
                             ]
                             .into(),
                             throttle_time_ms,
