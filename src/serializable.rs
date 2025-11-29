@@ -36,3 +36,9 @@ impl Serializable for u8 {
         u8::to_be_bytes(*self).to_vec()
     }
 }
+
+impl Serializable for u32 {
+    fn to_be_bytes(&self) -> Vec<u8> {
+        u32::to_be_bytes(*self).to_vec()
+    }
+}
