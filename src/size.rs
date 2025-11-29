@@ -30,6 +30,12 @@ impl Size for i8 {
     }
 }
 
+impl Size for u32 {
+    fn size(&self) -> usize {
+        size_of::<u32>()
+    }
+}
+
 impl Size for Uuid {
     fn size(&self) -> usize {
         size_of::<Uuid>()
