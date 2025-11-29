@@ -1,5 +1,3 @@
-use std::i32;
-
 use crate::compact_array::CompactArray;
 use crate::fetch::topic::ResponseTopic;
 use crate::headers::response_header_v1::ResponseHeaderV1;

@@ -1,5 +1,3 @@
-use std::{u128, usize};
-
 use uuid::Uuid;
 
 use super::partition::{RequestPartition, ResponsePartition};
@@ -75,11 +73,11 @@ impl Size for ResponseTopic {
 
 impl Serializable for ResponseTopic {
     fn serializable_fields(&self) -> Vec<BoxedSerializable> {
-        let mut fields: Vec<BoxedSerializable> = Vec::with_capacity(3);
-        fields.push(Box::new(self.topic_id));
-        fields.push(Box::new(self.partitions.clone()));
-        fields.push(Box::new(self._tagged_fields.clone()));
-        fields
+        vec![
+            Box::new(self.topic_id),
+            Box::new(self.partitions.clone()),
+            Box::new(self._tagged_fields.clone()),
+        ]
     }
 }
 

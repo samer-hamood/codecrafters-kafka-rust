@@ -1,5 +1,4 @@
 #![allow(unused_imports)]
-use std::i32;
 use std::io::{Read, Write};
 use std::net::TcpStream;
 use std::process::exit;
@@ -76,7 +75,7 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                     let request_header = RequestHeaderV2::parse(buf, 0);
 
                     let response_bytes = if request_header.request_api_key == API_VERSIONS {
-                        println!("Handling {} request...", "ApiVersions");
+                        println!("Handling ApiVersions request...");
                         let throttle_time_ms = 0;
                         ApiVersionsResponseV4::new(
                             request_header.correlation_id,
@@ -91,7 +90,7 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                         )
                         .to_be_bytes()
                     } else if request_header.request_api_key == FETCH {
-                        println!("Handling {} request...", "Fetch");
+                        println!("Handling Fetch request...");
                         let fetch_request = FetchRequestV16::parse(buf, request_header.size());
                         let mut topics = Vec::new();
                         for _ in 0..fetch_request.topics.len() {
@@ -106,17 +105,17 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                             let topic_id: Uuid = fetch_request.topics[0].topic_id;
                             topics.push(ResponseTopic::new(
                                 topic_id,
-                                vec![ResponsePartition::new(
+                                vec![ResponsePartition {
                                     partition_index,
-                                    UNKNOWN_TOPIC_ID,
+                                    error_code: check_topic_exists(&topic_id),
                                     high_watermark,
                                     last_stable_offset,
                                     log_start_offset,
                                     aborted_transactions,
                                     preferred_read_replica,
                                     records,
-                                    TaggedFieldsSection::empty(),
-                                )]
+                                    _tagged_fields: TaggedFieldsSection::empty(),
+                                }]
                                 .into(),
                                 TaggedFieldsSection::empty(),
                             ));
@@ -162,7 +161,7 @@ fn check_supported_version(version: i16) -> i16 {
 
 fn write_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) -> usize {
     println!("Writing the following bytes to stream: {:X?}", bytes);
-    match _stream.write(&bytes) {
+    match _stream.write(bytes) {
         Ok(n) => {
             println!("Wrote {:#?} byte(s) successfully", n);
             n

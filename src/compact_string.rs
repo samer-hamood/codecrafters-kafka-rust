@@ -1,5 +1,3 @@
-use std::usize;
-
 use crate::byte_parsable::ByteParsable;
 use crate::serializable::Serializable;
 use crate::size::Size;

@@ -1,5 +1,3 @@
-use std::usize;
-
 use crate::byte_parsable::ByteParsable;
 use crate::serializable::Serializable;
 use crate::size::Size;
@@ -39,16 +37,14 @@ impl ByteParsable<NullableString> for NullableString {
     fn parse(bytes: &[u8], offset: usize) -> Self {
         let mut offset = offset;
         let length = i16::from_be_bytes(bytes[offset..offset + LENGTH].try_into().unwrap());
-        return if length == -1 {
+        if length == -1 {
             NullableString::null()
         } else {
             offset += LENGTH;
-            let utf8_bytes = bytes[offset..offset + (length as usize)]
-                .try_into()
-                .unwrap();
+            let utf8_bytes = bytes[offset..offset + (length as usize)].into();
             Self {
                 bytes: Some(utf8_bytes),
             }
-        };
+        }
     }
 }

@@ -1,5 +1,3 @@
-use std::usize;
-
 use crate::{byte_parsable::ByteParsable, serializable::Serializable, size::Size};
 
 pub const EMPTY: usize = 1;

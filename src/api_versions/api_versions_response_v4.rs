@@ -1,4 +1,4 @@
-use std::{array, i32};
+use std::array;
 
 use crate::byte_parsable::ByteParsable;
 use crate::compact_array::CompactArray;
@@ -102,12 +102,12 @@ impl ByteParsable<ApiKey> for ApiKey {
 
 impl Serializable for ApiKey {
     fn serializable_fields(&self) -> Vec<BoxedSerializable> {
-        let mut fields: Vec<BoxedSerializable> = Vec::with_capacity(4);
-        fields.push(Box::new(self.api_key));
-        fields.push(Box::new(self.min_version));
-        fields.push(Box::new(self.max_version));
-        fields.push(Box::new(self._tagged_fields.clone()));
-        fields
+        vec![
+            Box::new(self.api_key),
+            Box::new(self.min_version),
+            Box::new(self.max_version),
+            Box::new(self._tagged_fields.clone()),
+        ]
     }
 }
 

@@ -72,41 +72,15 @@ impl Serializable for RequestPartition {
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct ResponsePartition {
-    partition_index: i32,
-    error_code: i16,
-    high_watermark: i64,
-    last_stable_offset: i64,
-    log_start_offset: i64,
-    aborted_transactions: CompactArray<Transaction>,
-    preferred_read_replica: i32,
-    records: CompactRecords,
-    _tagged_fields: TaggedFieldsSection,
-}
-
-impl ResponsePartition {
-    pub fn new(
-        partition_index: i32,
-        error_code: i16,
-        high_watermark: i64,
-        last_stable_offset: i64,
-        log_start_offset: i64,
-        aborted_transactions: CompactArray<Transaction>,
-        preferred_read_replica: i32,
-        records: CompactRecords,
-        _tagged_fields: TaggedFieldsSection,
-    ) -> Self {
-        Self {
-            partition_index,
-            error_code,
-            high_watermark,
-            last_stable_offset,
-            log_start_offset,
-            aborted_transactions,
-            preferred_read_replica,
-            records,
-            _tagged_fields,
-        }
-    }
+    pub partition_index: i32,
+    pub error_code: i16,
+    pub high_watermark: i64,
+    pub last_stable_offset: i64,
+    pub log_start_offset: i64,
+    pub aborted_transactions: CompactArray<Transaction>,
+    pub preferred_read_replica: i32,
+    pub records: CompactRecords,
+    pub _tagged_fields: TaggedFieldsSection,
 }
 
 impl Size for ResponsePartition {
@@ -125,17 +99,17 @@ impl Size for ResponsePartition {
 
 impl Serializable for ResponsePartition {
     fn serializable_fields(&self) -> Vec<BoxedSerializable> {
-        let mut fields: Vec<BoxedSerializable> = Vec::with_capacity(9);
-        fields.push(Box::new(self.partition_index));
-        fields.push(Box::new(self.error_code));
-        fields.push(Box::new(self.high_watermark));
-        fields.push(Box::new(self.last_stable_offset));
-        fields.push(Box::new(self.log_start_offset));
-        fields.push(Box::new(self.aborted_transactions.clone()));
-        fields.push(Box::new(self.preferred_read_replica));
-        fields.push(Box::new(self.records.clone()));
-        fields.push(Box::new(self._tagged_fields.clone()));
-        fields
+        vec![
+            Box::new(self.partition_index),
+            Box::new(self.error_code),
+            Box::new(self.high_watermark),
+            Box::new(self.last_stable_offset),
+            Box::new(self.log_start_offset),
+            Box::new(self.aborted_transactions.clone()),
+            Box::new(self.preferred_read_replica),
+            Box::new(self.records.clone()),
+            Box::new(self._tagged_fields.clone()),
+        ]
     }
 }
 
@@ -183,17 +157,17 @@ mod test {
     fn computes_message_size() {
         let expected_size = 4 + 2 + 8 + 8 + 8 + (1 + 0) + 4 + 1 + 1;
 
-        let partition = ResponsePartition::new(
-            0,                            // 4 bytes
-            UNKNOWN_TOPIC_ID,             // 2 bytes
-            0,                            // 8 bytes
-            0,                            // 8 bytes
-            0,                            // 8 bytes
-            CompactArray::empty(),        // (1 + 0) byte
-            0,                            // 4 bytes
-            CompactRecords::empty(),      // 1 bytes
-            TaggedFieldsSection::empty(), // 1 bytes
-        );
+        let partition = ResponsePartition {
+            partition_index: 0,                           // 4 bytes
+            error_code: UNKNOWN_TOPIC_ID,                 // 2 bytes
+            high_watermark: 0,                            // 8 bytes
+            last_stable_offset: 0,                        // 8 bytes
+            log_start_offset: 0,                          // 8 bytes
+            aborted_transactions: CompactArray::empty(),  // (1 + 0) byte
+            preferred_read_replica: 0,                    // 4 bytes
+            records: CompactRecords::empty(),             // 1 bytes
+            _tagged_fields: TaggedFieldsSection::empty(), // 1 bytes
+        };
 
         assert_eq!(expected_size, partition.size());
     }

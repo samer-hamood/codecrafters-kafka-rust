@@ -8,9 +8,7 @@ pub struct ResponseHeaderV0 {
 #[allow(dead_code)]
 impl ResponseHeaderV0 {
     fn new(correlation_id: i32) -> ResponseHeaderV0 {
-        ResponseHeaderV0 {
-            correlation_id: correlation_id,
-        }
+        ResponseHeaderV0 { correlation_id }
     }
 
     pub fn to_be_bytes(&self) -> Vec<u8> {

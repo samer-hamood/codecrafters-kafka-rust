@@ -3,7 +3,6 @@ use crate::serializable::{BoxedSerializable, Serializable};
 use crate::size::Size;
 use std::iter;
 use std::slice::Iter;
-use std::{i32, usize};
 
 #[allow(dead_code)]
 const LENGTH: usize = 1;
@@ -94,9 +93,9 @@ impl<T: Serializable + Size + ByteParsable<T> + Clone> std::ops::Index<usize> fo
     }
 }
 
-impl<T: Serializable + Size + ByteParsable<T> + Clone> Into<CompactArray<T>> for Vec<T> {
-    fn into(self) -> CompactArray<T> {
-        CompactArray::new(self)
+impl<T: Serializable + Size + ByteParsable<T> + Clone> From<Vec<T>> for CompactArray<T> {
+    fn from(val: Vec<T>) -> Self {
+        CompactArray::new(val)
     }
 }
 
