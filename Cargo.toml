@@ -13,6 +13,7 @@ thiserror = "1.0.38"                             # error handling
 
 [dev-dependencies]
 parameterized = "2.0.0"
+rstest = "0.26.1"
 
 [dependencies.uuid]
 version = "1.18.1"
