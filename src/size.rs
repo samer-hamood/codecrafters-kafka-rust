@@ -28,6 +28,12 @@ impl Size for i8 {
     }
 }
 
+impl Size for u16 {
+    fn size(&self) -> usize {
+        size_of::<Self>()
+    }
+}
+
 impl Size for u32 {
     fn size(&self) -> usize {
         size_of::<u32>()

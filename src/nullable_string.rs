@@ -2,6 +2,8 @@ use crate::byte_parsable::ByteParsable;
 use crate::serializable::Serializable;
 use crate::size::Size;
 
+// https://kafka.apache.org/27/protocol.html#protocol_types
+
 pub const LENGTH: usize = 2;
 
 /// Represents a sequence of characters or null.
@@ -29,22 +31,20 @@ impl NullableString {
 
 impl Size for NullableString {
     fn size(&self) -> usize {
-        size_of::<i16>() + self.bytes.as_ref().map_or(0, |v| v.len())
+        size_of::<i16>() + self.bytes.as_ref().map_or(0, |string| string.len())
     }
 }
 
 impl ByteParsable<NullableString> for NullableString {
     fn parse(bytes: &[u8], offset: usize) -> Self {
         let mut offset = offset;
-        let length = i16::from_be_bytes(bytes[offset..offset + LENGTH].try_into().unwrap());
-        if length == -1 {
-            NullableString::null()
+        let length = i16::parse(bytes, offset);
+        let bytes = if length == -1 {
+            None
         } else {
-            offset += LENGTH;
-            let utf8_bytes = bytes[offset..offset + (length as usize)].into();
-            Self {
-                bytes: Some(utf8_bytes),
-            }
-        }
+            offset += length.size();
+            Some(bytes[offset..offset + length as usize].to_vec())
+        };
+        Self { bytes }
     }
 }

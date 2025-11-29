@@ -32,6 +32,16 @@ impl ByteParsable<i8> for i8 {
     }
 }
 
+impl ByteParsable<Self> for u16 {
+    fn parse(bytes: &[u8], offset: usize) -> Self {
+        Self::from_be_bytes(
+            bytes[offset..offset + size_of::<Self>()]
+                .try_into()
+                .unwrap(),
+        )
+    }
+}
+
 impl ByteParsable<u32> for u32 {
     fn parse(bytes: &[u8], offset: usize) -> u32 {
         u32::from_be_bytes(bytes[offset..offset + size_of::<u32>()].try_into().unwrap())
