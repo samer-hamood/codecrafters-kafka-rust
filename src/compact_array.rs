@@ -98,26 +98,3 @@ impl<T: Serializable + Size + ByteParsable<T> + Clone> From<Vec<T>> for CompactA
         CompactArray::new(val)
     }
 }
-
-#[derive(Debug, Clone)]
-pub struct CompactArrayElementI32(i32);
-
-impl Size for CompactArrayElementI32 {
-    fn size(&self) -> usize {
-        size_of::<i32>()
-    }
-}
-
-impl Serializable for CompactArrayElementI32 {
-    fn to_be_bytes(&self) -> Vec<u8> {
-        self.0.to_be_bytes().to_vec()
-    }
-}
-
-impl ByteParsable<CompactArrayElementI32> for CompactArrayElementI32 {
-    fn parse(bytes: &[u8], offset: usize) -> Self {
-        let partition =
-            i32::from_be_bytes(bytes[offset..offset + size_of::<i32>()].try_into().unwrap());
-        CompactArrayElementI32(partition)
-    }
-}

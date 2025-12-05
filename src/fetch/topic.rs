@@ -2,7 +2,7 @@ use uuid::Uuid;
 
 use super::partition::{RequestPartition, ResponsePartition};
 use crate::byte_parsable::ByteParsable;
-use crate::compact_array::{CompactArray, CompactArrayElementI32};
+use crate::compact_array::CompactArray;
 use crate::serializable::{BoxedSerializable, Serializable};
 use crate::size::Size;
 use crate::tagged_fields_section::{self, TaggedFieldsSection};
@@ -97,7 +97,7 @@ impl ByteParsable<ResponseTopic> for ResponseTopic {
 #[derive(Debug, Clone)]
 pub struct ForgottenTopicsDatum {
     topic_id: Uuid, // v4 128 bits (16 bytes) UUID
-    partitions: CompactArray<CompactArrayElementI32>,
+    partitions: CompactArray<i32>,
     _tagged_fields: TaggedFieldsSection,
 }
 
@@ -112,7 +112,7 @@ impl ByteParsable<ForgottenTopicsDatum> for ForgottenTopicsDatum {
         let mut offset = offset;
         let topic_id = Uuid::parse(bytes, offset);
         offset += topic_id.size();
-        let partitions = CompactArray::<CompactArrayElementI32>::parse(bytes, offset);
+        let partitions = CompactArray::<i32>::parse(bytes, offset);
         offset += partitions.size();
         let _tagged_fields = TaggedFieldsSection::parse(bytes, offset);
         Self {
