@@ -183,6 +183,7 @@ fn write_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) -> usize {
     }
 }
 
+#[cfg(test)]
 mod test {
     use super::*;
     use parameterized::parameterized;
