@@ -53,7 +53,7 @@ impl FetchResponseV16 {
 
 impl Size for FetchResponseV16 {
     fn size(&self) -> usize {
-        // NB: This is the messagge size and should not include message size (4 bytes) itself
+        // NB: This is the message size and should not include message size (4 bytes) itself
         self.header.size()
             + self.throttle_time_ms.size()
             + self.error_code.size()
