@@ -3,7 +3,6 @@ use uuid::Uuid;
 use crate::serializable::Serializable;
 use crate::size::Size;
 
-#[allow(dead_code)]
 pub trait ByteParsable<T> {
     fn parse(bytes: &[u8], offset: usize) -> T;
 }
