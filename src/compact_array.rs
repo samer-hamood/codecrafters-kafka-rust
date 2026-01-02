@@ -1,50 +1,56 @@
 use crate::byte_parsable::ByteParsable;
 use crate::serializable::{BoxedSerializable, Serializable};
 use crate::size::Size;
+use crate::types::unsigned_varint::UnsignedVarint;
 use std::iter;
 use std::slice::Iter;
 
-#[allow(dead_code)]
-const LENGTH: usize = 1;
+// https://kafka.apache.org/27/protocol.html#protocol_types
 
 #[derive(Debug, Clone)]
 pub struct CompactArray<T: Serializable + Size + ByteParsable<T> + Clone> {
-    elements: Vec<T>,
+    pub length: UnsignedVarint,
+    elements: Option<Vec<T>>,
 }
 
 #[allow(dead_code)]
 impl<T: Serializable + Size + ByteParsable<T> + Clone> CompactArray<T> {
     pub fn new(elements: Vec<T>) -> CompactArray<T> {
-        CompactArray { elements }
+        CompactArray {
+            length: UnsignedVarint {
+                value: (1 + elements.len()).try_into().unwrap(),
+                byte_count: 1, // TODO: Compute number of bytes for value
+            },
+            elements: Some(elements),
+        }
     }
 
     pub fn empty() -> Self {
-        CompactArray::new(Vec::new())
+        CompactArray {
+            length: UnsignedVarint {
+                value: 1,
+                byte_count: 1,
+            },
+            elements: Some(Vec::new()),
+        }
     }
 
     pub fn len(&self) -> usize {
-        self.elements.len()
-    }
-
-    pub fn length(&self) -> u8 {
-        // pub fn len(&self) -> u32 {
-        (1 + self.elements.len()).try_into().unwrap()
+        self.number_of_elements()
     }
 
     pub fn iter(&self) -> Iter<'_, T> {
-        self.elements.iter()
+        self.elements.as_deref().unwrap_or(&[]).iter()
+    }
+
+    fn number_of_elements(&self) -> usize {
+        self.elements.as_ref().map(|v| v.len()).unwrap_or(0)
     }
 }
 
 impl<T: Serializable + Size + ByteParsable<T> + Clone> Size for CompactArray<T> {
     fn size(&self) -> usize {
-        // TODO: Compute unsigned varint size of length: encode_unsigned_varint(1 + self.elements.len()).len()
-        size_of::<u8>()
-            + self
-                .elements
-                .iter()
-                .map(|element| element.size())
-                .sum::<usize>()
+        self.length.size() + self.iter().map(|element| element.size()).sum::<usize>()
     }
 }
 
@@ -53,32 +59,30 @@ impl<T: Serializable + Size + ByteParsable<T> + Clone> ByteParsable<CompactArray
 {
     fn parse(bytes: &[u8], offset: usize) -> CompactArray<T> {
         let mut offset = offset;
-        let length = u8::from_be_bytes(bytes[offset..offset + LENGTH].try_into().unwrap());
-        offset += LENGTH;
-
-        let compact_array = if length == 0 {
-            CompactArray::<T>::empty()
-        } else if length == 1 {
-            CompactArray::<T>::empty()
-        } else {
-            let mut elements = Vec::new();
-            for _ in 0..(length - 1) {
-                let element = T::parse(bytes, offset);
-                offset += element.size();
-                elements.push(element);
+        let length = UnsignedVarint::parse(bytes, offset);
+        offset += length.size();
+        let elements = match length.value {
+            0 => None,
+            1 => Some(Vec::new()),
+            _ => {
+                let mut elements = Vec::new();
+                for _ in 0..(length.value - 1) {
+                    let element = T::parse(bytes, offset);
+                    offset += element.size();
+                    elements.push(element);
+                }
+                Some(elements)
             }
-            CompactArray::<T>::new(elements)
         };
-        compact_array
+        CompactArray { length, elements }
     }
 }
 
 impl<T: Serializable + Size + ByteParsable<T> + Clone + 'static> Serializable for CompactArray<T> {
     fn serializable_fields(&self) -> Vec<BoxedSerializable> {
-        iter::once(Box::new(self.length()) as BoxedSerializable)
+        iter::once(Box::new(self.length.clone()) as BoxedSerializable)
             .chain(
-                self.elements
-                    .iter()
+                self.iter()
                     .map(|x| Box::new(x.clone()) as BoxedSerializable),
             )
             .collect()
@@ -89,7 +93,7 @@ impl<T: Serializable + Size + ByteParsable<T> + Clone> std::ops::Index<usize> fo
     type Output = T;
 
     fn index(&self, offset: usize) -> &Self::Output {
-        &self.elements[offset]
+        &self.elements.as_ref().expect("elements is None")[offset]
     }
 }
 

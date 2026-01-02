@@ -1,66 +1,41 @@
 use crate::byte_parsable::ByteParsable;
-use crate::serializable::Serializable;
 use crate::size::Size;
+use crate::types::unsigned_varint::UnsignedVarint;
 
-#[allow(dead_code)]
-const LENGTH: usize = 1;
+// https://kafka.apache.org/27/protocol.html#protocol_types
 
 #[allow(dead_code)]
 #[derive(Debug)]
 pub struct CompactString {
-    bytes: Vec<u8>,
+    pub length: UnsignedVarint,
+    pub bytes: Option<Vec<u8>>,
 }
 
 #[allow(dead_code)]
 impl CompactString {
-    pub fn new(string: &str) -> Self {
-        Self {
-            bytes: string.as_bytes().to_vec(),
-        }
-    }
-
-    fn emtpy() -> Self {
-        Self { bytes: Vec::new() }
-    }
-
-    pub fn len(&self) -> u8 {
-        // pub fn len(&self) -> i32 {
-        (1 + self.bytes.len()).try_into().unwrap()
+    fn number_of_bytes(&self) -> usize {
+        self.bytes.as_ref().map(|v| v.len()).unwrap_or(0)
     }
 }
 
 impl Size for CompactString {
     fn size(&self) -> usize {
-        // TODO: Compute unsigned varint size of length: encode_unsigned_varint(1 + self.elements.len()).len()
-        let length_size = size_of::<u8>();
-        length_size + self.bytes.len()
-    }
-}
-
-impl Serializable for CompactString {
-    fn to_be_bytes(&self) -> Vec<u8> {
-        let array_length_bytes = self.len().to_be_bytes();
-        let mut bytes: Vec<u8> = Vec::with_capacity(array_length_bytes.len() + self.bytes.len());
-        bytes.extend_from_slice(&self.len().to_be_bytes());
-        bytes.extend_from_slice(&self.bytes);
-        bytes
+        self.length.byte_count + self.number_of_bytes()
     }
 }
 
 impl ByteParsable<CompactString> for CompactString {
     fn parse(bytes: &[u8], offset: usize) -> CompactString {
         let mut offset = offset;
-        let length = u8::from_be_bytes(bytes[offset..offset + LENGTH].try_into().unwrap());
-        offset += LENGTH;
+        let length = UnsignedVarint::parse(bytes, offset);
+        offset += length.size();
 
-        let bytes = if length == 0 {
-            Vec::new()
-        } else if length == 1 {
-            Vec::new()
-        } else {
-            bytes[offset..offset + (length - 1) as usize].to_vec()
+        let bytes = match length.value {
+            0 => None,
+            1 => Some(Vec::new()),
+            _ => Some(bytes[offset..offset + (length.value - 1) as usize].into()),
         };
 
-        Self { bytes }
+        Self { length, bytes }
     }
 }
