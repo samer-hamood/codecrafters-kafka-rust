@@ -102,6 +102,9 @@ pub fn serialize(number: u32) -> Vec<u8> {
     bytes
 }
 
+fn get_bit_value(byte: u8, index: u8) -> u8 {
+    (byte >> index) & 0x01
+}
 
 #[cfg(test)]
 mod test {
