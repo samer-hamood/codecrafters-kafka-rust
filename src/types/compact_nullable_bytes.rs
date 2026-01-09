@@ -9,7 +9,7 @@ pub struct CompactNullableBytes {
 impl CompactNullableBytes {
     pub fn null() -> Self {
         CompactNullableBytes {
-            length: UnsignedVarint::new(0, 1),
+            length: UnsignedVarint::new(0),
             bytes: None,
         }
     }

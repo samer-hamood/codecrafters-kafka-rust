@@ -1,11 +1,11 @@
 use std::any::type_name;
 
 use crate::serializable::Serializable;
-use crate::types::variable_integer::serialize;
+use crate::types::variable_integer::{parse, serialize, size_of};
 use crate::{
     byte_parsable::ByteParsable,
     size::Size,
-    types::{variable_integer::parse, zig_zag_decoder::ZigZagDecoder},
+    types::zig_zag_decoder::ZigZagDecoder,
 };
 
 #[derive(Clone, Debug)]
@@ -15,10 +15,10 @@ pub struct UnsignedVarint {
 }
 
 impl UnsignedVarint {
-    pub fn new(value: u32, byte_count: usize) -> Self {
+    pub fn new(value: u32) -> Self {
+        let byte_count = size_of(value) as usize;
         Self {
             value,
-            // TODO: Calculate byte count (see variable_integer::serialize function)
             byte_count,
         }
     }
