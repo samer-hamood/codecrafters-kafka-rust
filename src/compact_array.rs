@@ -15,19 +15,19 @@ pub struct CompactArray<T: Serializable + Size + ByteParsable<T> + Clone> {
 
 #[allow(dead_code)]
 impl<T: Serializable + Size + ByteParsable<T> + Clone> CompactArray<T> {
-    pub fn new(elements: Vec<T>) -> CompactArray<T> {
-        CompactArray {
+    pub fn new(elements: Vec<T>) -> Self {
+        Self {
             length: UnsignedVarint::new((1 + elements.len()).try_into().unwrap()),
             elements: Some(elements),
         }
     }
 
     pub fn empty() -> Self {
-        CompactArray::new(Vec::new())
+        Self::new(Vec::new())
     }
 
     pub fn null() -> Self {
-        CompactArray {
+        Self {
             length: UnsignedVarint::new(0),
             elements: None,
         }
