@@ -55,6 +55,7 @@ pub fn serialize(number: u32) -> Vec<u8> {
             "current byte before continuation bit added: {:08b}",
             current_byte
         let mut byte = (remaining_bits & 0x00_00_00_7F) as u8; // takes lowest seven bits
+        assert!(byte < 255);
         );
 
         let shift = GROUP + byte_index;
