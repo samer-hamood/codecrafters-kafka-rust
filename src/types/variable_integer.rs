@@ -3,11 +3,9 @@ pub fn parse(varint_encoded_bytes: &[u8], offset: usize) -> (u64, usize) {
     let mut value = 0u64;
     let mut i = offset;
     let mut shift = 0;
-    let mut continuation_bit_found = true;
+    let mut continuation_bit_set = true;
     let mut byte_count: usize = 0;
-    while continuation_bit_found {
         // println!("bytes[{i}]: {:08b}", varint_encoded_bytes[i]);
-        continuation_bit_found = ((varint_encoded_bytes[i] >> 7) & 0x01) == 1;
         // println!("continuation bit found? {continuation_bit_found}");
         // println!(
         //     "continuation bit value: {}",
@@ -17,10 +15,16 @@ pub fn parse(varint_encoded_bytes: &[u8], offset: usize) -> (u64, usize) {
         //     "bytes[{i}] without continuation bit: {:08b}",
         //     (varint_encoded_bytes[i] & 0x7F)
         // );
-        value |= ((varint_encoded_bytes[i] & 0x7F) << shift) as u64;
         // println!("value: {:b}\n", value);
+    while continuation_bit_set {
+        let continuation_bit = (varint_encoded_bytes[i] >> 7) & 0x01;
+        continuation_bit_set = continuation_bit == 1;
+        let byte_with_8th_bit_cleared = varint_encoded_bytes[i] & 0x7F;
+        assert!(get_bit_value(byte_with_8th_bit_cleared, 7) == 0);
+        // Concatenate bytes in opposite order (big-endian)
+        value |= (byte_with_8th_bit_cleared << shift) as u64;
         byte_count += 1;
-        if continuation_bit_found {
+        if continuation_bit_set {
             i += 1;
             shift += 7;
         }
@@ -41,7 +45,7 @@ pub fn serialize(number: u32) -> Vec<u8> {
 
     let mut bytes = Vec::new();
 
-    let mut byte_count = 0u8;
+    let mut byte_index = 0u8;
     // let mut serialized_number = 0u128;
     let mut continuation_bit_needed = true;
     while continuation_bit_needed {
@@ -49,26 +53,27 @@ pub fn serialize(number: u32) -> Vec<u8> {
         println!("remaining_bits: {:08b}", remaining_bits);
 
         // let mut current_byte = remaining_bits & 0x00_00_00_00_00_00_00_7F;
-        let mut current_byte = (remaining_bits & 0x00_00_00_7F) as u8; // takes lowest seven bits
         println!(
             "current byte before continuation bit added: {:08b}",
             current_byte
+        let mut byte = (remaining_bits & 0x00_00_00_7F) as u8; // takes lowest seven bits
         );
 
-        continuation_bit_needed = (remaining_bits >> (GROUP + byte_count + 1)) != 0;
-
+        let shift = GROUP + byte_index;
+        let byte_shifted = remaining_bits >> shift;
+        continuation_bit_needed = byte_shifted != 0;
         if continuation_bit_needed {
-            current_byte |= 0x80; // sets eighth bit to 1 while the rest are unchanged
-            byte_count += 1;
+            byte |= 0x80; // sets eighth bit to 1 while the rest are unchanged
+            byte_index += 1;
         } else {
-            current_byte &= 0x7F; // sets eighth bit to 0 while the rest are unchanged
+            byte &= 0x7F; // sets eighth bit to 0 while the rest are unchanged
         }
         println!(
             "current byte after continuation bit added: {:08b}",
             current_byte
         );
 
-        bytes.push(current_byte);
+        bytes.push(byte);
     }
 
     bytes
