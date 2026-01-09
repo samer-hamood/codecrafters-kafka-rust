@@ -1,3 +1,4 @@
+pub mod compact_nullable_bytes;
 pub mod signed_varint;
 pub mod unsigned_varint;
 mod variable_integer;

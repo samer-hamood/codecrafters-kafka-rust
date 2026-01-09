@@ -26,12 +26,14 @@ impl<T: Serializable + Size + ByteParsable<T> + Clone> CompactArray<T> {
     }
 
     pub fn empty() -> Self {
+
+    pub fn null() -> Self {
         CompactArray {
             length: UnsignedVarint {
-                value: 1,
+                value: 0,
                 byte_count: 1,
             },
-            elements: Some(Vec::new()),
+            elements: None,
         }
     }
 
