@@ -20,7 +20,7 @@ impl CompactString {
 
 impl Size for CompactString {
     fn size(&self) -> usize {
-        self.length.byte_count + self.number_of_bytes()
+        self.length.size() + self.number_of_bytes()
     }
 }
 
