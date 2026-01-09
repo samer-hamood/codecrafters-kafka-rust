@@ -102,6 +102,28 @@ pub fn serialize(number: u32) -> Vec<u8> {
     bytes
 }
 
+/// Counts the bytes needed to encode varint based on serialize function above.
+pub fn size_of(number: u32) -> u8 {
+    let mut byte_index = 0u8;
+
+    const GROUP: u8 = 7u8;
+    let mut remaining_bits = number;
+    let mut continuation_bit_needed = true;
+    while continuation_bit_needed {
+        let shift = GROUP + byte_index;
+        let byte_shifted = remaining_bits >> shift;
+        continuation_bit_needed = byte_shifted != 0;
+        if continuation_bit_needed {
+            byte_index += 1;
+            remaining_bits = number >> (GROUP * byte_index);
+        }
+    }
+
+    let byte_count = byte_index + 1;
+    trace!("Byte count: {}", byte_count);
+    byte_count
+}
+
 fn get_bit_value(byte: u8, index: u8) -> u8 {
     (byte >> index) & 0x01
 }
@@ -138,5 +160,16 @@ mod test {
     fn serializes_to_varint_encoded_bytes(#[case] number: u32, #[case] expected: &[u8]) {
         let serialized = serialize(number);
         assert_eq!(serialized, expected);
+    }
+
+    #[test_log::test]
+    #[rstest]
+    #[case(0, 1)]
+    #[case(150, 2)]
+    #[case(300, 2)]
+    #[serial]
+    fn counts_bytes_needed_to_encode_varint(#[case] number: u32, #[case] expected: u8) {
+        let byte_count = size_of(number);
+        assert_eq!(byte_count, expected);
     }
 }
