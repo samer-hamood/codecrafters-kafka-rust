@@ -130,6 +130,7 @@ mod test {
     #[rstest]
     #[case(0, &[0x00])]
     #[case(300, &[0xAC, 0x02])]
+    #[case(150, &[0x96, 0x01])]
     #[serial]
     fn serializes_to_varint_encoded_bytes(#[case] number: u32, #[case] expected: &[u8]) {
         let serialized = serialize(number);
