@@ -36,6 +36,7 @@ mod compact_string;
 mod error_codes;
 mod fetch;
 mod headers;
+mod macros;
 mod nullable_string;
 mod partial_parsable;
 mod records;
