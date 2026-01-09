@@ -1,17 +1,11 @@
 use crate::serializable::{BoxedSerializable, Serializable};
 use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
+use crate::types::compact_nullable_bytes::CompactNullableBytes;
 
 #[derive(Debug, Clone)]
 pub struct CompactRecords {
-    length: u8, // uvarint
-                // attributes: u8,
-                // timestamp_delta: i64, // zigzag varint
-                // offset_delta: i32,    // zigzag varint
-                // key: Option<Vec<u8>>, // CompactBytes
-                // value: Option<Vec<u8>>,
-                // headers: Vec<Header>, // CompactArray
-                // _tag_fields: TagSection,
+    records: CompactNullableBytes,
 }
 
 impl CompactRecords {
@@ -22,17 +16,12 @@ impl CompactRecords {
 
 impl Size for CompactRecords {
     fn size(&self) -> usize {
-        size_of::<u8>() + self.length as usize
+        self.records.size()
     }
 }
 
 impl Serializable for CompactRecords {
-    fn serializable_fields(&self) -> Vec<BoxedSerializable> {
-        vec![Box::new(self.length)]
+    fn to_be_bytes(&self) -> Vec<u8> {
+        self.records.to_be_bytes()
     }
 }
-
-// struct Header {
-//     key: String,          // CompactString
-//     value: Option<Vec<u8>>,
-// }
