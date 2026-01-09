@@ -14,6 +14,16 @@ pub struct UnsignedVarint {
     pub byte_count: usize,
 }
 
+impl UnsignedVarint {
+    pub fn new(value: u32, byte_count: usize) -> Self {
+        Self {
+            value,
+            // TODO: Calculate byte count (see variable_integer::serialize function)
+            byte_count,
+        }
+    }
+}
+
 impl Size for UnsignedVarint {
     fn size(&self) -> usize {
         self.byte_count
