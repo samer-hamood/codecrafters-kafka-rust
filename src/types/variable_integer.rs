@@ -1,3 +1,9 @@
+use itertools::join;
+use tracing::{debug, field, trace};
+use tracing_subscriber::field::debug;
+
+use crate::{lazy_debug, lazy_trace};
+
 pub fn parse(varint_encoded_bytes: &[u8], offset: usize) -> (u64, usize) {
     // https://protobuf.dev/programming-guides/encoding/#varints
     let mut value = 0u64;
@@ -5,32 +11,41 @@ pub fn parse(varint_encoded_bytes: &[u8], offset: usize) -> (u64, usize) {
     let mut shift = 0;
     let mut continuation_bit_set = true;
     let mut byte_count: usize = 0;
-        // println!("bytes[{i}]: {:08b}", varint_encoded_bytes[i]);
-        // println!("continuation bit found? {continuation_bit_found}");
-        // println!(
-        //     "continuation bit value: {}",
-        //     ((varint_encoded_bytes[i] >> 7) & 0x01)
-        // );
-        // println!(
-        //     "bytes[{i}] without continuation bit: {:08b}",
-        //     (varint_encoded_bytes[i] & 0x7F)
-        // );
-        // println!("value: {:b}\n", value);
+    lazy_debug!(
+        "bytes: {}\n",
+        join(
+            varint_encoded_bytes
+                .iter()
+                .map(|byte| format!("{:08b}", byte)),
+            " "
+        )
+    );
     while continuation_bit_set {
+        debug!("bytes[{i}]: {:08b}", varint_encoded_bytes[i]);
         let continuation_bit = (varint_encoded_bytes[i] >> 7) & 0x01;
         continuation_bit_set = continuation_bit == 1;
+        trace!(
+            "continuation bit: {continuation_bit}, continuation_bit_set: {continuation_bit_set}"
+        );
         let byte_with_8th_bit_cleared = varint_encoded_bytes[i] & 0x7F;
         assert!(get_bit_value(byte_with_8th_bit_cleared, 7) == 0);
+        debug!("Drop continuation bit: {:07b}", byte_with_8th_bit_cleared);
         // Concatenate bytes in opposite order (big-endian)
         value |= (byte_with_8th_bit_cleared << shift) as u64;
+        trace!("concatenated value: {:b}", value);
         byte_count += 1;
         if continuation_bit_set {
             i += 1;
             shift += 7;
         }
+        debug!("");
     }
-    // println!("value: {value}");
-    // println!("value in binary: {:b}", value);
+    debug!(
+        "Concatenated: {:0width$b} ({})",
+        value,
+        value,
+        width = byte_count * 7
+    );
     (value, byte_count)
 }
 
@@ -39,8 +54,8 @@ pub fn serialize(number: u32) -> Vec<u8> {
     // https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=120722234#KIP482:TheKafkaProtocolshouldSupportOptionalTaggedFields-UnsignedVarints
     // 1. Break up number into groups of seven bits
     // 2. Set high bit (bit 8) of the group if it's NOT the last one and clear bit if it is the last group
-    println!("number to serialize: {:08b}", number);
 
+    debug!("Number: {} ({:b})", number, number);
 
     let mut bytes = Vec::new();
 
@@ -51,15 +66,22 @@ pub fn serialize(number: u32) -> Vec<u8> {
     let mut continuation_bit_needed = true;
     while continuation_bit_needed {
         // let mut current_byte = remaining_bits & 0x00_00_00_00_00_00_00_7F;
-        println!(
-            "current byte before continuation bit added: {:08b}",
-            current_byte
         let mut byte = (remaining_bits & 0x00_00_00_7F) as u8; // takes lowest seven bits
         assert!(byte < 255);
+        debug!(
+            "Lowest 7 bits from remaining (before continuation bit added): {:07b}",
+            byte
         );
 
         let shift = GROUP + byte_index;
         let byte_shifted = remaining_bits >> shift;
+        trace!(
+            "Remaining bits shifted by {} ({} + {}): {:08b}",
+            shift,
+            GROUP,
+            byte_index,
+            byte_shifted
+        );
         continuation_bit_needed = byte_shifted != 0;
         if continuation_bit_needed {
             byte |= 0x80; // sets eighth bit to 1 while the rest are unchanged
@@ -68,14 +90,15 @@ pub fn serialize(number: u32) -> Vec<u8> {
         } else {
             byte &= 0x7F; // sets eighth bit to 0 while the rest are unchanged
         }
-        println!(
-            "current byte after continuation bit added: {:08b}",
-            current_byte
-        );
+        debug!("Add continuation bit: {:08b}", byte);
 
         bytes.push(byte);
     }
 
+    lazy_debug!(
+        "Serialized: {}\n",
+        join(bytes.iter().map(|byte| format!("{:08b}", byte)), " ")
+    );
     bytes
     // if serialized_number <= u8::MAX as u64 {
     //     Int::U8(serialized_number as u8)
