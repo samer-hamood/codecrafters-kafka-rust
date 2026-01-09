@@ -165,7 +165,7 @@ mod test {
             log_start_offset: 0,                          // 8 bytes
             aborted_transactions: CompactArray::empty(),  // (1 + 0) byte
             preferred_read_replica: 0,                    // 4 bytes
-            records: CompactRecords::empty(),             // 1 bytes
+            records: CompactRecords::null(),              // 1 byte
             _tagged_fields: TaggedFieldsSection::empty(), // 1 bytes
         };
 

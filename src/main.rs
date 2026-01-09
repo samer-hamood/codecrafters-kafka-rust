@@ -120,7 +120,7 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                             let aborted_transactions: CompactArray<Transaction> =
                                 CompactArray::empty();
                             let preferred_read_replica = 0;
-                            let records = CompactRecords::empty();
+                            let records = CompactRecords::null();
                             let topic_id: Uuid = fetch_request.topics[0].topic_id;
                             topics.push(ResponseTopic::new(
                                 topic_id,

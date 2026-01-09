@@ -9,8 +9,10 @@ pub struct CompactRecords {
 }
 
 impl CompactRecords {
-    pub fn empty() -> Self {
-        Self { length: 0 }
+    pub fn null() -> Self {
+        Self {
+            records: CompactNullableBytes::null(),
+        }
     }
 }
 
