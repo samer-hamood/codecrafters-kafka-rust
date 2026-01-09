@@ -29,7 +29,7 @@ pub fn parse(varint_encoded_bytes: &[u8], offset: usize) -> (u64, usize) {
             "continuation bit: {continuation_bit}, continuation_bit_set: {continuation_bit_set}"
         );
         let byte_with_8th_bit_cleared = varint_encoded_bytes[i] & 0x7F;
-        assert!(get_bit_value(byte_with_8th_bit_cleared, 7) == 0);
+        assert_eq!(get_bit_value(byte_with_8th_bit_cleared, 7), 0);
         debug!("Drop continuation bit: {:07b}", byte_with_8th_bit_cleared);
         // Concatenate bytes in opposite order (big-endian)
         value |= (byte_with_8th_bit_cleared << shift) as u64;
