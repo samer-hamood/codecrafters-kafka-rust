@@ -26,6 +26,8 @@ impl<T: Serializable + Size + ByteParsable<T> + Clone> CompactArray<T> {
     }
 
     pub fn empty() -> Self {
+        CompactArray::new(Vec::new())
+    }
 
     pub fn null() -> Self {
         CompactArray {
