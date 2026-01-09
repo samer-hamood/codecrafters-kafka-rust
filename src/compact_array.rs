@@ -17,10 +17,7 @@ pub struct CompactArray<T: Serializable + Size + ByteParsable<T> + Clone> {
 impl<T: Serializable + Size + ByteParsable<T> + Clone> CompactArray<T> {
     pub fn new(elements: Vec<T>) -> CompactArray<T> {
         CompactArray {
-            length: UnsignedVarint {
-                value: (1 + elements.len()).try_into().unwrap(),
-                byte_count: 1, // TODO: Compute number of bytes for value
-            },
+            length: UnsignedVarint::new((1 + elements.len()).try_into().unwrap()),
             elements: Some(elements),
         }
     }
@@ -31,10 +28,7 @@ impl<T: Serializable + Size + ByteParsable<T> + Clone> CompactArray<T> {
 
     pub fn null() -> Self {
         CompactArray {
-            length: UnsignedVarint {
-                value: 0,
-                byte_count: 1,
-            },
+            length: UnsignedVarint::new(0),
             elements: None,
         }
     }
