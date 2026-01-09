@@ -107,8 +107,9 @@ pub fn serialize(number: u32) -> Vec<u8> {
 mod test {
     use super::*;
     use rstest::rstest;
+    use serial_test::serial;
 
-    #[test]
+    #[test_log::test]
     fn parses_varint_encoded_bytes() {
         // 150, encoded as `9601`
         // 10010110 00000001        // Original inputs.
@@ -125,9 +126,11 @@ mod test {
         assert_eq!(byte_count, varint_encoded_bytes.len());
     }
 
+    #[test_log::test]
     #[rstest]
     #[case(0, &[0x00])]
     #[case(300, &[0xAC, 0x02])]
+    #[serial]
     fn serializes_to_varint_encoded_bytes(#[case] number: u32, #[case] expected: &[u8]) {
         let serialized = serialize(number);
         assert_eq!(serialized, expected);
