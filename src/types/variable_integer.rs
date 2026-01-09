@@ -49,7 +49,6 @@ pub fn parse(varint_encoded_bytes: &[u8], offset: usize) -> (u64, usize) {
     (value, byte_count)
 }
 
-// pub fn serialize(number: u32) -> Int {
 pub fn serialize(number: u32) -> Vec<u8> {
     // https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=120722234#KIP482:TheKafkaProtocolshouldSupportOptionalTaggedFields-UnsignedVarints
     // 1. Break up number into groups of seven bits
@@ -100,23 +99,8 @@ pub fn serialize(number: u32) -> Vec<u8> {
         join(bytes.iter().map(|byte| format!("{:08b}", byte)), " ")
     );
     bytes
-    // if serialized_number <= u8::MAX as u64 {
-    //     Int::U8(serialized_number as u8)
-    // } else if serialized_number <= u16::MAX as u64 {
-    //     Int::U16(serialized_number as u16)
-    // } else if serialized_number <= u32::MAX as u64 {
-    //     Int::U32(serialized_number as u32)
-    // } else if serialized_number <= u64::MAX {
-    //     Int::U64(serialized_number)
-    // }
 }
 
-// pub enum Int {
-//     U8(u8),
-//     U16(u16),
-//     U32(u32),
-//     U64(u64),
-// }
 
 #[cfg(test)]
 mod test {
