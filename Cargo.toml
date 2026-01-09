@@ -8,16 +8,19 @@ rust-version = "1.80"
 [dependencies]
 anyhow = "1.0.68"                                # error handling
 bytes = "1.3.0"                                  # helps manage buffers
-parameterized = "2.0.0"
+itertools = "0.14.0"
+log = "0.4.29"
 thiserror = "1.0.38"                             # error handling
-
-[dev-dependencies]
-parameterized = "2.0.0"
-rstest = "0.26.1"
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
 
 [dependencies.uuid]
 version = "1.18.1"
 # Lets you generate random UUIDs
-features = [
-    "v4",
-]
+features = ["v4"]
+
+[dev-dependencies]
+parameterized = "2.0.0"
+rstest = "0.26.1"
+serial_test = "3.2.0"
+test-log = { version = "0.2.19", features = ["trace"] }
