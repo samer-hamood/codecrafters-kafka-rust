@@ -11,6 +11,7 @@ pub fn parse(varint_encoded_bytes: &[u8], offset: usize) -> (u64, usize) {
     let mut shift = 0;
     let mut continuation_bit_set = true;
     let mut byte_count: usize = 0;
+    // varint_encoded_bytes should come in little-endian order
     lazy_debug!(
         "bytes: {}\n",
         join(
