@@ -31,6 +31,12 @@ impl Serializable for i16 {
     }
 }
 
+impl Serializable for i8 {
+    fn to_be_bytes(&self) -> Vec<u8> {
+        i8::to_be_bytes(*self).to_vec()
+    }
+}
+
 impl Serializable for u8 {
     fn to_be_bytes(&self) -> Vec<u8> {
         u8::to_be_bytes(*self).to_vec()
