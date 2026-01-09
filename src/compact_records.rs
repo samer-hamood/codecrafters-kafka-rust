@@ -2,6 +2,7 @@ use crate::serializable::{BoxedSerializable, Serializable};
 use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
 use crate::types::compact_nullable_bytes::CompactNullableBytes;
+use crate::types::unsigned_varint::UnsignedVarint;
 
 #[derive(Debug, Clone)]
 pub struct CompactRecords {
@@ -9,6 +10,12 @@ pub struct CompactRecords {
 }
 
 impl CompactRecords {
+    fn new(length: UnsignedVarint, bytes: Option<Vec<u8>>) -> Self {
+        Self {
+            records: CompactNullableBytes { length, bytes },
+        }
+    }
+
     pub fn null() -> Self {
         Self {
             records: CompactNullableBytes::null(),
