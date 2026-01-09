@@ -41,17 +41,15 @@ pub fn serialize(number: u32) -> Vec<u8> {
     // 2. Set high bit (bit 8) of the group if it's NOT the last one and clear bit if it is the last group
     println!("number to serialize: {:08b}", number);
 
-    const GROUP: u8 = 7u8;
 
     let mut bytes = Vec::new();
 
+    const GROUP: u8 = 7u8;
     let mut byte_index = 0u8;
     // let mut serialized_number = 0u128;
+    let mut remaining_bits = number;
     let mut continuation_bit_needed = true;
     while continuation_bit_needed {
-        let remaining_bits = number >> (GROUP * byte_count);
-        println!("remaining_bits: {:08b}", remaining_bits);
-
         // let mut current_byte = remaining_bits & 0x00_00_00_00_00_00_00_7F;
         println!(
             "current byte before continuation bit added: {:08b}",
@@ -65,6 +63,7 @@ pub fn serialize(number: u32) -> Vec<u8> {
         if continuation_bit_needed {
             byte |= 0x80; // sets eighth bit to 1 while the rest are unchanged
             byte_index += 1;
+            remaining_bits = number >> (GROUP * byte_index);
         } else {
             byte &= 0x7F; // sets eighth bit to 0 while the rest are unchanged
         }
