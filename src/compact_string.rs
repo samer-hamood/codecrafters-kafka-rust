@@ -11,16 +11,9 @@ pub struct CompactString {
     pub bytes: Option<Vec<u8>>,
 }
 
-#[allow(dead_code)]
-impl CompactString {
-    fn number_of_bytes(&self) -> usize {
-        self.bytes.as_ref().map(|v| v.len()).unwrap_or(0)
-    }
-}
-
 impl Size for CompactString {
     fn size(&self) -> usize {
-        self.length.size() + self.number_of_bytes()
+        self.length.size() + self.bytes.size()
     }
 }
 

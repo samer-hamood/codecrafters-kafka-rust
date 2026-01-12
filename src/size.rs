@@ -45,3 +45,51 @@ impl Size for Uuid {
         size_of::<Uuid>()
     }
 }
+
+impl Size for String {
+    fn size(&self) -> usize {
+        self.len()
+    }
+}
+
+impl Size for Vec<u8> {
+    fn size(&self) -> usize {
+        self.len()
+    }
+}
+
+impl Size for Option<Vec<u8>> {
+    fn size(&self) -> usize {
+        self.as_ref().map(|v| v.len()).unwrap_or(0)
+    }
+}
+
+impl<T: Size> Size for Vec<T> {
+    fn size(&self) -> usize {
+        self.iter().map(|e| e.size()).sum()
+    }
+}
+
+impl<T: Size> Size for Option<Vec<T>> {
+    fn size(&self) -> usize {
+        self.as_ref().map(|v| v.size()).unwrap_or(0)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn size_of_string_equals_number_of_bytes() {
+        let string = String::from("Hello, world!");
+        assert_eq!(string.size(), string.len());
+    }
+
+    #[test]
+    fn size_of_vec_equals_sum_of_size_of_each_element() {
+        let vec = vec![1, 2, 3, 4];
+        let expected_size = vec.len() * 4; // i32 is 4 bytes
+        assert_eq!(vec.size(), expected_size);
+    }
+}

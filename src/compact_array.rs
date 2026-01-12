@@ -48,7 +48,7 @@ impl<T: Serializable + Size + ByteParsable<T> + Clone> CompactArray<T> {
 
 impl<T: Serializable + Size + ByteParsable<T> + Clone> Size for CompactArray<T> {
     fn size(&self) -> usize {
-        self.length.size() + self.iter().map(|element| element.size()).sum::<usize>()
+        self.length.size() + self.elements.size()
     }
 }
 

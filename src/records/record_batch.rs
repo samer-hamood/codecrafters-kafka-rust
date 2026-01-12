@@ -37,11 +37,7 @@ impl Size for RecordBatch {
             + self.producer_epoch.size()
             + self.base_sequence.size()
             + self.records_count.size()
-            + self
-                .records
-                .iter()
-                .map(|record| record.size())
-                .sum::<usize>()
+            + self.records.size()
     }
 }
 
@@ -121,11 +117,11 @@ impl Size for Record {
             + self.timestamp_delta.size()
             + self.offset_delta.size()
             + self.key_length.size()
-            + self.key.as_ref().map(|v| v.len()).unwrap_or(0)
+            + self.key.size()
             + self.value_length.size()
-            + self.value.len()
+            + self.value.size()
             + self.headers_count.size()
-            + self.headers.as_ref().map(|v| v.len()).unwrap_or(0)
+            + self.headers.size()
     }
 }
 
@@ -147,7 +143,7 @@ impl ByteParsable<Record> for Record {
         } else {
             Some(bytes[offset..offset + key_length.value as usize].to_vec())
         };
-        offset += key.as_ref().map_or(0, |v| v.len());
+        offset += key.size();
         let value_length = SignedVarint::parse(bytes, offset);
         offset += value_length.size();
         let value = bytes[offset..offset + value_length.value as usize].to_vec();
