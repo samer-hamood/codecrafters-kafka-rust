@@ -13,7 +13,6 @@ pub struct CompactArray<T: Serializable + Size + ByteParsable<T> + Clone> {
     elements: Option<Vec<T>>,
 }
 
-#[allow(dead_code)]
 impl<T: Serializable + Size + ByteParsable<T> + Clone> CompactArray<T> {
     pub fn new(elements: Vec<T>) -> Self {
         Self {
@@ -26,6 +25,7 @@ impl<T: Serializable + Size + ByteParsable<T> + Clone> CompactArray<T> {
         Self::new(Vec::new())
     }
 
+    #[allow(dead_code)]
     pub fn null() -> Self {
         Self {
             length: UnsignedVarint::new(0),

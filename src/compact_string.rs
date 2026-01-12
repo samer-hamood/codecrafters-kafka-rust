@@ -4,7 +4,6 @@ use crate::types::unsigned_varint::UnsignedVarint;
 
 // https://kafka.apache.org/27/protocol.html#protocol_types
 
-#[allow(dead_code)]
 #[derive(Debug)]
 pub struct CompactString {
     pub length: UnsignedVarint,

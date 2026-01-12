@@ -16,6 +16,7 @@ impl CompactRecords {
         }
     }
 
+    #[allow(dead_code)]
     pub fn null() -> Self {
         Self {
             records: CompactNullableBytes::null(),
