@@ -10,16 +10,16 @@ pub struct CompactRecords {
 }
 
 impl CompactRecords {
-    fn new(length: UnsignedVarint, bytes: Option<Vec<u8>>) -> Self {
-        Self {
-            records: CompactNullableBytes { length, bytes },
-        }
-    }
-
     #[allow(dead_code)]
     pub fn null() -> Self {
         Self {
             records: CompactNullableBytes::null(),
+        }
+    }
+
+    fn new(length: UnsignedVarint, bytes: Option<Vec<u8>>) -> Self {
+        Self {
+            records: CompactNullableBytes { length, bytes },
         }
     }
 }
