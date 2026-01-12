@@ -34,15 +34,11 @@ impl<T: Serializable + Size + ByteParsable<T> + Clone> CompactArray<T> {
     }
 
     pub fn len(&self) -> usize {
-        self.number_of_elements()
+        self.elements.as_ref().map(|v| v.len()).unwrap_or(0)
     }
 
     pub fn iter(&self) -> Iter<'_, T> {
         self.elements.as_deref().unwrap_or(&[]).iter()
-    }
-
-    fn number_of_elements(&self) -> usize {
-        self.elements.as_ref().map(|v| v.len()).unwrap_or(0)
     }
 }
 
