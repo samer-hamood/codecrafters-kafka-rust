@@ -30,7 +30,7 @@ impl Size for i8 {
 
 impl Size for u16 {
     fn size(&self) -> usize {
-        size_of::<Self>()
+        size_of::<u16>()
     }
 }
 
