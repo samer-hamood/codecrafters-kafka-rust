@@ -20,6 +20,8 @@ pub struct RecordBatch {
     pub base_sequence: i32,
     pub records_count: i32,
     pub records: Vec<Record>,
+    // Store bytes parsed
+    pub _parsed_bytes: Vec<u8>,
 }
 
 impl Size for RecordBatch {
@@ -43,6 +45,7 @@ impl Size for RecordBatch {
 
 impl ByteParsable<RecordBatch> for RecordBatch {
     fn parse(bytes: &[u8], offset: usize) -> Self {
+        let initial_offset: usize = offset;
         let mut offset: usize = offset;
         let base_offset = i64::parse(bytes, offset);
         offset += base_offset.size();
@@ -76,6 +79,7 @@ impl ByteParsable<RecordBatch> for RecordBatch {
             offset += record.size();
             records.push(record);
         }
+        let _parsed_bytes =  bytes[initial_offset..offset].to_vec();
         Self {
             base_offset,
             batch_length,
@@ -91,6 +95,7 @@ impl ByteParsable<RecordBatch> for RecordBatch {
             base_sequence,
             records_count,
             records,
+            _parsed_bytes,
         }
     }
 }
