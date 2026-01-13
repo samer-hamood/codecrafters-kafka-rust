@@ -114,13 +114,26 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                             let aborted_transactions: CompactArray<Transaction> =
                                 CompactArray::empty();
                             let preferred_read_replica = 0;
-                            let records = CompactRecords::null();
                             let topic_id: Uuid = fetch_request.topics[0].topic_id;
+                            let metadata_record_batches = get_record_batches_from_metadata_log();
+                            let records = if let Some(topic_record) =
+                                get_topic_record(&topic_id, &metadata_record_batches)
+                            {
+                                let topic_name = topic_record.topic_name.to_string();
+                                let data_record_batches =
+                                    get_record_batches_from_data_log(&topic_name, partition_index);
+                                CompactRecords::from_record_batches(&data_record_batches)
+                            } else {
+                                CompactRecords::null()
+                            };
                             topics.push(ResponseTopic::new(
                                 topic_id,
                                 vec![ResponsePartition {
                                     partition_index,
-                                    error_code: check_topic_exists(&topic_id),
+                                    error_code: check_topic_exists(
+                                        &topic_id,
+                                        metadata_record_batches,
+                                    ),
                                     high_watermark,
                                     last_stable_offset,
                                     log_start_offset,
@@ -164,8 +177,15 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
     total_bytes_read
 }
 
-fn check_topic_exists(topic_id: &Uuid) -> i16 {
-    let topic_exists = metadata_file_contains(topic_id);
+fn get_topic_record(topic_id: &Uuid, record_batches: &[RecordBatch]) -> Option<TopicRecord> {
+    record_batches
+        .iter()
+        .filter_map(|record_batch| to_topic_record(record_batch, topic_id))
+        .next()
+}
+
+fn check_topic_exists(topic_id: &Uuid, record_batches: Vec<RecordBatch>) -> i16 {
+    let topic_exists = metadata_file_contains(topic_id, record_batches);
     if topic_exists {
         error_codes::NONE
     } else {
@@ -173,44 +193,38 @@ fn check_topic_exists(topic_id: &Uuid) -> i16 {
     }
 }
 
-fn metadata_file_contains(topic_id: &Uuid) -> bool {
-    let metadata_file_path =
-        "/tmp/kraft-combined-logs/__cluster_metadata-0/00000000000000000000.log";
-    let mut metadata_file = File::open(metadata_file_path)
-        .unwrap_or_else(|_| panic!("Metadata log file not found: {metadata_file_path}"));
-
-    // Parse file
-    let file_byte_count: usize = get_file_size(metadata_file_path);
-    let mut buf = vec![0; file_byte_count];
-    let _ = metadata_file.read(&mut buf);
-    let mut offset = 0;
-    while offset < file_byte_count {
-        let record_batch = RecordBatch::parse(&buf, offset);
-        offset += record_batch.size();
-        if record_batch_contains_topic(&record_batch, topic_id) {
-            return true;
-        }
-    }
-
-    false
+fn metadata_file_contains(topic_id: &Uuid, record_batches: Vec<RecordBatch>) -> bool {
+    record_batches
+        .iter()
+        .any(|record_batch| record_batch_contains_topic(record_batch, topic_id))
 }
 
-#[allow(dead_code)]
-fn parse_metadata_log_file(path: &str) -> Vec<RecordBatch> {
-    let mut metadata_file =
-        File::open(path).unwrap_or_else(|_| panic!("Metadata log file not found: {path}"));
-    let file_byte_count: usize = get_file_size(path);
-    let mut buf = vec![0; file_byte_count];
-    let _ = metadata_file.read(&mut buf);
+fn get_record_batches_from_metadata_log() -> Vec<RecordBatch> {
+    get_record_batches_from_log_file("__cluster_metadata-0")
+}
+
+fn get_record_batches_from_data_log(topic_name: &str, partition_index: i32) -> Vec<RecordBatch> {
+    get_record_batches_from_log_file(format!("{topic_name}-{partition_index}").as_str())
+}
+
+fn get_record_batches_from_log_file(directory: &str) -> Vec<RecordBatch> {
+    let log_file_path = format!("/tmp/kraft-combined-logs/{directory}/00000000000000000000.log");
+    let mut metadata_file = File::open(&log_file_path)
+        .unwrap_or_else(|_| panic!("Log file not found: {log_file_path}"));
 
     let mut record_batches = Vec::new();
 
+    // Parse file
+    let file_byte_count: usize = get_file_size(&log_file_path);
+    let mut buf = vec![0; file_byte_count];
+    let _ = metadata_file.read(&mut buf);
     let mut offset = 0;
     while offset < file_byte_count {
         let record_batch = RecordBatch::parse(&buf, offset);
         offset += record_batch.size();
         record_batches.push(record_batch);
     }
+
     record_batches
 }
 
@@ -233,6 +247,21 @@ fn record_batch_contains_topic(record_batch: &RecordBatch, topic_id: &Uuid) -> b
         }
     }
     false
+}
+
+fn to_topic_record(record_batch: &RecordBatch, topic_id: &Uuid) -> Option<TopicRecord> {
+    for record in &record_batch.records {
+        let mut offset: usize = 0;
+        let metadata_record = MetadataRecord::parse(&record.value, offset);
+        offset += metadata_record.size();
+        if metadata_record._type == 2 {
+            let topic_record = TopicRecord::parse(&record.value, offset, metadata_record);
+            if &topic_record.topic_uuid == topic_id {
+                return Some(topic_record);
+            }
+        }
+    }
+    None
 }
 
 fn check_supported_version(version: i16) -> i16 {
