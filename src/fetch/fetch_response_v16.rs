@@ -1,9 +1,9 @@
-use crate::compact_array::CompactArray;
 use crate::fetch::topic::ResponseTopic;
 use crate::headers::response_header_v1::ResponseHeaderV1;
 use crate::serializable::{BoxedSerializable, Serializable};
 use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
+use crate::types::compact_array::CompactArray;
 
 /// Fetch Response (Version: 16) => throttle_time_ms error_code session_id [responses] _tagged_fields
 ///   throttle_time_ms => INT32

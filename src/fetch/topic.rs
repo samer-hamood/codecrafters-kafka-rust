@@ -2,10 +2,10 @@ use uuid::Uuid;
 
 use super::partition::{RequestPartition, ResponsePartition};
 use crate::byte_parsable::ByteParsable;
-use crate::compact_array::CompactArray;
 use crate::serializable::{BoxedSerializable, Serializable};
 use crate::size::Size;
 use crate::tagged_fields_section::{self, TaggedFieldsSection};
+use crate::types::compact_array::CompactArray;
 
 #[allow(dead_code)]
 #[derive(Debug, Clone)]

@@ -1,43 +1,36 @@
 #![allow(unused_imports)]
 use std::fs::{self, File};
 use std::io::{Read, Write};
+use std::net::TcpListener;
 use std::net::TcpStream;
-use std::process::exit;
-use std::{cmp::Ordering, net::TcpListener};
 
 use uuid::Uuid;
 
 use crate::api_keys::{API_VERSIONS, FETCH};
-use crate::api_versions::api_versions_request_v4::ApiVersionsRequestV4;
 use crate::api_versions::api_versions_response_v4::{ApiKey, ApiVersionsResponseV4};
 use crate::byte_parsable::ByteParsable;
-use crate::compact_array::CompactArray;
-use crate::compact_records::CompactRecords;
 use crate::fetch::fetch_request_v16::FetchRequestV16;
 use crate::fetch::fetch_response_v16::FetchResponseV16;
 use crate::fetch::partition::{ResponsePartition, Transaction};
-use crate::fetch::topic::{self, ResponseTopic};
-use crate::headers::request_header_v2::{self, RequestHeaderV2};
+use crate::fetch::topic::ResponseTopic;
+use crate::headers::request_header_v2::RequestHeaderV2;
 use crate::partial_parsable::PartialParsable;
-use crate::records::metadata_record::{self, MetadataRecord};
-use crate::records::partition_record::PartitionRecord;
-use crate::records::record_batch::{self, RecordBatch};
+use crate::records::metadata_record::MetadataRecord;
+use crate::records::record_batch::RecordBatch;
 use crate::records::topic_record::TopicRecord;
 use crate::serializable::Serializable;
 use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
+use types::compact_array::CompactArray;
+use types::compact_records::CompactRecords;
 
 mod api_keys;
 mod api_versions;
 mod byte_parsable;
-mod compact_array;
-mod compact_records;
-mod compact_string;
 mod error_codes;
 mod fetch;
 mod headers;
 mod macros;
-mod nullable_string;
 mod partial_parsable;
 mod records;
 mod serializable;

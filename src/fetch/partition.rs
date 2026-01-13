@@ -1,12 +1,12 @@
 use std::io::Cursor;
 
 use crate::byte_parsable::ByteParsable;
-use crate::compact_array::CompactArray;
-use crate::compact_records::CompactRecords;
 use crate::fetch::partition;
 use crate::serializable::{BoxedSerializable, Serializable};
 use crate::size::{self, Size};
 use crate::tagged_fields_section::TaggedFieldsSection;
+use crate::types::compact_array::CompactArray;
+use crate::types::compact_records::CompactRecords;
 
 #[allow(dead_code)]
 pub trait Partition: Serializable + Size {}

@@ -1,11 +1,11 @@
 use std::array;
 
 use crate::byte_parsable::ByteParsable;
-use crate::compact_array::CompactArray;
 use crate::error_codes::NONE;
 use crate::serializable::{BoxedSerializable, Serializable};
 use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
+use crate::types::compact_array::CompactArray;
 
 #[allow(dead_code)]
 #[derive(Debug)]

@@ -1,4 +1,8 @@
+pub mod compact_array;
 pub mod compact_nullable_bytes;
+pub mod compact_records;
+pub mod compact_string;
+pub mod nullable_string;
 pub mod signed_varint;
 pub mod unsigned_varint;
 mod variable_integer;

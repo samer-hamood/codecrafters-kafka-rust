@@ -1,7 +1,8 @@
 use uuid::Uuid;
 
+use crate::types::compact_string::CompactString;
 use crate::{
-    byte_parsable::ByteParsable, compact_string::CompactString, partial_parsable::PartialParsable,
+    byte_parsable::ByteParsable, partial_parsable::PartialParsable,
     records::metadata_record::MetadataRecord, size::Size, types::unsigned_varint::UnsignedVarint,
 };
 

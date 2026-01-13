@@ -1,13 +1,13 @@
 use std::any::Any;
 
 use crate::byte_parsable::ByteParsable;
-use crate::compact_array::CompactArray;
-use crate::compact_string::CompactString;
 use crate::fetch::partition::{Partition, RequestPartition};
 use crate::fetch::topic::{self, ForgottenTopicsDatum, RequestTopic};
 use crate::headers::request_header_v2::RequestHeaderV2;
 use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
+use crate::types::compact_array::CompactArray;
+use crate::types::compact_string::CompactString;
 
 /// Fetch Request (Version: 16) => max_wait_ms min_bytes max_bytes isolation_level session_id session_epoch [topics] [forgotten_topics_data] rack_id _tagged_fields
 ///   max_wait_ms => INT32

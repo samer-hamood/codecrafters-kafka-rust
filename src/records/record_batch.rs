@@ -1,8 +1,7 @@
 use crate::types::signed_varint::SignedVarint;
 use crate::types::unsigned_varint::UnsignedVarint;
 use crate::types::varlong::Varlong;
-use crate::{byte_parsable::ByteParsable, compact_array::CompactArray, size::Size};
-
+use crate::{byte_parsable::ByteParsable, size::Size};
 #[allow(dead_code)]
 #[derive(Debug)]
 pub struct RecordBatch {
@@ -88,7 +87,7 @@ impl ByteParsable<RecordBatch> for RecordBatch {
         let parsed_bytes_count = offset - initial_offset;
         let expected_batch_size = base_offset.size() + batch_length.size() + batch_length as usize;
         assert_eq!(parsed_bytes_count, expected_batch_size);
-        let _parsed_bytes =  bytes[initial_offset..offset].to_vec();
+        let _parsed_bytes = bytes[initial_offset..offset].to_vec();
         Self {
             base_offset,
             batch_length,
@@ -176,7 +175,10 @@ impl ByteParsable<Record> for Record {
             }
             Some(headers)
         };
-        assert_eq!(offset - initial_offset, length.size() + length.value as usize);
+        assert_eq!(
+            offset - initial_offset,
+            length.size() + length.value as usize
+        );
         Self {
             length,
             attributes,

@@ -1,7 +1,7 @@
 use crate::byte_parsable::ByteParsable;
-use crate::nullable_string::{self, NullableString};
 use crate::size::Size;
 use crate::tagged_fields_section::{self, TaggedFieldsSection, EMPTY};
+use crate::types::nullable_string::{self, NullableString};
 
 /// Request Header v2 => request_api_key request_api_version correlation_id client_id _tagged_fields
 ///   request_api_key => INT16
