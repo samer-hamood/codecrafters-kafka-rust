@@ -112,7 +112,7 @@ pub struct Record {
 
 impl Size for Record {
     fn size(&self) -> usize {
-        self.length.byte_count
+        self.length.size()
             + self.attributes.size()
             + self.timestamp_delta.size()
             + self.offset_delta.size()
