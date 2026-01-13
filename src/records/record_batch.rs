@@ -186,18 +186,42 @@ impl ByteParsable<Record> for Record {
     }
 }
 
-#[allow(dead_code)]
 #[derive(Clone, Debug)]
-pub struct Header {}
+pub struct Header {
+    header_key_length: SignedVarint,
+    header_key: String,
+    header_value_length: SignedVarint,
+    value: Vec<u8>,
+}
 
 impl Size for Header {
     fn size(&self) -> usize {
-        0
+        self.header_key_length.size()
+            + self.header_key.size()
+            + self.header_value_length.size()
+            + self.value.size()
     }
 }
 
 impl ByteParsable<Header> for Header {
-    fn parse(_bytes: &[u8], _offset: usize) -> Self {
-        Self {}
+    fn parse(bytes: &[u8], offset: usize) -> Self {
+        let mut offset: usize = offset;
+        let header_key_length = SignedVarint::parse(bytes, offset);
+        offset += header_key_length.size();
+        let header_key =
+            match String::from_utf8(bytes[offset..header_key_length.value as usize].to_vec()) {
+                Ok(s) => s,
+                Err(e) => panic!("Invalid UTF-8: {}", e),
+            };
+        offset += header_key_length.size();
+        let header_value_length = SignedVarint::parse(bytes, offset);
+        offset += header_value_length.size();
+        let value = bytes[offset..offset + header_value_length.value as usize].to_vec();
+        Self {
+            header_key_length,
+            header_key,
+            header_value_length,
+            value,
+        }
     }
 }
