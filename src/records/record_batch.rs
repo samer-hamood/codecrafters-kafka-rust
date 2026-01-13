@@ -119,7 +119,7 @@ pub struct Record {
     pub key: Option<Vec<u8>>,
     pub value_length: SignedVarint,
     pub value: Vec<u8>,
-    pub headers_count: UnsignedVarint,
+    pub headers_count: SignedVarint,
     pub headers: Option<Vec<Header>>,
 }
 
@@ -162,7 +162,7 @@ impl ByteParsable<Record> for Record {
         offset += value_length.size();
         let value = bytes[offset..offset + value_length.value as usize].to_vec();
         offset += value.len();
-        let headers_count = UnsignedVarint::parse(bytes, offset);
+        let headers_count = SignedVarint::parse(bytes, offset);
         offset += headers_count.size();
         let headers = if headers_count.value == 0 {
             None
