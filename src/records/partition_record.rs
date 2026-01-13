@@ -5,6 +5,7 @@ use crate::{
     records::metadata_record::MetadataRecord, size::Size, types::unsigned_varint::UnsignedVarint,
 };
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub struct PartitionRecord {
     #[allow(dead_code)]

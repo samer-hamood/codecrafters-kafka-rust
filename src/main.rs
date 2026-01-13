@@ -239,11 +239,6 @@ fn record_batch_contains_topic(record_batch: &RecordBatch, topic_id: &Uuid) -> b
             if &topic_record.topic_uuid == topic_id {
                 return true;
             }
-        } else if metadata_record._type == 3 {
-            let partition_record = PartitionRecord::parse(&record.value, offset, metadata_record);
-            if &partition_record.topic_uuid == topic_id {
-                return true;
-            }
         }
     }
     false
