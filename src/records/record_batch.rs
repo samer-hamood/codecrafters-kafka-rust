@@ -79,6 +79,9 @@ impl ByteParsable<RecordBatch> for RecordBatch {
             offset += record.size();
             records.push(record);
         }
+        let parsed_bytes_count = offset - initial_offset;
+        let expected_batch_size = base_offset.size() + batch_length.size() + batch_length as usize;
+        assert_eq!(parsed_bytes_count, expected_batch_size);
         let _parsed_bytes =  bytes[initial_offset..offset].to_vec();
         Self {
             base_offset,
@@ -132,6 +135,7 @@ impl Size for Record {
 
 impl ByteParsable<Record> for Record {
     fn parse(bytes: &[u8], offset: usize) -> Self {
+        let initial_offset: usize = offset;
         let mut offset: usize = offset;
         let length = SignedVarint::parse(bytes, offset);
         offset += length.size();
@@ -166,7 +170,7 @@ impl ByteParsable<Record> for Record {
             }
             Some(headers)
         };
-
+        assert_eq!(offset - initial_offset, length.size() + length.value as usize);
         Self {
             length,
             attributes,
