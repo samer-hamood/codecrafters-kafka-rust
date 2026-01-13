@@ -209,10 +209,8 @@ fn parse_metadata_log_file(path: &str) -> Vec<RecordBatch> {
     while offset < file_byte_count {
         let record_batch = RecordBatch::parse(&buf, offset);
         offset += record_batch.size();
-        // println!("{:?}\n", &record_batch);
         record_batches.push(record_batch);
     }
-    // println!("Offset after parsing: {offset}");
     record_batches
 }
 
