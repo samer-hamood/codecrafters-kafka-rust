@@ -24,6 +24,12 @@ pub struct RecordBatch {
     pub _parsed_bytes: Vec<u8>,
 }
 
+impl RecordBatch {
+    pub fn expected_length(&self) -> usize {
+        self.base_offset.size() + self.batch_length.size() + self.batch_length as usize
+    }
+}
+
 impl Size for RecordBatch {
     fn size(&self) -> usize {
         self.base_offset.size()
