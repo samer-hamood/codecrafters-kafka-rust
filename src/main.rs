@@ -76,90 +76,10 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                 total_bytes_read += n;
                 if total_bytes_read >= header_size {
                     let request_header = RequestHeaderV2::parse(buf, 0);
-
-                    let response_bytes = if request_header.request_api_key == API_VERSIONS {
-                        println!("Handling ApiVersions request...");
-                        let throttle_time_ms = 0;
-                        ApiVersionsResponseV4::new(
-                            request_header.correlation_id,
-                            check_supported_version(request_header.request_api_version),
-                            vec![
-                                ApiKey::new(
-                                    API_VERSIONS,
-                                    api_versions::MIN_VERSION,
-                                    api_versions::MAX_VERSION,
-                                    TaggedFieldsSection::empty(),
-                                ),
-                                ApiKey::new(
-                                    FETCH,
-                                    fetch::MIN_VERSION,
-                                    fetch::MAX_VERSION,
-                                    TaggedFieldsSection::empty(),
-                                ),
-                            ]
-                            .into(),
-                            throttle_time_ms,
-                            TaggedFieldsSection::empty(),
-                        )
-                        .to_be_bytes()
-                    } else if request_header.request_api_key == FETCH {
-                        println!("Handling Fetch request...");
-                        let fetch_request = FetchRequestV16::parse(buf, request_header.size());
-                        let mut topics = Vec::new();
-                        for _ in 0..fetch_request.topics.len() {
-                            let partition_index = 0;
-                            let high_watermark = 0;
-                            let last_stable_offset = 0;
-                            let log_start_offset = 0;
-                            let aborted_transactions: CompactArray<Transaction> =
-                                CompactArray::empty();
-                            let preferred_read_replica = 0;
-                            let topic_id: Uuid = fetch_request.topics[0].topic_id;
-                            let metadata_record_batches = get_record_batches_from_metadata_log();
-                            let records = if let Some(topic_record) =
-                                get_topic_record(&topic_id, &metadata_record_batches)
-                            {
-                                let topic_name = topic_record.topic_name.to_string();
-                                let data_record_batches =
-                                    get_record_batches_from_data_log(&topic_name, partition_index);
-                                CompactRecords::from_record_batches(&data_record_batches)
-                            } else {
-                                CompactRecords::null()
-                            };
-                            topics.push(ResponseTopic::new(
-                                topic_id,
-                                vec![ResponsePartition {
-                                    partition_index,
-                                    error_code: check_topic_exists(
-                                        &topic_id,
-                                        metadata_record_batches,
-                                    ),
-                                    high_watermark,
-                                    last_stable_offset,
-                                    log_start_offset,
-                                    aborted_transactions,
-                                    preferred_read_replica,
-                                    records,
-                                    _tagged_fields: TaggedFieldsSection::empty(),
-                                }]
-                                .into(),
-                                TaggedFieldsSection::empty(),
-                            ));
-                        }
-                        let throttle_time_ms = 0;
-                        let session_id = 0;
-                        let responses = CompactArray::new(topics);
-                        FetchResponseV16::new(
-                            request_header.correlation_id,
-                            throttle_time_ms,
-                            error_codes::NONE,
-                            session_id,
-                            responses,
-                            TaggedFieldsSection::empty(),
-                        )
-                        .to_be_bytes()
-                    } else {
-                        Vec::new()
+                    let response_bytes = match request_header.request_api_key {
+                        API_VERSIONS => respond_to_api_versions_request(request_header),
+                        FETCH => respond_to_fetch_request(request_header, buf),
+                        _ => Vec::new(),
                     };
 
                     let response_bytes_sent = write_bytes_to_stream(_stream, &response_bytes);
@@ -175,6 +95,86 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
     }
     println!("Total bytes read: {}", total_bytes_read);
     total_bytes_read
+}
+
+fn respond_to_api_versions_request(request_header: RequestHeaderV2) -> Vec<u8> {
+    println!("Handling ApiVersions request...");
+    let throttle_time_ms = 0;
+    ApiVersionsResponseV4::new(
+        request_header.correlation_id,
+        check_supported_version(request_header.request_api_version),
+        vec![
+            ApiKey::new(
+                API_VERSIONS,
+                api_versions::MIN_VERSION,
+                api_versions::MAX_VERSION,
+                TaggedFieldsSection::empty(),
+            ),
+            ApiKey::new(
+                FETCH,
+                fetch::MIN_VERSION,
+                fetch::MAX_VERSION,
+                TaggedFieldsSection::empty(),
+            ),
+        ]
+        .into(),
+        throttle_time_ms,
+        TaggedFieldsSection::empty(),
+    )
+    .to_be_bytes()
+}
+
+fn respond_to_fetch_request(request_header: RequestHeaderV2, buf: &[u8]) -> Vec<u8> {
+    println!("Handling Fetch request...");
+    let fetch_request = FetchRequestV16::parse(buf, request_header.size());
+    let throttle_time_ms = 0;
+    let session_id = 0;
+    let mut topics = Vec::new();
+    for _ in 0..fetch_request.topics.len() {
+        let partition_index = 0;
+        let high_watermark = 0;
+        let last_stable_offset = 0;
+        let log_start_offset = 0;
+        let aborted_transactions: CompactArray<Transaction> = CompactArray::empty();
+        let preferred_read_replica = 0;
+        let topic_id: Uuid = fetch_request.topics[0].topic_id;
+        let metadata_record_batches = get_record_batches_from_metadata_log();
+        let records =
+            if let Some(topic_record) = get_topic_record(&topic_id, &metadata_record_batches) {
+                let topic_name = topic_record.topic_name.to_string();
+                let data_record_batches =
+                    get_record_batches_from_data_log(&topic_name, partition_index);
+                CompactRecords::from_record_batches(&data_record_batches)
+            } else {
+                CompactRecords::null()
+            };
+        topics.push(ResponseTopic::new(
+            topic_id,
+            vec![ResponsePartition {
+                partition_index,
+                error_code: check_topic_exists(&topic_id, metadata_record_batches),
+                high_watermark,
+                last_stable_offset,
+                log_start_offset,
+                aborted_transactions,
+                preferred_read_replica,
+                records,
+                _tagged_fields: TaggedFieldsSection::empty(),
+            }]
+            .into(),
+            TaggedFieldsSection::empty(),
+        ));
+    }
+    let responses = CompactArray::new(topics);
+    FetchResponseV16::new(
+        request_header.correlation_id,
+        throttle_time_ms,
+        error_codes::NONE,
+        session_id,
+        responses,
+        TaggedFieldsSection::empty(),
+    )
+    .to_be_bytes()
 }
 
 fn get_topic_record(topic_id: &Uuid, record_batches: &[RecordBatch]) -> Option<TopicRecord> {
