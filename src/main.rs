@@ -3,6 +3,7 @@ use std::fs::{self, File};
 use std::io::{Read, Write};
 use std::net::TcpListener;
 use std::net::TcpStream;
+use std::thread;
 
 use uuid::Uuid;
 
@@ -47,7 +48,8 @@ fn main() {
     let listener = TcpListener::bind("127.0.0.1:9092").unwrap();
 
     for stream in listener.incoming() {
-        match stream {
+        // Uses 1:1 model of thread implementation (1 thread: 1 OS thread), so probably won't scale
+        thread::spawn(move || match stream {
             Ok(mut _stream) => {
                 println!("\nAccepted new connection");
 
@@ -57,7 +59,7 @@ fn main() {
             Err(e) => {
                 println!("error: {}", e);
             }
-        }
+        });
     }
 }
 
