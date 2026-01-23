@@ -7,7 +7,7 @@ use std::thread;
 
 use uuid::Uuid;
 
-use crate::api_keys::{API_VERSIONS, FETCH};
+use crate::api_keys::{API_VERSIONS, DESCRIBE_TOPIC_PARTITIONS, FETCH};
 use crate::api_versions::api_versions_response_v4::{ApiKey, ApiVersionsResponseV4};
 use crate::byte_parsable::ByteParsable;
 use crate::fetch::fetch_request_v16::FetchRequestV16;
@@ -28,6 +28,7 @@ use types::compact_records::CompactRecords;
 mod api_keys;
 mod api_versions;
 mod byte_parsable;
+mod describe_topic_partitions;
 mod error_codes;
 mod fetch;
 mod headers;
@@ -116,6 +117,12 @@ fn respond_to_api_versions_request(request_header: RequestHeaderV2) -> Vec<u8> {
                 FETCH,
                 fetch::MIN_VERSION,
                 fetch::MAX_VERSION,
+                TaggedFieldsSection::empty(),
+            ),
+            ApiKey::new(
+                DESCRIBE_TOPIC_PARTITIONS,
+                describe_topic_partitions::MIN_VERSION,
+                describe_topic_partitions::MAX_VERSION,
                 TaggedFieldsSection::empty(),
             ),
         ]
