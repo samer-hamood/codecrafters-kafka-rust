@@ -28,6 +28,12 @@ impl Size for i8 {
     }
 }
 
+impl Size for u8 {
+    fn size(&self) -> usize {
+        size_of::<u8>()
+    }
+}
+
 impl Size for u16 {
     fn size(&self) -> usize {
         size_of::<u16>()
@@ -40,6 +46,12 @@ impl Size for u32 {
     }
 }
 
+impl Size for bool {
+    fn size(&self) -> usize {
+        size_of::<bool>()
+    }
+}
+
 impl Size for Uuid {
     fn size(&self) -> usize {
         size_of::<Uuid>()
@@ -49,18 +61,6 @@ impl Size for Uuid {
 impl Size for String {
     fn size(&self) -> usize {
         self.len()
-    }
-}
-
-impl Size for Vec<u8> {
-    fn size(&self) -> usize {
-        self.len()
-    }
-}
-
-impl Size for Option<Vec<u8>> {
-    fn size(&self) -> usize {
-        self.as_ref().map(|v| v.len()).unwrap_or(0)
     }
 }
 
@@ -91,5 +91,11 @@ mod test {
         let vec = vec![1, 2, 3, 4];
         let expected_size = vec.len() * 4; // i32 is 4 bytes
         assert_eq!(vec.size(), expected_size);
+    }
+
+    #[test]
+    fn size_of_bool_equals_one_byte() {
+        let boolean = false;
+        assert_eq!(boolean.size(), 1);
     }
 }
