@@ -1,7 +1,13 @@
 use uuid::Uuid;
 
 pub trait Size {
-    fn size(&self) -> usize;
+    fn size(&self) -> usize {
+        self.sized_fields().iter().map(|field| field.size()).sum()
+    }
+
+    fn sized_fields(&self) -> Vec<Box<dyn Size>> {
+        vec![]
+    }
 }
 
 impl Size for i64 {
