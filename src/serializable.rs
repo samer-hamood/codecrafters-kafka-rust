@@ -1,6 +1,8 @@
+use crate::size::Size;
+
 pub type BoxedSerializable = Box<dyn Serializable>;
 
-pub trait Serializable {
+pub trait Serializable: Size {
     fn to_be_bytes(&self) -> Vec<u8> {
         self.serializable_fields()
             .iter()
