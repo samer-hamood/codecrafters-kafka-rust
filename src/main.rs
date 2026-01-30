@@ -5,6 +5,7 @@ use std::net::TcpListener;
 use std::net::TcpStream;
 use std::thread;
 
+use tracing::{debug, info, trace};
 use uuid::Uuid;
 
 use crate::api_keys::{API_VERSIONS, DESCRIBE_TOPIC_PARTITIONS, FETCH};
@@ -43,6 +44,7 @@ mod types;
 const SUPPORTED_API_VERSIONS: [i16; 5] = [0, 1, 2, 3, 4];
 
 fn main() {
+    set_up_logging();
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     println!("Logs from your program will appear here!");
 
@@ -64,9 +66,16 @@ fn main() {
     }
 }
 
+fn set_up_logging() {
+    tracing_subscriber::fmt()
+        .with_env_filter("info")
+        .fmt_fields(tracing_subscriber::fmt::format::DefaultFields::new())
+        .init();
+}
+
 fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
+    debug!("Buffer length: {}", buf.len());
     let mut total_bytes_read = 0;
-    println!("Buffer length: {}", buf.len());
     let header_size = RequestHeaderV2::min_size();
     loop {
         match _stream.read(&mut buf[total_bytes_read..]) {
@@ -75,7 +84,7 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                 break;
             }
             Ok(n) => {
-                println!("Read {} byte(s)", n);
+                debug!("Read {n} byte(s)");
                 total_bytes_read += n;
                 if total_bytes_read >= header_size {
                     let request_header = RequestHeaderV2::parse(buf, 0);
@@ -85,9 +94,11 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                         _ => Vec::new(),
                     };
 
+                    debug!("Response size: {} byte(s)", &response_bytes.len());
+
                     let response_bytes_sent = write_bytes_to_stream(_stream, &response_bytes);
 
-                    println!("Sent {:#?} byte(s) for response", response_bytes_sent);
+                    debug!("Sent {response_bytes_sent} byte(s) for response");
                 }
             }
             Err(e) => {
@@ -96,12 +107,12 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
             }
         }
     }
-    println!("Total bytes read: {}", total_bytes_read);
+    debug!("Total bytes read: {}", total_bytes_read);
     total_bytes_read
 }
 
 fn respond_to_api_versions_request(request_header: RequestHeaderV2) -> Vec<u8> {
-    println!("Handling ApiVersions request...");
+    debug!("Handling ApiVersions request...");
     let throttle_time_ms = 0;
     ApiVersionsResponseV4::new(
         request_header.correlation_id,
@@ -134,8 +145,8 @@ fn respond_to_api_versions_request(request_header: RequestHeaderV2) -> Vec<u8> {
 }
 
 fn respond_to_fetch_request(request_header: RequestHeaderV2, buf: &[u8]) -> Vec<u8> {
-    println!("Handling Fetch request...");
     let fetch_request = FetchRequestV16::parse(buf, request_header.size());
+    debug!("Handling Fetch request...");
     let throttle_time_ms = 0;
     let session_id = 0;
     let mut topics = Vec::new();
@@ -282,10 +293,10 @@ fn check_supported_version(version: i16) -> i16 {
 }
 
 fn write_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) -> usize {
-    println!("Writing the following bytes to stream: {:X?}", bytes);
+    trace!("Writing the following bytes to stream: {:X?}", bytes);
     match _stream.write(bytes) {
         Ok(n) => {
-            println!("Wrote {:#?} byte(s) successfully", n);
+            trace!("Wrote {n} byte(s) successfully");
             n
         }
         Err(e) => {

@@ -12,17 +12,8 @@ pub fn parse(varint_encoded_bytes: &[u8], offset: usize) -> (u64, usize) {
     let mut continuation_bit_set = true;
     let mut byte_count: usize = 0;
     // varint_encoded_bytes should come in little-endian order
-    lazy_debug!(
-        "bytes: {}\n",
-        join(
-            varint_encoded_bytes
-                .iter()
-                .map(|byte| format!("{:08b}", byte)),
-            " "
-        )
-    );
     while continuation_bit_set {
-        debug!("bytes[{i}]: {:08b}", varint_encoded_bytes[i]);
+        trace!("bytes[{i}]: {:08b}", varint_encoded_bytes[i]);
         let continuation_bit = (varint_encoded_bytes[i] >> 7) & 0x01;
         continuation_bit_set = continuation_bit == 1;
         trace!(
@@ -30,18 +21,17 @@ pub fn parse(varint_encoded_bytes: &[u8], offset: usize) -> (u64, usize) {
         );
         let byte_with_8th_bit_cleared = varint_encoded_bytes[i] & 0x7F;
         assert_eq!(get_bit_value(byte_with_8th_bit_cleared, 7), 0);
-        debug!("Drop continuation bit: {:07b}", byte_with_8th_bit_cleared);
+        trace!("Drop continuation bit: {:07b}", byte_with_8th_bit_cleared);
         // Concatenate bytes in opposite order (big-endian)
         value |= (byte_with_8th_bit_cleared << shift) as u64;
-        trace!("concatenated value: {:b}", value);
+        trace!("concatenated value: {:b}\n", value);
         byte_count += 1;
         if continuation_bit_set {
             i += 1;
             shift += 7;
         }
-        debug!("");
     }
-    debug!(
+    trace!(
         "Concatenated: {:0width$b} ({})",
         value,
         value,
@@ -55,7 +45,7 @@ pub fn serialize(number: u32) -> Vec<u8> {
     // 1. Break up number into groups of seven bits
     // 2. Set high bit (bit 8) of the group if it's NOT the last one and clear bit if it is the last group
 
-    debug!("Number: {} ({:b})", number, number);
+    trace!("Number: {} ({:b})", number, number);
 
     let mut bytes = Vec::new();
 
@@ -68,7 +58,7 @@ pub fn serialize(number: u32) -> Vec<u8> {
         // let mut current_byte = remaining_bits & 0x00_00_00_00_00_00_00_7F;
         let mut byte = (remaining_bits & 0x00_00_00_7F) as u8; // takes lowest seven bits
         assert!(byte < 255);
-        debug!(
+        trace!(
             "Lowest 7 bits from remaining (before continuation bit added): {:07b}",
             byte
         );
@@ -90,12 +80,12 @@ pub fn serialize(number: u32) -> Vec<u8> {
         } else {
             byte &= 0x7F; // sets eighth bit to 0 while the rest are unchanged
         }
-        debug!("Add continuation bit: {:08b}", byte);
+        trace!("Add continuation bit: {:08b}", byte);
 
         bytes.push(byte);
     }
 
-    lazy_debug!(
+    lazy_trace!(
         "Serialized: {}\n",
         join(bytes.iter().map(|byte| format!("{:08b}", byte)), " ")
     );
