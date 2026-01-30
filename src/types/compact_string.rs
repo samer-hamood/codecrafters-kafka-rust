@@ -1,6 +1,7 @@
 use std::fmt::{Debug, Display};
 
 use crate::byte_parsable::ByteParsable;
+use crate::serializable::Serializable;
 use crate::size::Size;
 use crate::types::unsigned_varint::UnsignedVarint;
 
@@ -33,6 +34,19 @@ impl ByteParsable<CompactString> for CompactString {
         Self { length, bytes }
     }
 }
+
+impl Serializable for CompactString {
+    fn to_be_bytes(&self) -> Vec<u8> {
+        match &self.bytes {
+            Some(b) => {
+                let mut bytes = Vec::new();
+                bytes.extend_from_slice(&self.length.to_be_bytes());
+                bytes.extend_from_slice(&b.to_vec());
+                bytes
+            },
+            None => Vec::new(),
+        }
+    }
 
 impl Debug for CompactString {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
