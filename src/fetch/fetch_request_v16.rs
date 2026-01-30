@@ -29,7 +29,6 @@ use crate::types::compact_string::CompactString;
 ///     topic_id => UUID
 ///     partitions => INT32
 ///   rack_id => COMPACT_STRING
-#[allow(dead_code)]
 #[derive(Debug)]
 pub struct FetchRequestV16 {
     pub max_wait_ms: i32,
