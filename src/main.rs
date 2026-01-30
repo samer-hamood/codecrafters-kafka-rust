@@ -145,11 +145,11 @@ fn respond_to_api_versions_request(request_header: RequestHeaderV2) -> Vec<u8> {
 }
 
 fn respond_to_fetch_request(request_header: RequestHeaderV2, buf: &[u8]) -> Vec<u8> {
-    let fetch_request = FetchRequestV16::parse(buf, request_header.size());
     debug!("Handling Fetch request...");
     let throttle_time_ms = 0;
     let session_id = 0;
     let mut topics = Vec::new();
+    let fetch_request = FetchRequestV16::parse(buf, request_header.size());
     for _ in 0..fetch_request.topics.len() {
         let partition_index = 0;
         let high_watermark = 0;
