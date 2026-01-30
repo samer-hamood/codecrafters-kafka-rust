@@ -48,3 +48,18 @@ impl Serializable for u32 {
         u32::to_be_bytes(*self).to_vec()
     }
 }
+
+impl Serializable for bool {
+    fn to_be_bytes(&self) -> Vec<u8> {
+        vec![*self as u8]
+    }
+}
+
+impl <T: Serializable + 'static> Serializable for Option<Vec<T>> {
+    fn to_be_bytes(&self) -> Vec<u8> {
+       match self {
+           Some(v) => v.iter().flat_map(|s| s.to_be_bytes()).collect(),
+           None => Vec::new()
+       }
+    }
+}
