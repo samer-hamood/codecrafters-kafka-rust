@@ -3,6 +3,7 @@ use std::fs::{self, File};
 use std::io::{Read, Write};
 use std::net::TcpListener;
 use std::net::TcpStream;
+use std::str::FromStr;
 use std::thread;
 
 use tracing::{debug, info, trace};
@@ -11,6 +12,10 @@ use uuid::Uuid;
 use crate::api_keys::{API_VERSIONS, DESCRIBE_TOPIC_PARTITIONS, FETCH};
 use crate::api_versions::api_versions_response_v4::{ApiKey, ApiVersionsResponseV4};
 use crate::byte_parsable::ByteParsable;
+use crate::describe_topic_partitions::describe_topic_partitions_request_v0::DescribeTopicPartitionsRequestV0;
+use crate::describe_topic_partitions::describe_topic_partitions_response_v0::{
+    DescribeTopicPartitionsResponseV0, Topic,
+};
 use crate::fetch::fetch_request_v16::FetchRequestV16;
 use crate::fetch::fetch_response_v16::FetchResponseV16;
 use crate::fetch::partition::{ResponsePartition, Transaction};
@@ -91,6 +96,9 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                     let response_bytes = match request_header.request_api_key {
                         API_VERSIONS => respond_to_api_versions_request(request_header),
                         FETCH => respond_to_fetch_request(request_header, buf),
+                        DESCRIBE_TOPIC_PARTITIONS => {
+                            respond_to_describe_topic_partitions_request(request_header, buf)
+                        }
                         _ => Vec::new(),
                     };
 
@@ -109,6 +117,46 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
     }
     debug!("Total bytes read: {}", total_bytes_read);
     total_bytes_read
+}
+
+fn respond_to_describe_topic_partitions_request(
+    request_header: RequestHeaderV2,
+    buf: &[u8],
+) -> Vec<u8> {
+    debug!("Handling DescribeTopicPartitions request...");
+    let throttle_time_ms = 0;
+    let describe_topic_partitions_request =
+        DescribeTopicPartitionsRequestV0::parse(buf, request_header.size());
+    let topic_id = Uuid::from_str("00000000-0000-0000-0000-000000000000").unwrap();
+    let is_internal = false;
+    let partitions = CompactArray::empty();
+    let topic_authorized_operation = 0;
+    let topics: CompactArray<Topic> = describe_topic_partitions_request
+        .topics
+        .iter()
+        .map(|request_topic| {
+            Topic::new(
+                error_codes::UNKNOWN_TOPIC_OR_PARTITION,
+                request_topic.name.clone(),
+                topic_id,
+                is_internal,
+                partitions.clone(),
+                topic_authorized_operation,
+                TaggedFieldsSection::empty(),
+            )
+        })
+        .collect::<Vec<Topic>>()
+        .into();
+    let next_cursor: i8 = -1;
+    let response = DescribeTopicPartitionsResponseV0::new(
+        request_header.correlation_id,
+        throttle_time_ms,
+        topics,
+        next_cursor,
+        TaggedFieldsSection::empty(),
+    );
+    let bytes = response.to_be_bytes();
+    bytes
 }
 
 fn respond_to_api_versions_request(request_header: RequestHeaderV2) -> Vec<u8> {

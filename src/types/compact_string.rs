@@ -47,8 +47,6 @@ impl Serializable for CompactString {
             None => Vec::new(),
         }
     }
-
-    }
 }
 
 impl Display for CompactString {
