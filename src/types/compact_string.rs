@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::fmt::{Debug, Display};
 
 use crate::byte_parsable::ByteParsable;
 use crate::size::Size;
@@ -6,7 +6,7 @@ use crate::types::unsigned_varint::UnsignedVarint;
 
 // https://kafka.apache.org/27/protocol.html#protocol_types
 
-#[derive(Debug)]
+#[derive(Clone)]
 pub struct CompactString {
     pub length: UnsignedVarint,
     pub bytes: Option<Vec<u8>>,
@@ -31,6 +31,19 @@ impl ByteParsable<CompactString> for CompactString {
         };
 
         Self { length, bytes }
+    }
+}
+
+impl Debug for CompactString {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if let Some(bytes) = &self.bytes {
+            match str::from_utf8(bytes) {
+                Ok(s) => write!(f, "{}", s),
+                Err(e) => panic!("Invalid UTF-8: {}", e),
+            }
+        } else {
+            panic!("No bytes to display CompactString")
+        }
     }
 }
 
