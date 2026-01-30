@@ -43,7 +43,7 @@ impl Serializable for CompactString {
                 bytes.extend_from_slice(&self.length.to_be_bytes());
                 bytes.extend_from_slice(&b.to_vec());
                 bytes
-            },
+            }
             None => Vec::new(),
         }
     }

@@ -57,11 +57,11 @@ impl Serializable for bool {
     }
 }
 
-impl <T: Serializable + 'static> Serializable for Option<Vec<T>> {
+impl<T: Serializable> Serializable for Option<Vec<T>> {
     fn to_be_bytes(&self) -> Vec<u8> {
-       match self {
-           Some(v) => v.iter().flat_map(|s| s.to_be_bytes()).collect(),
-           None => Vec::new()
-       }
+        match self {
+            Some(v) => v.iter().flat_map(|s| s.to_be_bytes()).collect(),
+            None => Vec::new(),
+        }
     }
 }
