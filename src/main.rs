@@ -5,9 +5,6 @@ use std::net::TcpListener;
 use std::net::TcpStream;
 use std::thread;
 
-use tracing::{debug, info, trace};
-use uuid::Uuid;
-
 use crate::api_keys::{API_VERSIONS, DESCRIBE_TOPIC_PARTITIONS, FETCH};
 use crate::api_versions::api_versions_response_v4::{ApiKey, ApiVersionsResponseV4};
 use crate::byte_parsable::ByteParsable;
@@ -30,7 +27,11 @@ use crate::tagged_fields_section::TaggedFieldsSection;
 use crate::types::compact_array::CompactArray;
 use crate::types::compact_records::CompactRecords;
 use crate::types::compact_string::CompactString;
+use crate::utils::config::load_config;
+use crate::utils::logging::init_logging;
 use crate::utils::uuid::all_zeroes_uuid;
+use tracing::{debug, info, trace};
+use uuid::Uuid;
 
 mod api_keys;
 mod api_versions;
@@ -51,7 +52,8 @@ mod utils;
 const SUPPORTED_API_VERSIONS: [i16; 5] = [0, 1, 2, 3, 4];
 
 fn main() {
-    set_up_logging();
+    let config = load_config();
+    init_logging(&config.log.level);
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     println!("Logs from your program will appear here!");
 
@@ -71,13 +73,6 @@ fn main() {
             }
         });
     }
-}
-
-fn set_up_logging() {
-    tracing_subscriber::fmt()
-        .with_env_filter("info")
-        .fmt_fields(tracing_subscriber::fmt::format::DefaultFields::new())
-        .init();
 }
 
 fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
