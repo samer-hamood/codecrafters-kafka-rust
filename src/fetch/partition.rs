@@ -9,9 +9,6 @@ use crate::types::compact_array::CompactArray;
 use crate::types::compact_records::CompactRecords;
 
 #[allow(dead_code)]
-pub trait Partition: Serializable + Size {}
-
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct RequestPartition {
     pub partition: i32,
@@ -118,8 +115,6 @@ impl ByteParsable<ResponsePartition> for ResponsePartition {
         todo!()
     }
 }
-
-impl Partition for ResponsePartition {}
 
 #[allow(dead_code)]
 #[derive(Debug, Clone)]

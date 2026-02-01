@@ -1,7 +1,7 @@
 use std::any::Any;
 
 use crate::byte_parsable::ByteParsable;
-use crate::fetch::partition::{Partition, RequestPartition};
+use crate::fetch::partition::RequestPartition;
 use crate::fetch::topic::{self, ForgottenTopicsDatum, RequestTopic};
 use crate::headers::request_header_v2::RequestHeaderV2;
 use crate::size::Size;
