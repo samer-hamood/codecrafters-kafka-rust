@@ -20,26 +20,16 @@ pub struct PartitionRecord {
     #[allow(dead_code)]
     pub topic_uuid: Uuid,
     #[allow(dead_code)]
-    pub length_of_replica_array: UnsignedVarint,
-    #[allow(dead_code)]
-    pub replica_array: CompactArray<u32>,
-    #[allow(dead_code)]
-    pub length_of_in_sync_replica_array: UnsignedVarint,
-    #[allow(dead_code)]
-    pub in_sync_replica_array: CompactArray<u32>,
-    #[allow(dead_code)]
-    pub length_of_removing_replica_array: UnsignedVarint,
-    #[allow(dead_code)]
-    pub length_of_adding_replica_array: UnsignedVarint,
-    #[allow(dead_code)]
     pub leader: u32,
     #[allow(dead_code)]
     pub leader_epoch: u32,
     #[allow(dead_code)]
     pub partition_epoch: u32,
     #[allow(dead_code)]
-    pub length_of_directories_array: UnsignedVarint,
-    #[allow(dead_code)]
+    pub replica_array: CompactArray<i32>,
+    pub in_sync_replica_array: CompactArray<i32>,
+    pub removing_replica_array: CompactArray<i32>,
+    pub adding_replica_array: CompactArray<i32>,
     pub directories_array: CompactArray<Uuid>, // Array of UUIDs
     #[allow(dead_code)]
     pub tagged_fields_count: UnsignedVarint,
