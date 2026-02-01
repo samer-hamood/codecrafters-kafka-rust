@@ -23,7 +23,7 @@ use crate::fetch::topic::ResponseTopic;
 use crate::headers::request_header_v2::RequestHeaderV2;
 use crate::partial_parsable::PartialParsable;
 use crate::records::metadata_record::{MetadataRecord, TOPIC};
-use crate::records::record_batch::{RecordBatch, RecordValue};
+use crate::records::record_batch::{RecordBatch, RecordValue, SearchItem};
 use crate::records::topic_record::TopicRecord;
 use crate::serializable::Serializable;
 use crate::size::Size;
@@ -250,7 +250,7 @@ fn get_topic_record(topic_id: &Uuid, record_batches: &[RecordBatch]) -> Option<T
     record_batches
         .iter()
         .flat_map(|record_batch| {
-            parse_record_values(record_batch, SearchItem::TopicId(*topic_id), true)
+            record_batch.parse_record_values(SearchItem::TopicId(*topic_id), true)
         })
         .filter_map(|record_value| record_value.to_topic_record())
         .next()
@@ -319,48 +319,6 @@ fn record_batch_contains_topic(record_batch: &RecordBatch, topic_id: &Uuid) -> b
         }
     }
     false
-}
-
-enum SearchItem {
-    TopicId(Uuid),
-    TopicName(CompactString),
-}
-
-impl SearchItem {
-    fn found_in(&self, topic_record: &TopicRecord) -> bool {
-        match self {
-            Self::TopicId(id) => id == &topic_record.topic_uuid,
-            Self::TopicName(name) => name == &topic_record.topic_name,
-        }
-    }
-}
-
-fn parse_record_values(
-    record_batch: &RecordBatch,
-    search_item: SearchItem,
-    topic_record_only: bool,
-) -> Vec<RecordValue> {
-    let mut record_values = Vec::new();
-    for record in &record_batch.records {
-        let mut offset: usize = 0;
-        let metadata_record = MetadataRecord::parse(&record.value, offset);
-        offset += metadata_record.size();
-        match metadata_record._type {
-            TOPIC => {
-                let topic_record = TopicRecord::parse(&record.value, offset, metadata_record);
-                if search_item.found_in(&topic_record) {
-                    record_values.push(RecordValue::Topic(topic_record));
-                } else {
-                    break;
-                }
-                if topic_record_only {
-                    break;
-                }
-            }
-            _ => {}
-        }
-    }
-    record_values
 }
 
 fn check_supported_version(version: i16) -> i16 {

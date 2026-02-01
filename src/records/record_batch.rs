@@ -1,5 +1,9 @@
-use crate::records::partition_record::PartitionRecord;
+use uuid::Uuid;
+
+use crate::partial_parsable::PartialParsable;
+use crate::records::metadata_record::{MetadataRecord, TOPIC};
 use crate::records::topic_record::TopicRecord;
+use crate::types::compact_string::CompactString;
 use crate::types::signed_varint::SignedVarint;
 use crate::types::unsigned_varint::UnsignedVarint;
 use crate::types::varlong::Varlong;
@@ -28,6 +32,34 @@ pub struct RecordBatch {
 impl RecordBatch {
     pub fn expected_length(&self) -> usize {
         self.base_offset.size() + self.batch_length.size() + self.batch_length as usize
+    }
+
+    pub fn parse_record_values(
+        &self,
+        search_item: SearchItem,
+        topic_record_only: bool,
+    ) -> Vec<RecordValue> {
+        let mut record_values = Vec::new();
+        for record in &self.records {
+            let mut offset: usize = 0;
+            let metadata_record = MetadataRecord::parse(&record.value, offset);
+            offset += metadata_record.size();
+            match metadata_record._type {
+                TOPIC => {
+                    let topic_record = TopicRecord::parse(&record.value, offset, metadata_record);
+                    if search_item.found_in(&topic_record) {
+                        record_values.push(RecordValue::Topic(topic_record));
+                    } else {
+                        break;
+                    }
+                    if topic_record_only {
+                        break;
+                    }
+                }
+                _ => {}
+            }
+        }
+        record_values
     }
 }
 
@@ -231,6 +263,20 @@ impl ByteParsable<Header> for Header {
             header_key,
             header_value_length,
             value,
+        }
+    }
+}
+
+pub enum SearchItem {
+    TopicId(Uuid),
+    TopicName(CompactString),
+}
+
+impl SearchItem {
+    fn found_in(&self, topic_record: &TopicRecord) -> bool {
+        match self {
+            Self::TopicId(id) => id == &topic_record.topic_uuid,
+            Self::TopicName(name) => name == &topic_record.topic_name,
         }
     }
 }
