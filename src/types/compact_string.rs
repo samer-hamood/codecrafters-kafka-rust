@@ -7,7 +7,7 @@ use crate::types::unsigned_varint::UnsignedVarint;
 
 // https://kafka.apache.org/27/protocol.html#protocol_types
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct CompactString {
     pub length: UnsignedVarint,
     pub bytes: Option<Vec<u8>>,
