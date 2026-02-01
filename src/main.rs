@@ -22,7 +22,7 @@ use crate::fetch::partition::{ResponsePartition, Transaction};
 use crate::fetch::topic::ResponseTopic;
 use crate::headers::request_header_v2::RequestHeaderV2;
 use crate::partial_parsable::PartialParsable;
-use crate::records::metadata_record::MetadataRecord;
+use crate::records::metadata_record::{MetadataRecord, TOPIC};
 use crate::records::record_batch::{RecordBatch, RecordValue};
 use crate::records::topic_record::TopicRecord;
 use crate::serializable::Serializable;
@@ -346,7 +346,7 @@ fn parse_record_values(
         let metadata_record = MetadataRecord::parse(&record.value, offset);
         offset += metadata_record.size();
         match metadata_record._type {
-            2 => {
+            TOPIC => {
                 let topic_record = TopicRecord::parse(&record.value, offset, metadata_record);
                 if search_item.found_in(&topic_record) {
                     record_values.push(RecordValue::Topic(topic_record));
