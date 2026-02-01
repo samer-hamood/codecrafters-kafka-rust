@@ -2,7 +2,7 @@ use crate::types::signed_varint::SignedVarint;
 use crate::types::unsigned_varint::UnsignedVarint;
 use crate::types::varlong::Varlong;
 use crate::{byte_parsable::ByteParsable, size::Size};
-#[allow(dead_code)]
+
 #[derive(Debug)]
 pub struct RecordBatch {
     pub base_offset: i64,

@@ -8,7 +8,6 @@ use crate::tagged_fields_section::TaggedFieldsSection;
 use crate::types::compact_array::CompactArray;
 use crate::types::compact_records::CompactRecords;
 
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct RequestPartition {
     pub partition: i32,
@@ -116,7 +115,6 @@ impl ByteParsable<ResponsePartition> for ResponsePartition {
     }
 }
 
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct Transaction {
     producer_id: i64,
