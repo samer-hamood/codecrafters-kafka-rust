@@ -134,7 +134,7 @@ fn respond_to_describe_topic_partitions_request(
     let is_internal = false;
     let partitions = CompactArray::empty();
     let topic_authorized_operation = 0;
-    let topics: CompactArray<Topic> = describe_topic_partitions_request
+    let topics = describe_topic_partitions_request
         .topics
         .iter()
         .map(|request_topic| {
