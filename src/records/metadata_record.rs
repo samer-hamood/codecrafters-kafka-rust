@@ -2,11 +2,8 @@ use crate::{byte_parsable::ByteParsable, size::Size};
 
 #[derive(Debug)]
 pub struct MetadataRecord {
-    #[allow(dead_code)]
     pub frame_version: i8,
-    #[allow(dead_code)]
     pub _type: i8,
-    #[allow(dead_code)]
     pub version: i8,
 }
 

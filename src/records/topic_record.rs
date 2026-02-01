@@ -8,16 +8,11 @@ use crate::{
 
 #[derive(Debug)]
 pub struct TopicRecord {
-    #[allow(dead_code)]
     pub frame_version: i8,
-    #[allow(dead_code)]
     pub _type: i8,
-    #[allow(dead_code)]
     pub version: i8,
-    #[allow(dead_code)]
     pub topic_name: CompactString,
     pub topic_uuid: Uuid,
-    #[allow(dead_code)]
     pub tagged_fields_count: UnsignedVarint,
 }
 

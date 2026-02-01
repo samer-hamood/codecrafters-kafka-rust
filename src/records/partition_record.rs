@@ -6,18 +6,12 @@ use crate::{
     records::metadata_record::MetadataRecord, size::Size, types::unsigned_varint::UnsignedVarint,
 };
 
-#[allow(dead_code)]
 #[derive(Debug)]
 pub struct PartitionRecord {
-    #[allow(dead_code)]
     pub frame_version: i8,
-    #[allow(dead_code)]
     pub _type: i8,
-    #[allow(dead_code)]
     pub version: i8,
-    #[allow(dead_code)]
     pub partition_id: i32,
-    #[allow(dead_code)]
     pub topic_uuid: Uuid,
     pub replica_array: CompactArray<i32>,
     pub in_sync_replica_array: CompactArray<i32>,
@@ -27,7 +21,6 @@ pub struct PartitionRecord {
     pub leader_epoch: i32,
     pub partition_epoch: i32,
     pub directories_array: CompactArray<Uuid>, // Array of UUIDs
-    #[allow(dead_code)]
     pub tagged_fields_count: UnsignedVarint,
 }
 

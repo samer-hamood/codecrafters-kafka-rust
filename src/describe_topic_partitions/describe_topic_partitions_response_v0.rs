@@ -162,7 +162,6 @@ impl Serializable for Topic {
     }
 }
 
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct Partition {
     pub error_code: i16,

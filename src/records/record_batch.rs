@@ -108,7 +108,6 @@ impl ByteParsable<RecordBatch> for RecordBatch {
     }
 }
 
-#[allow(dead_code)]
 #[derive(Clone, Debug)]
 pub struct Record {
     pub length: SignedVarint,
