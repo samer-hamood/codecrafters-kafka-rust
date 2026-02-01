@@ -158,8 +158,7 @@ fn respond_to_describe_topic_partitions_request(
         next_cursor,
         TaggedFieldsSection::empty(),
     );
-    let bytes = response.to_be_bytes();
-    bytes
+    response.to_be_bytes()
 }
 
 fn respond_to_api_versions_request(request_header: RequestHeaderV2) -> Vec<u8> {
