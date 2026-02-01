@@ -27,11 +27,10 @@ use crate::records::topic_record::TopicRecord;
 use crate::serializable::Serializable;
 use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
+use crate::types::compact_array::CompactArray;
+use crate::types::compact_records::CompactRecords;
 use crate::types::compact_string::CompactString;
 use crate::utils::uuid::all_zeroes_uuid;
-use types::compact_array::CompactArray;
-use types::compact_records::CompactRecords;
-use types::compact_string::CompactString;
 
 mod api_keys;
 mod api_versions;
