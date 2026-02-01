@@ -78,6 +78,7 @@ impl<T: Size> Size for Vec<T> {
 
 impl<T: Size> Size for Option<Vec<T>> {
     fn size(&self) -> usize {
+        // Vec is summed (see Size for Vec<T> above)
         self.as_ref().map(|v| v.size()).unwrap_or(0)
     }
 }
