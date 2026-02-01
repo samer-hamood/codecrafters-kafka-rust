@@ -3,7 +3,6 @@ use std::fs::{self, File};
 use std::io::{Read, Write};
 use std::net::TcpListener;
 use std::net::TcpStream;
-use std::str::FromStr;
 use std::thread;
 
 use tracing::{debug, info, trace};
@@ -14,7 +13,7 @@ use crate::api_versions::api_versions_response_v4::{ApiKey, ApiVersionsResponseV
 use crate::byte_parsable::ByteParsable;
 use crate::describe_topic_partitions::describe_topic_partitions_request_v0::DescribeTopicPartitionsRequestV0;
 use crate::describe_topic_partitions::describe_topic_partitions_response_v0::{
-    DescribeTopicPartitionsResponseV0, Topic,
+    DescribeTopicPartitionsResponseV0, Partition, Topic,
 };
 use crate::fetch::fetch_request_v16::FetchRequestV16;
 use crate::fetch::fetch_response_v16::FetchResponseV16;
@@ -28,6 +27,7 @@ use crate::records::topic_record::TopicRecord;
 use crate::serializable::Serializable;
 use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
+use crate::types::compact_string::CompactString;
 use crate::utils::uuid::all_zeroes_uuid;
 use types::compact_array::CompactArray;
 use types::compact_records::CompactRecords;
@@ -129,21 +129,28 @@ fn respond_to_describe_topic_partitions_request(
     debug!("Handling DescribeTopicPartitions request...");
     let describe_topic_partitions_request =
         DescribeTopicPartitionsRequestV0::parse(buf, request_header.size());
-    let topic_id = Uuid::from_str("00000000-0000-0000-0000-000000000000").unwrap();
     let throttle_time_ms = 0;
     let is_internal = false;
-    let partitions = CompactArray::empty();
     let topic_authorized_operation = 0;
+    let record_batches = get_record_batches_from_metadata_log();
     let topics = describe_topic_partitions_request
         .topics
         .iter()
         .map(|request_topic| {
+            let record_values = get_record_values(&record_batches, &request_topic.name);
+            let (topic_id, error_code) = get_topic_id_and_error_code(&record_values);
+            let partitions = record_values
+                .iter()
+                .filter_map(|record_value| record_value.to_partition_record())
+                .map(Partition::from_partition_record)
+                .collect::<Vec<Partition>>()
+                .into();
             Topic::new(
-                error_codes::UNKNOWN_TOPIC_OR_PARTITION,
+                error_code,
                 request_topic.name.clone(),
                 topic_id,
                 is_internal,
-                partitions.clone(),
+                partitions,
                 topic_authorized_operation,
                 TaggedFieldsSection::empty(),
             )
@@ -245,6 +252,31 @@ fn respond_to_fetch_request(request_header: RequestHeaderV2, buf: &[u8]) -> Vec<
         TaggedFieldsSection::empty(),
     )
     .to_be_bytes()
+}
+
+fn get_record_values(
+    record_batches: &[RecordBatch],
+    topic_name: &CompactString,
+) -> Vec<RecordValue> {
+    record_batches
+        .iter()
+        .flat_map(|record_batch| {
+            record_batch.parse_record_values(SearchItem::TopicName(topic_name.clone()), false)
+        })
+        .collect()
+}
+
+fn get_topic_id_and_error_code(record_values: &[RecordValue]) -> (Uuid, i16) {
+    if record_values.is_empty() {
+        (all_zeroes_uuid(), error_codes::UNKNOWN_TOPIC_OR_PARTITION)
+    } else if let RecordValue::Topic(record) = &record_values[0] {
+        (record.topic_uuid, error_codes::NONE)
+    // Should always be TopicRecord but could get topic_uuid from PartitionRecord
+    } else if let RecordValue::Partition(record) = &record_values[0] {
+        (record.topic_uuid, error_codes::NONE)
+    } else {
+        (all_zeroes_uuid(), error_codes::UNKNOWN_TOPIC_OR_PARTITION)
+    }
 }
 
 fn get_topic_record(topic_id: &Uuid, record_batches: &[RecordBatch]) -> Option<TopicRecord> {

@@ -2,7 +2,9 @@ use uuid::Uuid;
 
 use crate::{
     byte_parsable::ByteParsable,
+    error_codes,
     headers::{self, response_header_v1::ResponseHeaderV1},
+    records::partition_record::PartitionRecord,
     serializable::{BoxedSerializable, Serializable},
     size::Size,
     tagged_fields_section::TaggedFieldsSection,
@@ -176,7 +178,64 @@ pub struct Partition {
     pub _tagged_fields: TaggedFieldsSection,
 }
 
-impl Size for Partition {}
+impl Partition {
+    #[allow(clippy::too_many_arguments)]
+    pub fn new(
+        error_code: i16,
+        partition_index: i32,
+        leader_id: i32,
+        leader_epoch: i32,
+        replica_nodes: CompactArray<i32>,
+        isr_nodes: CompactArray<i32>,
+        eligible_leader_replicas: CompactArray<i32>,
+        last_known_elr: CompactArray<i32>,
+        offline_replicas: CompactArray<i32>,
+        _tagged_fields: TaggedFieldsSection,
+    ) -> Self {
+        Self {
+            error_code,
+            partition_index,
+            leader_id,
+            leader_epoch,
+            replica_nodes,
+            isr_nodes,
+            eligible_leader_replicas,
+            last_known_elr,
+            offline_replicas,
+            _tagged_fields,
+        }
+    }
+
+    pub fn from_partition_record(partition_record: PartitionRecord) -> Self {
+        Self::new(
+            error_codes::NONE,
+            partition_record.partition_id,
+            partition_record.leader,
+            partition_record.leader_epoch,
+            partition_record.replica_array,
+            partition_record.in_sync_replica_array,
+            CompactArray::empty(),
+            CompactArray::empty(),
+            CompactArray::empty(),
+            TaggedFieldsSection::empty(),
+        )
+    }
+}
+
+impl Size for Partition {
+    fn size(&self) -> usize {
+        self.error_code.size()
+            + self.partition_index.size()
+            + self.leader_id.size()
+            + self.leader_epoch.size()
+            + self.replica_nodes.size()
+            + self.isr_nodes.size()
+            + self.eligible_leader_replicas.size()
+            + self.last_known_elr.size()
+            + self.offline_replicas.size()
+            + self._tagged_fields.size()
+    }
+}
 
 impl ByteParsable<Self> for Partition {
     fn parse(_bytes: &[u8], _offset: usize) -> Self {
@@ -184,4 +243,19 @@ impl ByteParsable<Self> for Partition {
     }
 }
 
-impl Serializable for Partition {}
+impl Serializable for Partition {
+    fn to_be_bytes(&self) -> Vec<u8> {
+        let mut bytes = Vec::new();
+        bytes.extend_from_slice(&self.error_code.to_be_bytes());
+        bytes.extend_from_slice(&self.partition_index.to_be_bytes());
+        bytes.extend_from_slice(&self.leader_id.to_be_bytes());
+        bytes.extend_from_slice(&self.leader_epoch.to_be_bytes());
+        bytes.extend_from_slice(&self.replica_nodes.to_be_bytes());
+        bytes.extend_from_slice(&self.isr_nodes.to_be_bytes());
+        bytes.extend_from_slice(&self.eligible_leader_replicas.to_be_bytes());
+        bytes.extend_from_slice(&self.last_known_elr.to_be_bytes());
+        bytes.extend_from_slice(&self.offline_replicas.to_be_bytes());
+        bytes.extend_from_slice(&self._tagged_fields.to_be_bytes());
+        bytes
+    }
+}

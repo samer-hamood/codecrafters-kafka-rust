@@ -6,7 +6,7 @@ use crate::{
     records::metadata_record::MetadataRecord, size::Size, types::unsigned_varint::UnsignedVarint,
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct PartitionRecord {
     pub frame_version: i8,
     pub _type: i8,
@@ -22,6 +22,25 @@ pub struct PartitionRecord {
     pub partition_epoch: i32,
     pub directories_array: CompactArray<Uuid>, // Array of UUIDs
     pub tagged_fields_count: UnsignedVarint,
+}
+
+impl Size for PartitionRecord {
+    fn size(&self) -> usize {
+        self.frame_version.size()
+            + self._type.size()
+            + self.version.size()
+            + self.partition_id.size()
+            + self.topic_uuid.size()
+            + self.replica_array.size()
+            + self.in_sync_replica_array.size()
+            + self.removing_replica_array.size()
+            + self.adding_replica_array.size()
+            + self.leader.size()
+            + self.leader_epoch.size()
+            + self.partition_epoch.size()
+            + self.directories_array.size()
+            + self.tagged_fields_count.size()
+    }
 }
 
 impl PartialParsable<Self, MetadataRecord> for PartitionRecord {

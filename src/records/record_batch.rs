@@ -1,7 +1,8 @@
 use uuid::Uuid;
 
 use crate::partial_parsable::PartialParsable;
-use crate::records::metadata_record::{MetadataRecord, TOPIC};
+use crate::records::metadata_record::{MetadataRecord, PARTITION, TOPIC};
+use crate::records::partition_record::PartitionRecord;
 use crate::records::topic_record::TopicRecord;
 use crate::types::compact_string::CompactString;
 use crate::types::signed_varint::SignedVarint;
@@ -55,6 +56,13 @@ impl RecordBatch {
                     if topic_record_only {
                         break;
                     }
+                }
+                // Based on topic records always existing and before a partition record if one is in
+                // the batch
+                PARTITION => {
+                    let partition_record =
+                        PartitionRecord::parse(&record.value, offset, metadata_record);
+                    record_values.push(RecordValue::Partition(partition_record));
                 }
                 _ => {}
             }
@@ -283,11 +291,20 @@ impl SearchItem {
 
 pub enum RecordValue {
     Topic(TopicRecord),
+    Partition(PartitionRecord),
 }
 
 impl RecordValue {
     pub fn to_topic_record(&self) -> Option<TopicRecord> {
         if let RecordValue::Topic(record) = self {
+            Some(record.clone())
+        } else {
+            None
+        }
+    }
+
+    pub fn to_partition_record(&self) -> Option<PartitionRecord> {
+        if let RecordValue::Partition(record) = self {
             Some(record.clone())
         } else {
             None

@@ -16,6 +16,17 @@ pub struct TopicRecord {
     pub tagged_fields_count: UnsignedVarint,
 }
 
+impl Size for TopicRecord {
+    fn size(&self) -> usize {
+        self.frame_version.size()
+            + self._type.size()
+            + self.version.size()
+            + self.topic_name.size()
+            + self.topic_uuid.size()
+            + self.tagged_fields_count.size()
+    }
+}
+
 impl PartialParsable<Self, MetadataRecord> for TopicRecord {
     fn parse(bytes: &[u8], offset: usize, metadata_record: MetadataRecord) -> Self {
         let mut offset = offset;

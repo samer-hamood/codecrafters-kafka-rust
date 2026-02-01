@@ -2,6 +2,8 @@ use crate::{byte_parsable::ByteParsable, size::Size};
 
 // Record types
 pub const TOPIC: i8 = 2;
+pub const PARTITION: i8 = 3;
+
 #[derive(Debug)]
 pub struct MetadataRecord {
     pub frame_version: i8,
