@@ -168,12 +168,13 @@ pub struct Partition {
     pub partition_index: i32,
     pub leader_id: i32,
     pub leader_epoch: i32,
-}
     pub replica_nodes: CompactArray<i32>,
     pub isr_nodes: CompactArray<i32>,
     pub eligible_leader_replicas: CompactArray<i32>,
     pub last_known_elr: CompactArray<i32>,
     pub offline_replicas: CompactArray<i32>,
+    pub _tagged_fields: TaggedFieldsSection,
+}
 
 impl Size for Partition {}
 
