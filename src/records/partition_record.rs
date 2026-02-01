@@ -19,17 +19,13 @@ pub struct PartitionRecord {
     pub partition_id: i32,
     #[allow(dead_code)]
     pub topic_uuid: Uuid,
-    #[allow(dead_code)]
-    pub leader: u32,
-    #[allow(dead_code)]
-    pub leader_epoch: u32,
-    #[allow(dead_code)]
-    pub partition_epoch: u32,
-    #[allow(dead_code)]
     pub replica_array: CompactArray<i32>,
     pub in_sync_replica_array: CompactArray<i32>,
     pub removing_replica_array: CompactArray<i32>,
     pub adding_replica_array: CompactArray<i32>,
+    pub leader: i32,
+    pub leader_epoch: i32,
+    pub partition_epoch: i32,
     pub directories_array: CompactArray<Uuid>, // Array of UUIDs
     #[allow(dead_code)]
     pub tagged_fields_count: UnsignedVarint,
@@ -46,15 +42,15 @@ impl PartialParsable<Self, MetadataRecord> for PartitionRecord {
         offset += replica_array.size();
         let in_sync_replica_array = CompactArray::parse(bytes, offset);
         offset += in_sync_replica_array.size();
-        let leader = u32::parse(bytes, offset);
         let removing_replica_array = CompactArray::parse(bytes, offset);
         offset += removing_replica_array.size();
         let adding_replica_array = CompactArray::parse(bytes, offset);
         offset += adding_replica_array.size();
+        let leader = i32::parse(bytes, offset);
         offset += leader.size();
-        let leader_epoch = u32::parse(bytes, offset);
+        let leader_epoch = i32::parse(bytes, offset);
         offset += leader_epoch.size();
-        let partition_epoch = u32::parse(bytes, offset);
+        let partition_epoch = i32::parse(bytes, offset);
         offset += partition_epoch.size();
         let directories_array = CompactArray::parse(bytes, offset);
         offset += directories_array.size();
