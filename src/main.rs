@@ -28,6 +28,7 @@ use crate::records::topic_record::TopicRecord;
 use crate::serializable::Serializable;
 use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
+use crate::utils::uuid::all_zeroes_uuid;
 use types::compact_array::CompactArray;
 use types::compact_records::CompactRecords;
 use types::compact_string::CompactString;
@@ -46,6 +47,7 @@ mod serializable;
 mod size;
 mod tagged_fields_section;
 mod types;
+mod utils;
 
 const SUPPORTED_API_VERSIONS: [i16; 5] = [0, 1, 2, 3, 4];
 
