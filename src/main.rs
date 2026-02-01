@@ -23,13 +23,14 @@ use crate::fetch::topic::ResponseTopic;
 use crate::headers::request_header_v2::RequestHeaderV2;
 use crate::partial_parsable::PartialParsable;
 use crate::records::metadata_record::MetadataRecord;
-use crate::records::record_batch::RecordBatch;
+use crate::records::record_batch::{RecordBatch, RecordValue};
 use crate::records::topic_record::TopicRecord;
 use crate::serializable::Serializable;
 use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
 use types::compact_array::CompactArray;
 use types::compact_records::CompactRecords;
+use types::compact_string::CompactString;
 
 mod api_keys;
 mod api_versions;
@@ -248,7 +249,10 @@ fn respond_to_fetch_request(request_header: RequestHeaderV2, buf: &[u8]) -> Vec<
 fn get_topic_record(topic_id: &Uuid, record_batches: &[RecordBatch]) -> Option<TopicRecord> {
     record_batches
         .iter()
-        .filter_map(|record_batch| to_topic_record(record_batch, topic_id))
+        .flat_map(|record_batch| {
+            parse_record_values(record_batch, SearchItem::TopicId(*topic_id), true)
+        })
+        .filter_map(|record_value| record_value.to_topic_record())
         .next()
 }
 
@@ -317,19 +321,46 @@ fn record_batch_contains_topic(record_batch: &RecordBatch, topic_id: &Uuid) -> b
     false
 }
 
-fn to_topic_record(record_batch: &RecordBatch, topic_id: &Uuid) -> Option<TopicRecord> {
+enum SearchItem {
+    TopicId(Uuid),
+    TopicName(CompactString),
+}
+
+impl SearchItem {
+    fn found_in(&self, topic_record: &TopicRecord) -> bool {
+        match self {
+            Self::TopicId(id) => id == &topic_record.topic_uuid,
+            Self::TopicName(name) => name == &topic_record.topic_name,
+        }
+    }
+}
+
+fn parse_record_values(
+    record_batch: &RecordBatch,
+    search_item: SearchItem,
+    topic_record_only: bool,
+) -> Vec<RecordValue> {
+    let mut record_values = Vec::new();
     for record in &record_batch.records {
         let mut offset: usize = 0;
         let metadata_record = MetadataRecord::parse(&record.value, offset);
         offset += metadata_record.size();
-        if metadata_record._type == 2 {
-            let topic_record = TopicRecord::parse(&record.value, offset, metadata_record);
-            if &topic_record.topic_uuid == topic_id {
-                return Some(topic_record);
+        match metadata_record._type {
+            2 => {
+                let topic_record = TopicRecord::parse(&record.value, offset, metadata_record);
+                if search_item.found_in(&topic_record) {
+                    record_values.push(RecordValue::Topic(topic_record));
+                } else {
+                    break;
+                }
+                if topic_record_only {
+                    break;
+                }
             }
+            _ => {}
         }
     }
-    None
+    record_values
 }
 
 fn check_supported_version(version: i16) -> i16 {

@@ -1,3 +1,5 @@
+use crate::records::partition_record::PartitionRecord;
+use crate::records::topic_record::TopicRecord;
 use crate::types::signed_varint::SignedVarint;
 use crate::types::unsigned_varint::UnsignedVarint;
 use crate::types::varlong::Varlong;
@@ -229,6 +231,20 @@ impl ByteParsable<Header> for Header {
             header_key,
             header_value_length,
             value,
+        }
+    }
+}
+
+pub enum RecordValue {
+    Topic(TopicRecord),
+}
+
+impl RecordValue {
+    pub fn to_topic_record(&self) -> Option<TopicRecord> {
+        if let RecordValue::Topic(record) = self {
+            Some(record.clone())
+        } else {
+            None
         }
     }
 }

@@ -6,7 +6,7 @@ use crate::{
     records::metadata_record::MetadataRecord, size::Size, types::unsigned_varint::UnsignedVarint,
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct TopicRecord {
     pub frame_version: i8,
     pub _type: i8,
