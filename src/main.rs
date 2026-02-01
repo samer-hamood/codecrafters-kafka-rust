@@ -127,10 +127,10 @@ fn respond_to_describe_topic_partitions_request(
     buf: &[u8],
 ) -> Vec<u8> {
     debug!("Handling DescribeTopicPartitions request...");
-    let throttle_time_ms = 0;
     let describe_topic_partitions_request =
         DescribeTopicPartitionsRequestV0::parse(buf, request_header.size());
     let topic_id = Uuid::from_str("00000000-0000-0000-0000-000000000000").unwrap();
+    let throttle_time_ms = 0;
     let is_internal = false;
     let partitions = CompactArray::empty();
     let topic_authorized_operation = 0;
