@@ -43,23 +43,20 @@ impl PartialParsable<Self, MetadataRecord> for PartitionRecord {
         let topic_uuid = Uuid::parse(bytes, offset);
         offset += topic_uuid.size();
         let replica_array = CompactArray::parse(bytes, offset);
-        let length_of_replica_array = replica_array.length.clone();
         offset += replica_array.size();
         let in_sync_replica_array = CompactArray::parse(bytes, offset);
-        let length_of_in_sync_replica_array = in_sync_replica_array.length.clone();
         offset += in_sync_replica_array.size();
-        let length_of_removing_replica_array = UnsignedVarint::parse(bytes, offset);
-        offset += length_of_removing_replica_array.size();
-        let length_of_adding_replica_array = UnsignedVarint::parse(bytes, offset);
-        offset += length_of_adding_replica_array.size();
         let leader = u32::parse(bytes, offset);
+        let removing_replica_array = CompactArray::parse(bytes, offset);
+        offset += removing_replica_array.size();
+        let adding_replica_array = CompactArray::parse(bytes, offset);
+        offset += adding_replica_array.size();
         offset += leader.size();
         let leader_epoch = u32::parse(bytes, offset);
         offset += leader_epoch.size();
         let partition_epoch = u32::parse(bytes, offset);
         offset += partition_epoch.size();
         let directories_array = CompactArray::parse(bytes, offset);
-        let length_of_directories_array = directories_array.length.clone();
         offset += directories_array.size();
         let tagged_fields_count = UnsignedVarint::parse(bytes, offset);
         Self {
@@ -68,16 +65,13 @@ impl PartialParsable<Self, MetadataRecord> for PartitionRecord {
             version: metadata_record.version,
             partition_id,
             topic_uuid,
-            length_of_replica_array,
             replica_array,
-            length_of_in_sync_replica_array,
             in_sync_replica_array,
-            length_of_removing_replica_array,
-            length_of_adding_replica_array,
+            removing_replica_array,
+            adding_replica_array,
             leader,
             leader_epoch,
             partition_epoch,
-            length_of_directories_array,
             directories_array,
             tagged_fields_count,
         }
