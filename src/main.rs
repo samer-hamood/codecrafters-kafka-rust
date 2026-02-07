@@ -120,7 +120,6 @@ fn respond_to_describe_topic_partitions_request(
     request_header: RequestHeaderV2,
     buf: &[u8],
 ) -> Vec<u8> {
-    debug!("Handling DescribeTopicPartitions request...");
     let describe_topic_partitions_request =
         DescribeTopicPartitionsRequestV0::parse(buf, request_header.size());
     let throttle_time_ms = 0;
@@ -163,7 +162,6 @@ fn respond_to_describe_topic_partitions_request(
 }
 
 fn respond_to_api_versions_request(request_header: RequestHeaderV2) -> Vec<u8> {
-    debug!("Handling ApiVersions request...");
     let throttle_time_ms = 0;
     ApiVersionsResponseV4::new(
         request_header.correlation_id,
@@ -196,7 +194,6 @@ fn respond_to_api_versions_request(request_header: RequestHeaderV2) -> Vec<u8> {
 }
 
 fn respond_to_fetch_request(request_header: RequestHeaderV2, buf: &[u8]) -> Vec<u8> {
-    debug!("Handling Fetch request...");
     let throttle_time_ms = 0;
     let session_id = 0;
     let mut topics = Vec::new();
