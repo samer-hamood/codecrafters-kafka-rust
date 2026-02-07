@@ -10,3 +10,6 @@ target/
 *.pdb
 
 .idea
+
+codecrafters_test*
+codecrafters_submit*
