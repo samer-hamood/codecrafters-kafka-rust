@@ -1,0 +1,1628 @@
+Initiating test run...
+
+[32m⚡ This is a turbo test run. https://codecrafters.io/turbo[0m
+
+Running tests on your code. Logs should appear shortly...
+
+[33m[compile][0m    Compiling codecrafters-kafka v0.1.0 (/app)
+[33m[compile][0m     Finished `release` profile [optimized] target(s) in 4.39s
+[33m[compile][0m Moved ./.codecrafters/run.sh → ./your_program.sh
+[33m[compile][0m [32mCompilation successful.[0m
+
+Debug = true
+
+[33m[tester::#XZ1] [0m[94mRunning tests for Stage #XZ1 (Producing Messages - Include Produce in ApiVersions)[0m
+[33m[tester::#XZ1] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#XZ1] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#XZ1] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#XZ1] [Encoder] [0m[36m- ApiVersionsRequest[0m
+[33m[tester::#XZ1] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#XZ1] [Encoder] [0m[36m    - APIKey (18)[0m
+[33m[tester::#XZ1] [Encoder] [0m[36m    - APIVersion (4)[0m
+[33m[tester::#XZ1] [Encoder] [0m[36m    - CorrelationID (1495039539)[0m
+[33m[tester::#XZ1] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#XZ1] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#XZ1] [Encoder] [0m[36m    - ClientSoftwareName (kafka-cli)[0m
+[33m[tester::#XZ1] [Encoder] [0m[36m    - ClientSoftwareVersion (0.1)[0m
+[33m[tester::#XZ1] [client] [0m[94mSending "ApiVersions" request[0m
+[33m[tester::#XZ1] [client] [0m[36mHexdump of sent "ApiVersions" request: [0m
+[33m[tester::#XZ1] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#XZ1] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#XZ1] [client] [0m[36m0000 | 00 00 00 26 00 12 00 04 59 1c 7e 33 00 0c 6b 61 | ...&....Y.~3..ka[0m
+[33m[tester::#XZ1] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 0a 6b 61 66 6b | fka-tester..kafk[0m
+[33m[tester::#XZ1] [client] [0m[36m0020 | 61 2d 63 6c 69 04 30 2e 31 00                   | a-cli.0.1.[0m
+[33m[tester::#XZ1] [client] [0m[36m[0m
+[33m[tester::#XZ1] [client] [0m[36mHexdump of received "ApiVersions" response: [0m
+[33m[tester::#XZ1] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#XZ1] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#XZ1] [client] [0m[36m0000 | 00 00 00 28 59 1c 7e 33 00 00 05 00 12 00 00 00 | ...(Y.~3........[0m
+[33m[tester::#XZ1] [client] [0m[36m0010 | 04 00 00 01 00 00 00 10 00 00 4b 00 00 00 00 00 | ..........K.....[0m
+[33m[tester::#XZ1] [client] [0m[36m0020 | 00 00 00 00 00 0b 00 00 00 00 00 00             | ............[0m
+[33m[tester::#XZ1] [client] [0m[36m[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m- ApiVersionsResponse[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m    - CorrelationID (1495039539)[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m    - ErrorCode (0)[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m    - ApiKeys[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m      - Length (5 (Array length(4) + 1))[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m      - ApiKeys[0][0m
+[33m[tester::#XZ1] [Decoder] [0m[36m        - APIKey (18)[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m        - MaxVersion (4)[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m      - ApiKeys[1][0m
+[33m[tester::#XZ1] [Decoder] [0m[36m        - APIKey (1)[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m        - MaxVersion (16)[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m      - ApiKeys[2][0m
+[33m[tester::#XZ1] [Decoder] [0m[36m        - APIKey (75)[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m        - MaxVersion (0)[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m      - ApiKeys[3][0m
+[33m[tester::#XZ1] [Decoder] [0m[36m        - APIKey (0)[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m        - MaxVersion (11)[0m
+[33m[tester::#XZ1] [Decoder] [0m[36m    - ThrottleTimeMs (0)[0m
+[33m[tester::#XZ1] [0m[92m✓ CorrelationID: 1495039539[0m
+[33m[tester::#XZ1] [0m[92m✓ ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#XZ1] [0m[92m✓ API keys array length: 4[0m
+[33m[tester::#XZ1] [0m[92m✔ MinVersion for ApiVersions is <= 4 & >= 0[0m
+[33m[tester::#XZ1] [0m[92m✔ MaxVersion for ApiVersions is >= 4[0m
+[33m[tester::#XZ1] [0m[92m✔ MinVersion for Produce is <= 11 & >= 0[0m
+[33m[tester::#XZ1] [0m[92m✔ MaxVersion for Produce is >= 11[0m
+[33m[tester::#XZ1] [0m[92mTest passed.[0m
+[33m[tester::#XZ1] [0m[36mTerminating program[0m
+[33m[your_program] [0mConnection closed by peer
+[33m[tester::#XZ1] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#WQ2] [0m[94mRunning tests for Stage #WQ2 (Listing Partitions - List for multiple topics)[0m
+[33m[tester::#WQ2] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#WQ2] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#WQ2] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m- DescribeTopicPartitionsRequest[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m    - APIKey (75)[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m    - APIVersion (0)[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m    - CorrelationID (2110190138)[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m    - Topics[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m      - Length (3 (Array length(2) + 1))[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m      - Topics[0][0m
+[33m[tester::#WQ2] [Encoder] [0m[36m        - Topic[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m          - Name (pear)[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m      - Topics[1][0m
+[33m[tester::#WQ2] [Encoder] [0m[36m        - Topic[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m          - Name (grape)[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m    - ResponsePartitionLimit (3)[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m    - Cursor[0m
+[33m[tester::#WQ2] [Encoder] [0m[36m      - IsCursorPresent (-1)[0m
+[33m[tester::#WQ2] [client] [0m[94mSending "DescribeTopicPartitions" request[0m
+[33m[tester::#WQ2] [client] [0m[36mHexdump of sent "DescribeTopicPartitions" request: [0m
+[33m[tester::#WQ2] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#WQ2] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#WQ2] [client] [0m[36m0000 | 00 00 00 2b 00 4b 00 00 7d c6 f2 3a 00 0c 6b 61 | ...+.K..}..:..ka[0m
+[33m[tester::#WQ2] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 03 05 70 65 61 | fka-tester...pea[0m
+[33m[tester::#WQ2] [client] [0m[36m0020 | 72 00 06 67 72 61 70 65 00 00 00 00 03 ff 00    | r..grape.......[0m
+[33m[tester::#WQ2] [client] [0m[36m[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#WQ2] [client] [0m[36mHexdump of received "DescribeTopicPartitions" response: [0m
+[33m[tester::#WQ2] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#WQ2] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#WQ2] [client] [0m[36m0000 | 00 00 00 9d 7d c6 f2 3a 00 00 00 00 00 03 00 00 | ....}..:........[0m
+[33m[tester::#WQ2] [client] [0m[36m0010 | 06 67 72 61 70 65 71 a5 9a 51 89 68 4f 8b 93 7e | .grapeq..Q.hO..~[0m
+[33m[tester::#WQ2] [client] [0m[36m0020 | 00 00 00 00 05 f0 00 03 00 00 00 00 00 00 00 00 | ................[0m
+[33m[tester::#WQ2] [client] [0m[36m0030 | 00 01 00 00 00 00 02 00 00 00 01 02 00 00 00 01 | ................[0m
+[33m[tester::#WQ2] [client] [0m[36m0040 | 01 01 01 00 00 00 00 00 00 01 00 00 00 01 00 00 | ................[0m
+[33m[tester::#WQ2] [client] [0m[36m0050 | 00 00 02 00 00 00 01 02 00 00 00 01 01 01 01 00 | ................[0m
+[33m[tester::#WQ2] [client] [0m[36m0060 | 00 00 00 00 00 00 00 05 70 65 61 72 71 a5 9a 51 | ........pearq..Q[0m
+[33m[tester::#WQ2] [client] [0m[36m0070 | 89 68 4f 8b 93 7e 00 00 00 00 03 de 00 02 00 00 | .hO..~..........[0m
+[33m[tester::#WQ2] [client] [0m[36m0080 | 00 00 00 00 00 00 00 01 00 00 00 00 02 00 00 00 | ................[0m
+[33m[tester::#WQ2] [client] [0m[36m0090 | 01 02 00 00 00 01 01 01 01 00 00 00 00 00 00 ff | ................[0m
+[33m[tester::#WQ2] [client] [0m[36m00a0 | 00                                              | .[0m
+[33m[tester::#WQ2] [client] [0m[36m[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m- DescribeTopicPartitionsResponse[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m    - CorrelationID (2110190138)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m    - ThrottleTimeMs (0)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m    - Topics[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m      - Length (3 (Array length(2) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m      - Topics[0][0m
+[33m[tester::#WQ2] [Decoder] [0m[36m        - ErrorCode (0)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m        - Name (grape)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m        - UUID (71a59a51-8968-4f8b-937e-0000000005f0)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m        - IsInternal (False)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m        - Partitions[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m          - Length (3 (Array length(2) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m          - Partitions[0][0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - ErrorCode (0)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - PartitionIndex (0)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - LeaderId (1)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - LeaderEpoch (0)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - ReplicaNodes[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - ReplicaNodes[0][0m
+[33m[tester::#WQ2] [Decoder] [0m[36m                - ReplicaNode (1)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - IsrNodes[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - IsrNodes[0][0m
+[33m[tester::#WQ2] [Decoder] [0m[36m                - IsrNode (1)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - EligibleLeaderReplicas[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - LastKnownELR[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - OfflineReplicas[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m          - Partitions[1][0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - ErrorCode (0)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - PartitionIndex (1)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - LeaderId (1)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - LeaderEpoch (0)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - ReplicaNodes[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - ReplicaNodes[0][0m
+[33m[tester::#WQ2] [Decoder] [0m[36m                - ReplicaNode (1)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - IsrNodes[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - IsrNodes[0][0m
+[33m[tester::#WQ2] [Decoder] [0m[36m                - IsrNode (1)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - EligibleLeaderReplicas[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - LastKnownELR[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - OfflineReplicas[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m        - TopicAuthorizedOperations (0)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m      - Topics[1][0m
+[33m[tester::#WQ2] [Decoder] [0m[36m        - ErrorCode (0)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m        - Name (pear)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m        - UUID (71a59a51-8968-4f8b-937e-0000000003de)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m        - IsInternal (False)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m        - Partitions[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m          - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m          - Partitions[0][0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - ErrorCode (0)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - PartitionIndex (0)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - LeaderId (1)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - LeaderEpoch (0)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - ReplicaNodes[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - ReplicaNodes[0][0m
+[33m[tester::#WQ2] [Decoder] [0m[36m                - ReplicaNode (1)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - IsrNodes[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - IsrNodes[0][0m
+[33m[tester::#WQ2] [Decoder] [0m[36m                - IsrNode (1)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - EligibleLeaderReplicas[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - LastKnownELR[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m            - OfflineReplicas[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m        - TopicAuthorizedOperations (0)[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m    - Cursor[0m
+[33m[tester::#WQ2] [Decoder] [0m[36m      - IsCursorPresent (-1)[0m
+[33m[tester::#WQ2] [0m[92m✓ CorrelationID: 2110190138[0m
+[33m[tester::#WQ2] [0m[92m✓ Topics array length: 2[0m
+[33m[tester::#WQ2] [0m[92m✓ Cursor.IsCursorPresent: -1[0m
+[33m[tester::#WQ2] [0m[92m✓ Topic[0].Name: grape[0m
+[33m[tester::#WQ2] [0m[92m✓ Topic[0].UUID: 71a59a51-8968-4f8b-937e-0000000005f0[0m
+[33m[tester::#WQ2] [0m[92m✓ Topic[0].ErrorCode: 0[0m
+[33m[tester::#WQ2] [0m[92m✓ Topic[0].Partitions.Length: 2[0m
+[33m[tester::#WQ2] [0m[92m✓ Topic[0].Partition[0].ID: 0[0m
+[33m[tester::#WQ2] [0m[92m✓ Topic[0].Partition[0].ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#WQ2] [0m[92m✓ Topic[0].Partition[1].ID: 1[0m
+[33m[tester::#WQ2] [0m[92m✓ Topic[0].Partition[1].ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#WQ2] [0m[92m✓ Topic[1].Name: pear[0m
+[33m[tester::#WQ2] [0m[92m✓ Topic[1].UUID: 71a59a51-8968-4f8b-937e-0000000003de[0m
+[33m[tester::#WQ2] [0m[92m✓ Topic[1].ErrorCode: 0[0m
+[33m[tester::#WQ2] [0m[92m✓ Topic[1].Partitions.Length: 1[0m
+[33m[tester::#WQ2] [0m[92m✓ Topic[1].Partition[0].ID: 0[0m
+[33m[tester::#WQ2] [0m[92m✓ Topic[1].Partition[0].ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#WQ2] [0m[92mTest passed.[0m
+[33m[tester::#WQ2] [0m[36mTerminating program[0m
+[33m[your_program] [0mConnection closed by peer
+[33m[tester::#WQ2] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#KU4] [0m[94mRunning tests for Stage #KU4 (Listing Partitions - List for multiple partitions)[0m
+[33m[tester::#KU4] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#KU4] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#KU4] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#KU4] [Encoder] [0m[36m- DescribeTopicPartitionsRequest[0m
+[33m[tester::#KU4] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#KU4] [Encoder] [0m[36m    - APIKey (75)[0m
+[33m[tester::#KU4] [Encoder] [0m[36m    - APIVersion (0)[0m
+[33m[tester::#KU4] [Encoder] [0m[36m    - CorrelationID (1392719634)[0m
+[33m[tester::#KU4] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#KU4] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#KU4] [Encoder] [0m[36m    - Topics[0m
+[33m[tester::#KU4] [Encoder] [0m[36m      - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#KU4] [Encoder] [0m[36m      - Topics[0][0m
+[33m[tester::#KU4] [Encoder] [0m[36m        - Topic[0m
+[33m[tester::#KU4] [Encoder] [0m[36m          - Name (strawberry)[0m
+[33m[tester::#KU4] [Encoder] [0m[36m    - ResponsePartitionLimit (2)[0m
+[33m[tester::#KU4] [Encoder] [0m[36m    - Cursor[0m
+[33m[tester::#KU4] [Encoder] [0m[36m      - IsCursorPresent (-1)[0m
+[33m[tester::#KU4] [client] [0m[94mSending "DescribeTopicPartitions" request[0m
+[33m[tester::#KU4] [client] [0m[36mHexdump of sent "DescribeTopicPartitions" request: [0m
+[33m[tester::#KU4] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#KU4] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#KU4] [client] [0m[36m0000 | 00 00 00 2a 00 4b 00 00 53 03 37 12 00 0c 6b 61 | ...*.K..S.7...ka[0m
+[33m[tester::#KU4] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 02 0b 73 74 72 | fka-tester...str[0m
+[33m[tester::#KU4] [client] [0m[36m0020 | 61 77 62 65 72 72 79 00 00 00 00 02 ff 00       | awberry.......[0m
+[33m[tester::#KU4] [client] [0m[36m[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#KU4] [client] [0m[36mHexdump of received "DescribeTopicPartitions" response: [0m
+[33m[tester::#KU4] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#KU4] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#KU4] [client] [0m[36m0000 | 00 00 00 68 53 03 37 12 00 00 00 00 00 02 00 00 | ...hS.7.........[0m
+[33m[tester::#KU4] [client] [0m[36m0010 | 0b 73 74 72 61 77 62 65 72 72 79 71 a5 9a 51 89 | .strawberryq..Q.[0m
+[33m[tester::#KU4] [client] [0m[36m0020 | 68 4f 8b 93 7e 05 78 bd 49 53 09 00 03 00 00 00 | hO..~.x.IS......[0m
+[33m[tester::#KU4] [client] [0m[36m0030 | 00 00 00 00 00 00 01 00 00 00 00 02 00 00 00 01 | ................[0m
+[33m[tester::#KU4] [client] [0m[36m0040 | 02 00 00 00 01 01 01 01 00 00 00 00 00 00 01 00 | ................[0m
+[33m[tester::#KU4] [client] [0m[36m0050 | 00 00 01 00 00 00 00 02 00 00 00 01 02 00 00 00 | ................[0m
+[33m[tester::#KU4] [client] [0m[36m0060 | 01 01 01 01 00 00 00 00 00 00 ff 00             | ............[0m
+[33m[tester::#KU4] [client] [0m[36m[0m
+[33m[tester::#KU4] [Decoder] [0m[36m- DescribeTopicPartitionsResponse[0m
+[33m[tester::#KU4] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#KU4] [Decoder] [0m[36m    - CorrelationID (1392719634)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#KU4] [Decoder] [0m[36m    - ThrottleTimeMs (0)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m    - Topics[0m
+[33m[tester::#KU4] [Decoder] [0m[36m      - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#KU4] [Decoder] [0m[36m      - Topics[0][0m
+[33m[tester::#KU4] [Decoder] [0m[36m        - ErrorCode (0)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m        - Name (strawberry)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m        - UUID (71a59a51-8968-4f8b-937e-0578bd495309)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m        - IsInternal (False)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m        - Partitions[0m
+[33m[tester::#KU4] [Decoder] [0m[36m          - Length (3 (Array length(2) + 1))[0m
+[33m[tester::#KU4] [Decoder] [0m[36m          - Partitions[0][0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - ErrorCode (0)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - PartitionIndex (0)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - LeaderId (1)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - LeaderEpoch (0)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - ReplicaNodes[0m
+[33m[tester::#KU4] [Decoder] [0m[36m              - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#KU4] [Decoder] [0m[36m              - ReplicaNodes[0][0m
+[33m[tester::#KU4] [Decoder] [0m[36m                - ReplicaNode (1)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - IsrNodes[0m
+[33m[tester::#KU4] [Decoder] [0m[36m              - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#KU4] [Decoder] [0m[36m              - IsrNodes[0][0m
+[33m[tester::#KU4] [Decoder] [0m[36m                - IsrNode (1)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - EligibleLeaderReplicas[0m
+[33m[tester::#KU4] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - LastKnownELR[0m
+[33m[tester::#KU4] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - OfflineReplicas[0m
+[33m[tester::#KU4] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#KU4] [Decoder] [0m[36m          - Partitions[1][0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - ErrorCode (0)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - PartitionIndex (1)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - LeaderId (1)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - LeaderEpoch (0)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - ReplicaNodes[0m
+[33m[tester::#KU4] [Decoder] [0m[36m              - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#KU4] [Decoder] [0m[36m              - ReplicaNodes[0][0m
+[33m[tester::#KU4] [Decoder] [0m[36m                - ReplicaNode (1)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - IsrNodes[0m
+[33m[tester::#KU4] [Decoder] [0m[36m              - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#KU4] [Decoder] [0m[36m              - IsrNodes[0][0m
+[33m[tester::#KU4] [Decoder] [0m[36m                - IsrNode (1)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - EligibleLeaderReplicas[0m
+[33m[tester::#KU4] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - LastKnownELR[0m
+[33m[tester::#KU4] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#KU4] [Decoder] [0m[36m            - OfflineReplicas[0m
+[33m[tester::#KU4] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#KU4] [Decoder] [0m[36m        - TopicAuthorizedOperations (0)[0m
+[33m[tester::#KU4] [Decoder] [0m[36m    - Cursor[0m
+[33m[tester::#KU4] [Decoder] [0m[36m      - IsCursorPresent (-1)[0m
+[33m[tester::#KU4] [0m[92m✓ CorrelationID: 1392719634[0m
+[33m[tester::#KU4] [0m[92m✓ Topics array length: 1[0m
+[33m[tester::#KU4] [0m[92m✓ Cursor.IsCursorPresent: -1[0m
+[33m[tester::#KU4] [0m[92m✓ Topic[0].Name: strawberry[0m
+[33m[tester::#KU4] [0m[92m✓ Topic[0].UUID: 71a59a51-8968-4f8b-937e-0578bd495309[0m
+[33m[tester::#KU4] [0m[92m✓ Topic[0].ErrorCode: 0[0m
+[33m[tester::#KU4] [0m[92m✓ Topic[0].Partitions.Length: 2[0m
+[33m[tester::#KU4] [0m[92m✓ Topic[0].Partition[0].ID: 0[0m
+[33m[tester::#KU4] [0m[92m✓ Topic[0].Partition[0].ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#KU4] [0m[92m✓ Topic[0].Partition[1].ID: 1[0m
+[33m[tester::#KU4] [0m[92m✓ Topic[0].Partition[1].ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#KU4] [0m[92mTest passed.[0m
+[33m[tester::#KU4] [0m[36mTerminating program[0m
+[33m[your_program] [0mConnection closed by peer
+[33m[tester::#KU4] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#EA7] [0m[94mRunning tests for Stage #EA7 (Listing Partitions - List for a single partition)[0m
+[33m[tester::#EA7] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#EA7] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#EA7] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#EA7] [Encoder] [0m[36m- DescribeTopicPartitionsRequest[0m
+[33m[tester::#EA7] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#EA7] [Encoder] [0m[36m    - APIKey (75)[0m
+[33m[tester::#EA7] [Encoder] [0m[36m    - APIVersion (0)[0m
+[33m[tester::#EA7] [Encoder] [0m[36m    - CorrelationID (1800439499)[0m
+[33m[tester::#EA7] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#EA7] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#EA7] [Encoder] [0m[36m    - Topics[0m
+[33m[tester::#EA7] [Encoder] [0m[36m      - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#EA7] [Encoder] [0m[36m      - Topics[0][0m
+[33m[tester::#EA7] [Encoder] [0m[36m        - Topic[0m
+[33m[tester::#EA7] [Encoder] [0m[36m          - Name (pear)[0m
+[33m[tester::#EA7] [Encoder] [0m[36m    - ResponsePartitionLimit (1)[0m
+[33m[tester::#EA7] [Encoder] [0m[36m    - Cursor[0m
+[33m[tester::#EA7] [Encoder] [0m[36m      - IsCursorPresent (-1)[0m
+[33m[tester::#EA7] [client] [0m[94mSending "DescribeTopicPartitions" request[0m
+[33m[tester::#EA7] [client] [0m[36mHexdump of sent "DescribeTopicPartitions" request: [0m
+[33m[tester::#EA7] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#EA7] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#EA7] [client] [0m[36m0000 | 00 00 00 24 00 4b 00 00 6b 50 86 cb 00 0c 6b 61 | ...$.K..kP....ka[0m
+[33m[tester::#EA7] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 02 05 70 65 61 | fka-tester...pea[0m
+[33m[tester::#EA7] [client] [0m[36m0020 | 72 00 00 00 00 01 ff 00                         | r.......[0m
+[33m[tester::#EA7] [client] [0m[36m[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#EA7] [client] [0m[36mHexdump of received "DescribeTopicPartitions" response: [0m
+[33m[tester::#EA7] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#EA7] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#EA7] [client] [0m[36m0000 | 00 00 00 46 6b 50 86 cb 00 00 00 00 00 02 00 00 | ...FkP..........[0m
+[33m[tester::#EA7] [client] [0m[36m0010 | 05 70 65 61 72 71 a5 9a 51 89 68 4f 8b 93 7e 29 | .pearq..Q.hO..~)[0m
+[33m[tester::#EA7] [client] [0m[36m0020 | e0 e6 5c 9e e8 00 02 00 00 00 00 00 00 00 00 00 | ..\.............[0m
+[33m[tester::#EA7] [client] [0m[36m0030 | 01 00 00 00 00 02 00 00 00 01 02 00 00 00 01 01 | ................[0m
+[33m[tester::#EA7] [client] [0m[36m0040 | 01 01 00 00 00 00 00 00 ff 00                   | ..........[0m
+[33m[tester::#EA7] [client] [0m[36m[0m
+[33m[tester::#EA7] [Decoder] [0m[36m- DescribeTopicPartitionsResponse[0m
+[33m[tester::#EA7] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#EA7] [Decoder] [0m[36m    - CorrelationID (1800439499)[0m
+[33m[tester::#EA7] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#EA7] [Decoder] [0m[36m    - ThrottleTimeMs (0)[0m
+[33m[tester::#EA7] [Decoder] [0m[36m    - Topics[0m
+[33m[tester::#EA7] [Decoder] [0m[36m      - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#EA7] [Decoder] [0m[36m      - Topics[0][0m
+[33m[tester::#EA7] [Decoder] [0m[36m        - ErrorCode (0)[0m
+[33m[tester::#EA7] [Decoder] [0m[36m        - Name (pear)[0m
+[33m[tester::#EA7] [Decoder] [0m[36m        - UUID (71a59a51-8968-4f8b-937e-29e0e65c9ee8)[0m
+[33m[tester::#EA7] [Decoder] [0m[36m        - IsInternal (False)[0m
+[33m[tester::#EA7] [Decoder] [0m[36m        - Partitions[0m
+[33m[tester::#EA7] [Decoder] [0m[36m          - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#EA7] [Decoder] [0m[36m          - Partitions[0][0m
+[33m[tester::#EA7] [Decoder] [0m[36m            - ErrorCode (0)[0m
+[33m[tester::#EA7] [Decoder] [0m[36m            - PartitionIndex (0)[0m
+[33m[tester::#EA7] [Decoder] [0m[36m            - LeaderId (1)[0m
+[33m[tester::#EA7] [Decoder] [0m[36m            - LeaderEpoch (0)[0m
+[33m[tester::#EA7] [Decoder] [0m[36m            - ReplicaNodes[0m
+[33m[tester::#EA7] [Decoder] [0m[36m              - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#EA7] [Decoder] [0m[36m              - ReplicaNodes[0][0m
+[33m[tester::#EA7] [Decoder] [0m[36m                - ReplicaNode (1)[0m
+[33m[tester::#EA7] [Decoder] [0m[36m            - IsrNodes[0m
+[33m[tester::#EA7] [Decoder] [0m[36m              - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#EA7] [Decoder] [0m[36m              - IsrNodes[0][0m
+[33m[tester::#EA7] [Decoder] [0m[36m                - IsrNode (1)[0m
+[33m[tester::#EA7] [Decoder] [0m[36m            - EligibleLeaderReplicas[0m
+[33m[tester::#EA7] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#EA7] [Decoder] [0m[36m            - LastKnownELR[0m
+[33m[tester::#EA7] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#EA7] [Decoder] [0m[36m            - OfflineReplicas[0m
+[33m[tester::#EA7] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#EA7] [Decoder] [0m[36m        - TopicAuthorizedOperations (0)[0m
+[33m[tester::#EA7] [Decoder] [0m[36m    - Cursor[0m
+[33m[tester::#EA7] [Decoder] [0m[36m      - IsCursorPresent (-1)[0m
+[33m[tester::#EA7] [0m[92m✓ CorrelationID: 1800439499[0m
+[33m[tester::#EA7] [0m[92m✓ Topics array length: 1[0m
+[33m[tester::#EA7] [0m[92m✓ Cursor.IsCursorPresent: -1[0m
+[33m[tester::#EA7] [0m[92m✓ Topic[0].Name: pear[0m
+[33m[tester::#EA7] [0m[92m✓ Topic[0].UUID: 71a59a51-8968-4f8b-937e-29e0e65c9ee8[0m
+[33m[tester::#EA7] [0m[92m✓ Topic[0].ErrorCode: 0[0m
+[33m[tester::#EA7] [0m[92m✓ Topic[0].Partitions.Length: 1[0m
+[33m[tester::#EA7] [0m[92m✓ Topic[0].Partition[0].ID: 0[0m
+[33m[tester::#EA7] [0m[92m✓ Topic[0].Partition[0].ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#EA7] [0m[92mTest passed.[0m
+[33m[tester::#EA7] [0m[36mTerminating program[0m
+[33m[tester::#EA7] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#VT6] [0m[94mRunning tests for Stage #VT6 (Listing Partitions - List for an unknown topic)[0m
+[33m[tester::#VT6] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#VT6] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#VT6] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#VT6] [Encoder] [0m[36m- DescribeTopicPartitionsRequest[0m
+[33m[tester::#VT6] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#VT6] [Encoder] [0m[36m    - APIKey (75)[0m
+[33m[tester::#VT6] [Encoder] [0m[36m    - APIVersion (0)[0m
+[33m[tester::#VT6] [Encoder] [0m[36m    - CorrelationID (742370308)[0m
+[33m[tester::#VT6] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#VT6] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#VT6] [Encoder] [0m[36m    - Topics[0m
+[33m[tester::#VT6] [Encoder] [0m[36m      - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#VT6] [Encoder] [0m[36m      - Topics[0][0m
+[33m[tester::#VT6] [Encoder] [0m[36m        - Topic[0m
+[33m[tester::#VT6] [Encoder] [0m[36m          - Name (UNKNOWN_TOPIC_46)[0m
+[33m[tester::#VT6] [Encoder] [0m[36m    - ResponsePartitionLimit (1)[0m
+[33m[tester::#VT6] [Encoder] [0m[36m    - Cursor[0m
+[33m[tester::#VT6] [Encoder] [0m[36m      - IsCursorPresent (-1)[0m
+[33m[tester::#VT6] [client] [0m[94mSending "DescribeTopicPartitions" request[0m
+[33m[tester::#VT6] [client] [0m[36mHexdump of sent "DescribeTopicPartitions" request: [0m
+[33m[tester::#VT6] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#VT6] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#VT6] [client] [0m[36m0000 | 00 00 00 30 00 4b 00 00 2c 3f ac 04 00 0c 6b 61 | ...0.K..,?....ka[0m
+[33m[tester::#VT6] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 02 11 55 4e 4b | fka-tester...UNK[0m
+[33m[tester::#VT6] [client] [0m[36m0020 | 4e 4f 57 4e 5f 54 4f 50 49 43 5f 34 36 00 00 00 | NOWN_TOPIC_46...[0m
+[33m[tester::#VT6] [client] [0m[36m0030 | 00 01 ff 00                                     | ....[0m
+[33m[tester::#VT6] [client] [0m[36m[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#VT6] [client] [0m[36mHexdump of received "DescribeTopicPartitions" response: [0m
+[33m[tester::#VT6] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#VT6] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#VT6] [client] [0m[36m0000 | 00 00 00 36 2c 3f ac 04 00 00 00 00 00 02 00 03 | ...6,?..........[0m
+[33m[tester::#VT6] [client] [0m[36m0010 | 11 55 4e 4b 4e 4f 57 4e 5f 54 4f 50 49 43 5f 34 | .UNKNOWN_TOPIC_4[0m
+[33m[tester::#VT6] [client] [0m[36m0020 | 36 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | 6...............[0m
+[33m[tester::#VT6] [client] [0m[36m0030 | 00 00 01 00 00 00 00 00 ff 00                   | ..........[0m
+[33m[tester::#VT6] [client] [0m[36m[0m
+[33m[tester::#VT6] [Decoder] [0m[36m- DescribeTopicPartitionsResponse[0m
+[33m[tester::#VT6] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#VT6] [Decoder] [0m[36m    - CorrelationID (742370308)[0m
+[33m[tester::#VT6] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#VT6] [Decoder] [0m[36m    - ThrottleTimeMs (0)[0m
+[33m[tester::#VT6] [Decoder] [0m[36m    - Topics[0m
+[33m[tester::#VT6] [Decoder] [0m[36m      - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#VT6] [Decoder] [0m[36m      - Topics[0][0m
+[33m[tester::#VT6] [Decoder] [0m[36m        - ErrorCode (3)[0m
+[33m[tester::#VT6] [Decoder] [0m[36m        - Name (UNKNOWN_TOPIC_46)[0m
+[33m[tester::#VT6] [Decoder] [0m[36m        - UUID (00000000-0000-0000-0000-000000000000)[0m
+[33m[tester::#VT6] [Decoder] [0m[36m        - IsInternal (False)[0m
+[33m[tester::#VT6] [Decoder] [0m[36m        - Partitions[0m
+[33m[tester::#VT6] [Decoder] [0m[36m          - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#VT6] [Decoder] [0m[36m        - TopicAuthorizedOperations (0)[0m
+[33m[tester::#VT6] [Decoder] [0m[36m    - Cursor[0m
+[33m[tester::#VT6] [Decoder] [0m[36m      - IsCursorPresent (-1)[0m
+[33m[tester::#VT6] [0m[92m✓ CorrelationID: 742370308[0m
+[33m[tester::#VT6] [0m[92m✓ Topics array length: 1[0m
+[33m[tester::#VT6] [0m[92m✓ Cursor.IsCursorPresent: -1[0m
+[33m[tester::#VT6] [0m[92m✓ Topic[0].Name: UNKNOWN_TOPIC_46[0m
+[33m[tester::#VT6] [0m[92m✓ Topic[0].UUID: 00000000-0000-0000-0000-000000000000[0m
+[33m[tester::#VT6] [0m[92m✓ Topic[0].ErrorCode: 3[0m
+[33m[tester::#VT6] [0m[92m✓ Topic[0].Partitions.Length: 0[0m
+[33m[tester::#VT6] [0m[92mTest passed.[0m
+[33m[tester::#VT6] [0m[36mTerminating program[0m
+[33m[your_program] [0mConnection closed by peer
+[33m[tester::#VT6] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#YK1] [0m[94mRunning tests for Stage #YK1 (Listing Partitions - Include DescribeTopicPartitions in ApiVersions)[0m
+[33m[tester::#YK1] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#YK1] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#YK1] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#YK1] [Encoder] [0m[36m- ApiVersionsRequest[0m
+[33m[tester::#YK1] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#YK1] [Encoder] [0m[36m    - APIKey (18)[0m
+[33m[tester::#YK1] [Encoder] [0m[36m    - APIVersion (4)[0m
+[33m[tester::#YK1] [Encoder] [0m[36m    - CorrelationID (1344652855)[0m
+[33m[tester::#YK1] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#YK1] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#YK1] [Encoder] [0m[36m    - ClientSoftwareName (kafka-cli)[0m
+[33m[tester::#YK1] [Encoder] [0m[36m    - ClientSoftwareVersion (0.1)[0m
+[33m[tester::#YK1] [client] [0m[94mSending "ApiVersions" request[0m
+[33m[tester::#YK1] [client] [0m[36mHexdump of sent "ApiVersions" request: [0m
+[33m[tester::#YK1] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#YK1] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#YK1] [client] [0m[36m0000 | 00 00 00 26 00 12 00 04 50 25 c6 37 00 0c 6b 61 | ...&....P%.7..ka[0m
+[33m[tester::#YK1] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 0a 6b 61 66 6b | fka-tester..kafk[0m
+[33m[tester::#YK1] [client] [0m[36m0020 | 61 2d 63 6c 69 04 30 2e 31 00                   | a-cli.0.1.[0m
+[33m[tester::#YK1] [client] [0m[36m[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#YK1] [client] [0m[36mHexdump of received "ApiVersions" response: [0m
+[33m[tester::#YK1] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#YK1] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#YK1] [client] [0m[36m0000 | 00 00 00 28 50 25 c6 37 00 00 05 00 12 00 00 00 | ...(P%.7........[0m
+[33m[tester::#YK1] [client] [0m[36m0010 | 04 00 00 01 00 00 00 10 00 00 4b 00 00 00 00 00 | ..........K.....[0m
+[33m[tester::#YK1] [client] [0m[36m0020 | 00 00 00 00 00 0b 00 00 00 00 00 00             | ............[0m
+[33m[tester::#YK1] [client] [0m[36m[0m
+[33m[tester::#YK1] [Decoder] [0m[36m- ApiVersionsResponse[0m
+[33m[tester::#YK1] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#YK1] [Decoder] [0m[36m    - CorrelationID (1344652855)[0m
+[33m[tester::#YK1] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#YK1] [Decoder] [0m[36m    - ErrorCode (0)[0m
+[33m[tester::#YK1] [Decoder] [0m[36m    - ApiKeys[0m
+[33m[tester::#YK1] [Decoder] [0m[36m      - Length (5 (Array length(4) + 1))[0m
+[33m[tester::#YK1] [Decoder] [0m[36m      - ApiKeys[0][0m
+[33m[tester::#YK1] [Decoder] [0m[36m        - APIKey (18)[0m
+[33m[tester::#YK1] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#YK1] [Decoder] [0m[36m        - MaxVersion (4)[0m
+[33m[tester::#YK1] [Decoder] [0m[36m      - ApiKeys[1][0m
+[33m[tester::#YK1] [Decoder] [0m[36m        - APIKey (1)[0m
+[33m[tester::#YK1] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#YK1] [Decoder] [0m[36m        - MaxVersion (16)[0m
+[33m[tester::#YK1] [Decoder] [0m[36m      - ApiKeys[2][0m
+[33m[tester::#YK1] [Decoder] [0m[36m        - APIKey (75)[0m
+[33m[tester::#YK1] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#YK1] [Decoder] [0m[36m        - MaxVersion (0)[0m
+[33m[tester::#YK1] [Decoder] [0m[36m      - ApiKeys[3][0m
+[33m[tester::#YK1] [Decoder] [0m[36m        - APIKey (0)[0m
+[33m[tester::#YK1] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#YK1] [Decoder] [0m[36m        - MaxVersion (11)[0m
+[33m[tester::#YK1] [Decoder] [0m[36m    - ThrottleTimeMs (0)[0m
+[33m[tester::#YK1] [0m[92m✓ CorrelationID: 1344652855[0m
+[33m[tester::#YK1] [0m[92m✓ ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#YK1] [0m[92m✓ API keys array length: 4[0m
+[33m[tester::#YK1] [0m[92m✔ MinVersion for ApiVersions is <= 4 & >= 0[0m
+[33m[tester::#YK1] [0m[92m✔ MaxVersion for ApiVersions is >= 4[0m
+[33m[tester::#YK1] [0m[92m✔ MinVersion for DescribeTopicPartitions is <= 0 & >= 0[0m
+[33m[tester::#YK1] [0m[92m✔ MaxVersion for DescribeTopicPartitions is >= 0[0m
+[33m[tester::#YK1] [0m[92mTest passed.[0m
+[33m[tester::#YK1] [0m[36mTerminating program[0m
+[33m[your_program] [0mConnection closed by peer
+[33m[tester::#YK1] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#SK0] [0m[94mRunning tests for Stage #SK0 (Concurrent Clients - Concurrent requests)[0m
+[33m[tester::#SK0] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#SK0] [client-1] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#SK0] [client-1] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#SK0] [client-2] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[tester::#SK0] [client-2] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#SK0] [Encoder] [0m[36m- ApiVersionsRequest[0m
+[33m[tester::#SK0] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#SK0] [Encoder] [0m[36m    - APIKey (18)[0m
+[33m[tester::#SK0] [Encoder] [0m[36m    - APIVersion (4)[0m
+[33m[tester::#SK0] [Encoder] [0m[36m    - CorrelationID (827118250)[0m
+[33m[tester::#SK0] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#SK0] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#SK0] [Encoder] [0m[36m    - ClientSoftwareName (kafka-cli)[0m
+[33m[tester::#SK0] [Encoder] [0m[36m    - ClientSoftwareVersion (0.1)[0m
+[33m[tester::#SK0] [client-1] [0m[94mSending "ApiVersions" request[0m
+[33m[tester::#SK0] [client-1] [0m[36mHexdump of sent "ApiVersions" request: [0m
+[33m[tester::#SK0] [client-1] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#SK0] [client-1] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#SK0] [client-1] [0m[36m0000 | 00 00 00 26 00 12 00 04 31 4c d2 aa 00 0c 6b 61 | ...&....1L....ka[0m
+[33m[tester::#SK0] [client-1] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 0a 6b 61 66 6b | fka-tester..kafk[0m
+[33m[tester::#SK0] [client-1] [0m[36m0020 | 61 2d 63 6c 69 04 30 2e 31 00                   | a-cli.0.1.[0m
+[33m[tester::#SK0] [client-1] [0m[36m[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#SK0] [Encoder] [0m[36m- ApiVersionsRequest[0m
+[33m[tester::#SK0] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#SK0] [Encoder] [0m[36m    - APIKey (18)[0m
+[33m[tester::#SK0] [Encoder] [0m[36m    - APIVersion (4)[0m
+[33m[tester::#SK0] [Encoder] [0m[36m    - CorrelationID (1838597914)[0m
+[33m[tester::#SK0] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#SK0] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#SK0] [Encoder] [0m[36m    - ClientSoftwareName (kafka-cli)[0m
+[33m[tester::#SK0] [Encoder] [0m[36m    - ClientSoftwareVersion (0.1)[0m
+[33m[tester::#SK0] [client-2] [0m[94mSending "ApiVersions" request[0m
+[33m[tester::#SK0] [client-2] [0m[36mHexdump of sent "ApiVersions" request: [0m
+[33m[tester::#SK0] [client-2] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#SK0] [client-2] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#SK0] [client-2] [0m[36m0000 | 00 00 00 26 00 12 00 04 6d 96 c7 1a 00 0c 6b 61 | ...&....m.....ka[0m
+[33m[tester::#SK0] [client-2] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 0a 6b 61 66 6b | fka-tester..kafk[0m
+[33m[tester::#SK0] [client-2] [0m[36m0020 | 61 2d 63 6c 69 04 30 2e 31 00                   | a-cli.0.1.[0m
+[33m[tester::#SK0] [client-2] [0m[36m[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#SK0] [client-2] [0m[36mHexdump of received "ApiVersions" response: [0m
+[33m[tester::#SK0] [client-2] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#SK0] [client-2] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#SK0] [client-2] [0m[36m0000 | 00 00 00 28 6d 96 c7 1a 00 00 05 00 12 00 00 00 | ...(m...........[0m
+[33m[tester::#SK0] [client-2] [0m[36m0010 | 04 00 00 01 00 00 00 10 00 00 4b 00 00 00 00 00 | ..........K.....[0m
+[33m[tester::#SK0] [client-2] [0m[36m0020 | 00 00 00 00 00 0b 00 00 00 00 00 00             | ............[0m
+[33m[tester::#SK0] [client-2] [0m[36m[0m
+[33m[tester::#SK0] [Decoder] [0m[36m- ApiVersionsResponse[0m
+[33m[tester::#SK0] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#SK0] [Decoder] [0m[36m    - CorrelationID (1838597914)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#SK0] [Decoder] [0m[36m    - ErrorCode (0)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m    - ApiKeys[0m
+[33m[tester::#SK0] [Decoder] [0m[36m      - Length (5 (Array length(4) + 1))[0m
+[33m[tester::#SK0] [Decoder] [0m[36m      - ApiKeys[0][0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - APIKey (18)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MaxVersion (4)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m      - ApiKeys[1][0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - APIKey (1)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MaxVersion (16)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m      - ApiKeys[2][0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - APIKey (75)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MaxVersion (0)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m      - ApiKeys[3][0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - APIKey (0)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MaxVersion (11)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m    - ThrottleTimeMs (0)[0m
+[33m[tester::#SK0] [0m[92m✓ CorrelationID: 1838597914[0m
+[33m[tester::#SK0] [0m[92m✓ ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#SK0] [0m[92m✓ API keys array length: 4[0m
+[33m[tester::#SK0] [0m[92m✔ MinVersion for ApiVersions is <= 4 & >= 0[0m
+[33m[tester::#SK0] [0m[92m✔ MaxVersion for ApiVersions is >= 4[0m
+[33m[tester::#SK0] [0m[92m✓ Test 1 of 2: Passed[0m
+[33m[tester::#SK0] [client-1] [0m[36mHexdump of received "ApiVersions" response: [0m
+[33m[tester::#SK0] [client-1] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#SK0] [client-1] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#SK0] [client-1] [0m[36m0000 | 00 00 00 28 31 4c d2 aa 00 00 05 00 12 00 00 00 | ...(1L..........[0m
+[33m[tester::#SK0] [client-1] [0m[36m0010 | 04 00 00 01 00 00 00 10 00 00 4b 00 00 00 00 00 | ..........K.....[0m
+[33m[tester::#SK0] [client-1] [0m[36m0020 | 00 00 00 00 00 0b 00 00 00 00 00 00             | ............[0m
+[33m[tester::#SK0] [client-1] [0m[36m[0m
+[33m[tester::#SK0] [Decoder] [0m[36m- ApiVersionsResponse[0m
+[33m[tester::#SK0] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#SK0] [Decoder] [0m[36m    - CorrelationID (827118250)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#SK0] [Decoder] [0m[36m    - ErrorCode (0)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m    - ApiKeys[0m
+[33m[tester::#SK0] [Decoder] [0m[36m      - Length (5 (Array length(4) + 1))[0m
+[33m[tester::#SK0] [Decoder] [0m[36m      - ApiKeys[0][0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - APIKey (18)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MaxVersion (4)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m      - ApiKeys[1][0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - APIKey (1)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MaxVersion (16)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m      - ApiKeys[2][0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - APIKey (75)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MaxVersion (0)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m      - ApiKeys[3][0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - APIKey (0)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m        - MaxVersion (11)[0m
+[33m[tester::#SK0] [Decoder] [0m[36m    - ThrottleTimeMs (0)[0m
+[33m[tester::#SK0] [0m[92m✓ CorrelationID: 827118250[0m
+[33m[tester::#SK0] [0m[92m✓ ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#SK0] [0m[92m✓ API keys array length: 4[0m
+[33m[tester::#SK0] [0m[92m✔ MinVersion for ApiVersions is <= 4 & >= 0[0m
+[33m[tester::#SK0] [0m[92m✔ MaxVersion for ApiVersions is >= 4[0m
+[33m[tester::#SK0] [0m[92m✓ Test 2 of 2: Passed[0m
+[33m[tester::#SK0] [0m[92mTest passed.[0m
+[33m[tester::#SK0] [0m[36mTerminating program[0m
+[33m[your_program] [0mConnection closed by peer
+[33m[your_program] [0mConnection closed by peer
+[33m[tester::#SK0] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#NH4] [0m[94mRunning tests for Stage #NH4 (Concurrent Clients - Serial requests)[0m
+[33m[tester::#NH4] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#NH4] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#NH4] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#NH4] [Encoder] [0m[36m- ApiVersionsRequest[0m
+[33m[tester::#NH4] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#NH4] [Encoder] [0m[36m    - APIKey (18)[0m
+[33m[tester::#NH4] [Encoder] [0m[36m    - APIVersion (4)[0m
+[33m[tester::#NH4] [Encoder] [0m[36m    - CorrelationID (392192423)[0m
+[33m[tester::#NH4] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#NH4] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#NH4] [Encoder] [0m[36m    - ClientSoftwareName (kafka-cli)[0m
+[33m[tester::#NH4] [Encoder] [0m[36m    - ClientSoftwareVersion (0.1)[0m
+[33m[tester::#NH4] [client] [0m[94mSending "ApiVersions" request[0m
+[33m[tester::#NH4] [client] [0m[36mHexdump of sent "ApiVersions" request: [0m
+[33m[tester::#NH4] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#NH4] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#NH4] [client] [0m[36m0000 | 00 00 00 26 00 12 00 04 17 60 61 a7 00 0c 6b 61 | ...&.....`a...ka[0m
+[33m[tester::#NH4] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 0a 6b 61 66 6b | fka-tester..kafk[0m
+[33m[tester::#NH4] [client] [0m[36m0020 | 61 2d 63 6c 69 04 30 2e 31 00                   | a-cli.0.1.[0m
+[33m[tester::#NH4] [client] [0m[36m[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#NH4] [client] [0m[36mHexdump of received "ApiVersions" response: [0m
+[33m[tester::#NH4] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#NH4] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#NH4] [client] [0m[36m0000 | 00 00 00 28 17 60 61 a7 00 00 05 00 12 00 00 00 | ...(.`a.........[0m
+[33m[tester::#NH4] [client] [0m[36m0010 | 04 00 00 01 00 00 00 10 00 00 4b 00 00 00 00 00 | ..........K.....[0m
+[33m[tester::#NH4] [client] [0m[36m0020 | 00 00 00 00 00 0b 00 00 00 00 00 00             | ............[0m
+[33m[tester::#NH4] [client] [0m[36m[0m
+[33m[tester::#NH4] [Decoder] [0m[36m- ApiVersionsResponse[0m
+[33m[tester::#NH4] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#NH4] [Decoder] [0m[36m    - CorrelationID (392192423)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#NH4] [Decoder] [0m[36m    - ErrorCode (0)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m    - ApiKeys[0m
+[33m[tester::#NH4] [Decoder] [0m[36m      - Length (5 (Array length(4) + 1))[0m
+[33m[tester::#NH4] [Decoder] [0m[36m      - ApiKeys[0][0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - APIKey (18)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MaxVersion (4)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m      - ApiKeys[1][0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - APIKey (1)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MaxVersion (16)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m      - ApiKeys[2][0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - APIKey (75)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MaxVersion (0)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m      - ApiKeys[3][0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - APIKey (0)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MaxVersion (11)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m    - ThrottleTimeMs (0)[0m
+[33m[tester::#NH4] [0m[92m✓ CorrelationID: 392192423[0m
+[33m[tester::#NH4] [0m[92m✓ ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#NH4] [0m[92m✓ API keys array length: 4[0m
+[33m[tester::#NH4] [0m[92m✔ MinVersion for ApiVersions is <= 4 & >= 0[0m
+[33m[tester::#NH4] [0m[92m✔ MaxVersion for ApiVersions is >= 4[0m
+[33m[tester::#NH4] [0m[92m✓ Test 1 of 2: Passed[0m
+[33m[tester::#NH4] [Encoder] [0m[36m- ApiVersionsRequest[0m
+[33m[tester::#NH4] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#NH4] [Encoder] [0m[36m    - APIKey (18)[0m
+[33m[tester::#NH4] [Encoder] [0m[36m    - APIVersion (4)[0m
+[33m[tester::#NH4] [Encoder] [0m[36m    - CorrelationID (392192423)[0m
+[33m[tester::#NH4] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#NH4] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#NH4] [Encoder] [0m[36m    - ClientSoftwareName (kafka-cli)[0m
+[33m[tester::#NH4] [Encoder] [0m[36m    - ClientSoftwareVersion (0.1)[0m
+[33m[tester::#NH4] [client] [0m[94mSending "ApiVersions" request[0m
+[33m[tester::#NH4] [client] [0m[36mHexdump of sent "ApiVersions" request: [0m
+[33m[tester::#NH4] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#NH4] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#NH4] [client] [0m[36m0000 | 00 00 00 26 00 12 00 04 17 60 61 a7 00 0c 6b 61 | ...&.....`a...ka[0m
+[33m[tester::#NH4] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 0a 6b 61 66 6b | fka-tester..kafk[0m
+[33m[tester::#NH4] [client] [0m[36m0020 | 61 2d 63 6c 69 04 30 2e 31 00                   | a-cli.0.1.[0m
+[33m[tester::#NH4] [client] [0m[36m[0m
+[33m[tester::#NH4] [client] [0m[36mHexdump of received "ApiVersions" response: [0m
+[33m[tester::#NH4] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#NH4] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#NH4] [client] [0m[36m0000 | 00 00 00 28 17 60 61 a7 00 00 05 00 12 00 00 00 | ...(.`a.........[0m
+[33m[tester::#NH4] [client] [0m[36m0010 | 04 00 00 01 00 00 00 10 00 00 4b 00 00 00 00 00 | ..........K.....[0m
+[33m[tester::#NH4] [client] [0m[36m0020 | 00 00 00 00 00 0b 00 00 00 00 00 00             | ............[0m
+[33m[tester::#NH4] [client] [0m[36m[0m
+[33m[tester::#NH4] [Decoder] [0m[36m- ApiVersionsResponse[0m
+[33m[tester::#NH4] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#NH4] [Decoder] [0m[36m    - CorrelationID (392192423)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#NH4] [Decoder] [0m[36m    - ErrorCode (0)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m    - ApiKeys[0m
+[33m[tester::#NH4] [Decoder] [0m[36m      - Length (5 (Array length(4) + 1))[0m
+[33m[tester::#NH4] [Decoder] [0m[36m      - ApiKeys[0][0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - APIKey (18)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MaxVersion (4)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m      - ApiKeys[1][0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - APIKey (1)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MaxVersion (16)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m      - ApiKeys[2][0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - APIKey (75)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MaxVersion (0)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m      - ApiKeys[3][0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - APIKey (0)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m        - MaxVersion (11)[0m
+[33m[tester::#NH4] [Decoder] [0m[36m    - ThrottleTimeMs (0)[0m
+[33m[tester::#NH4] [0m[92m✓ CorrelationID: 392192423[0m
+[33m[tester::#NH4] [0m[92m✓ ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#NH4] [0m[92m✓ API keys array length: 4[0m
+[33m[tester::#NH4] [0m[92m✔ MinVersion for ApiVersions is <= 4 & >= 0[0m
+[33m[tester::#NH4] [0m[92m✔ MaxVersion for ApiVersions is >= 4[0m
+[33m[tester::#NH4] [0m[92m✓ Test 2 of 2: Passed[0m
+[33m[tester::#NH4] [0m[92mTest passed.[0m
+[33m[tester::#NH4] [0m[36mTerminating program[0m
+[33m[tester::#NH4] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#FD8] [0m[94mRunning tests for Stage #FD8 (Consuming Messages - Fetch multiple messages from disk)[0m
+[33m[tester::#FD8] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#FD8] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#FD8] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#FD8] [Encoder] [0m[36m- FetchRequest[0m
+[33m[tester::#FD8] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#FD8] [Encoder] [0m[36m    - APIKey (1)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m    - APIVersion (16)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m    - CorrelationID (1745982446)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#FD8] [Encoder] [0m[36m    - MaxWaitMS (500)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m    - MinBytes (1)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m    - MaxBytes (2147483647)[0m
+[33m[your_program] [0m
+[33m[tester::#FD8] [Encoder] [0m[36m    - IsolationLevel (0)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m    - SessionID (0)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m    - SessionEpoch (0)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m    - Topics[0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#FD8] [Encoder] [0m[36m      - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#FD8] [Encoder] [0m[36m      - Topics[0][0m
+[33m[tester::#FD8] [Encoder] [0m[36m        - Topic[0m
+[33m[tester::#FD8] [Encoder] [0m[36m          - UUID (71a59a51-8968-4f8b-937e-8a7372b76eb3)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m          - Partitions[0m
+[33m[tester::#FD8] [Encoder] [0m[36m            - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#FD8] [Encoder] [0m[36m            - Partitions[0][0m
+[33m[tester::#FD8] [Encoder] [0m[36m              - Partition[0m
+[33m[tester::#FD8] [Encoder] [0m[36m                - ID (0)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m                - CurrentLeaderEpoch (-1)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m                - FetchOffset (0)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m                - LastFetchedOffset (-1)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m                - LogStartOffset (-1)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m                - PartitionMaxBytes (2147483647)[0m
+[33m[tester::#FD8] [Encoder] [0m[36m    - ForgottenTopics[0m
+[33m[tester::#FD8] [Encoder] [0m[36m      - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#FD8] [Encoder] [0m[36m    - RackID ("")[0m
+[33m[tester::#FD8] [client] [0m[94mSending "Fetch" request[0m
+[33m[tester::#FD8] [client] [0m[36mHexdump of sent "Fetch" request: [0m
+[33m[tester::#FD8] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#FD8] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#FD8] [client] [0m[36m0000 | 00 00 00 63 00 01 00 10 68 11 93 ee 00 0c 6b 61 | ...c....h.....ka[0m
+[33m[tester::#FD8] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 00 00 01 f4 00 | fka-tester......[0m
+[33m[tester::#FD8] [client] [0m[36m0020 | 00 00 01 7f ff ff ff 00 00 00 00 00 00 00 00 00 | ................[0m
+[33m[tester::#FD8] [client] [0m[36m0030 | 02 71 a5 9a 51 89 68 4f 8b 93 7e 8a 73 72 b7 6e | .q..Q.hO..~.sr.n[0m
+[33m[tester::#FD8] [client] [0m[36m0040 | b3 02 00 00 00 00 ff ff ff ff 00 00 00 00 00 00 | ................[0m
+[33m[tester::#FD8] [client] [0m[36m0050 | 00 00 ff ff ff ff ff ff ff ff ff ff ff ff 7f ff | ................[0m
+[33m[tester::#FD8] [client] [0m[36m0060 | ff ff 00 00 01 01 00                            | .......[0m
+[33m[tester::#FD8] [client] [0m[36m[0m
+[33m[tester::#FD8] [client] [0m[36mHexdump of received "Fetch" response: [0m
+[33m[tester::#FD8] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#FD8] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#FD8] [client] [0m[36m0000 | 00 00 01 2e 68 11 93 ee 00 00 00 00 00 00 00 00 | ....h...........[0m
+[33m[tester::#FD8] [client] [0m[36m0010 | 00 00 00 02 71 a5 9a 51 89 68 4f 8b 93 7e 8a 73 | ....q..Q.hO..~.s[0m
+[33m[tester::#FD8] [client] [0m[36m0020 | 72 b7 6e b3 02 00 00 00 00 00 00 00 00 00 00 00 | r.n.............[0m
+[33m[tester::#FD8] [client] [0m[36m0030 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................[0m
+[33m[tester::#FD8] [client] [0m[36m0040 | 00 00 00 01 00 00 00 00 e6 01 00 00 00 00 00 00 | ................[0m
+[33m[tester::#FD8] [client] [0m[36m0050 | 00 00 00 00 00 41 00 00 00 00 02 cf 35 bf 62 00 | .....A......5.b.[0m
+[33m[tester::#FD8] [client] [0m[36m0060 | 00 00 00 00 00 00 00 01 91 e0 5b 6d 8b 00 00 01 | ..........[m....[0m
+[33m[tester::#FD8] [client] [0m[36m0070 | 91 e0 5b 6d 8b 00 00 00 00 00 00 00 00 00 00 00 | ..[m............[0m
+[33m[tester::#FD8] [client] [0m[36m0080 | 00 00 00 00 00 00 01 1e 00 00 00 01 12 70 69 6e | .............pin[0m
+[33m[tester::#FD8] [client] [0m[36m0090 | 65 61 70 70 6c 65 01 00 00 00 00 00 00 00 01 00 | eapple..........[0m
+[33m[tester::#FD8] [client] [0m[36m00a0 | 00 00 42 00 00 00 00 02 72 25 75 7b 00 00 00 00 | ..B.....r%u{....[0m
+[33m[tester::#FD8] [client] [0m[36m00b0 | 00 00 00 00 01 91 e0 5b 6d 8b 00 00 01 91 e0 5b | .......[m......[[0m
+[33m[tester::#FD8] [client] [0m[36m00c0 | 6d 8b 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | m...............[0m
+[33m[tester::#FD8] [client] [0m[36m00d0 | 00 00 00 01 20 00 00 00 01 14 73 74 72 61 77 62 | .... .....strawb[0m
+[33m[tester::#FD8] [client] [0m[36m00e0 | 65 72 72 79 01 00 00 00 00 00 00 00 02 00 00 00 | erry............[0m
+[33m[tester::#FD8] [client] [0m[36m00f0 | 3e 00 00 00 00 02 07 c6 ce e2 00 00 00 00 00 00 | >...............[0m
+[33m[tester::#FD8] [client] [0m[36m0100 | 00 00 01 91 e0 5b 6d 8b 00 00 01 91 e0 5b 6d 8b | .....[m......[m.[0m
+[33m[tester::#FD8] [client] [0m[36m0110 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................[0m
+[33m[tester::#FD8] [client] [0m[36m0120 | 00 01 18 00 00 00 01 0c 6f 72 61 6e 67 65 01 00 | ........orange..[0m
+[33m[tester::#FD8] [client] [0m[36m0130 | 00 00                                           | ..[0m
+[33m[tester::#FD8] [client] [0m[36m[0m
+[33m[tester::#FD8] [Decoder] [0m[36m- FetchResponse[0m
+[33m[tester::#FD8] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#FD8] [Decoder] [0m[36m    - CorrelationID (1745982446)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#FD8] [Decoder] [0m[36m    - ThrottleTimeMS (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m    - ErrorCode (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m    - SessionID (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m    - Topics[0m
+[33m[tester::#FD8] [Decoder] [0m[36m      - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#FD8] [Decoder] [0m[36m      - Topics[0][0m
+[33m[tester::#FD8] [Decoder] [0m[36m        - UUID (71a59a51-8968-4f8b-937e-8a7372b76eb3)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m        - Partitions[0m
+[33m[tester::#FD8] [Decoder] [0m[36m          - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#FD8] [Decoder] [0m[36m          - Partitions[0][0m
+[33m[tester::#FD8] [Decoder] [0m[36m            - Id (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m            - ErrorCode (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m            - HighWaterMark (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m            - LastStableOffset (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m            - LogStartOffset (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m            - AbortedTransactions[0m
+[33m[tester::#FD8] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#FD8] [Decoder] [0m[36m            - PreferredReadReplica (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m            - RecordBatches[0m
+[33m[tester::#FD8] [Decoder] [0m[36m              - Size (230 (Record size(229) + 1))[0m
+[33m[tester::#FD8] [Decoder] [0m[36m              - RecordBatches[0][0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - Offset (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - Length (65)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - PartitionLeaderEpoch (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - MagicByte (2)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - CRC (-818561182)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - Attributes (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - LastOffsetDelta (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - FirstTimeStamp (1726045973899)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - MaxTimeStamp (1726045973899)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - ProducerID (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - ProducerEpoch (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - BaseSequence (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - Records[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                  - Length (1)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                  - Records[0][0m
+[33m[tester::#FD8] [Decoder] [0m[36m                    - Record[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - Length (15)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - Attributes (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - TimestampDelta (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - OffsetDelta (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - KeyLength (-1)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - ValueLength (9)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - Value ([112 105 110 101 97 112 112 108 101] -> UTF-8: (pineapple))[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - HeadersLength (-1)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m              - RecordBatches[1][0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - Offset (1)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - Length (66)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - PartitionLeaderEpoch (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - MagicByte (2)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - CRC (1915057531)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - Attributes (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - LastOffsetDelta (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - FirstTimeStamp (1726045973899)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - MaxTimeStamp (1726045973899)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - ProducerID (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - ProducerEpoch (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - BaseSequence (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - Records[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                  - Length (1)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                  - Records[0][0m
+[33m[tester::#FD8] [Decoder] [0m[36m                    - Record[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - Length (16)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - Attributes (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - TimestampDelta (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - OffsetDelta (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - KeyLength (-1)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - ValueLength (10)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - Value ([115 116 114 97 119 98 101 114 114 121] -> UTF-8: (strawberry))[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - HeadersLength (-1)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m              - RecordBatches[2][0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - Offset (2)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - Length (62)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - PartitionLeaderEpoch (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - MagicByte (2)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - CRC (130469602)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - Attributes (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - LastOffsetDelta (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - FirstTimeStamp (1726045973899)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - MaxTimeStamp (1726045973899)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - ProducerID (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - ProducerEpoch (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - BaseSequence (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                - Records[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                  - Length (1)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                  - Records[0][0m
+[33m[tester::#FD8] [Decoder] [0m[36m                    - Record[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - Length (12)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - Attributes (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - TimestampDelta (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - OffsetDelta (0)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - KeyLength (-1)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - ValueLength (6)[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - Value ([111 114 97 110 103 101] -> UTF-8: (orange))[0m
+[33m[tester::#FD8] [Decoder] [0m[36m                      - HeadersLength (-1)[0m
+[33m[tester::#FD8] [0m[92m✓ TopicResponses Length: 1[0m
+[33m[tester::#FD8] [0m[92m✓ TopicResponse[0] TopicUUID: 71a59a51-8968-4f8b-937e-8a7372b76eb3[0m
+[33m[tester::#FD8] [0m[92m✓ PartitionResponses Length: 1[0m
+[33m[tester::#FD8] [0m[92m✓ PartitionResponse[0] ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#FD8] [0m[92m✓ PartitionResponse[0] PartitionId: 0[0m
+[33m[tester::#FD8] [0m[92m✓ RecordBatch bytes match with the contents on disk[0m
+[33m[tester::#FD8] [0m[92mTest passed.[0m
+[33m[tester::#FD8] [0m[36mTerminating program[0m
+[33m[your_program] [0mConnection closed by peer
+[33m[tester::#FD8] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#EG2] [0m[94mRunning tests for Stage #EG2 (Consuming Messages - Fetch single message from disk)[0m
+[33m[tester::#EG2] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#EG2] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#EG2] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#EG2] [Encoder] [0m[36m- FetchRequest[0m
+[33m[tester::#EG2] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#EG2] [Encoder] [0m[36m    - APIKey (1)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m    - APIVersion (16)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m    - CorrelationID (424582069)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#EG2] [Encoder] [0m[36m    - MaxWaitMS (500)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m    - MinBytes (1)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m    - MaxBytes (2147483647)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m    - IsolationLevel (0)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m    - SessionID (0)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m    - SessionEpoch (0)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m    - Topics[0m
+[33m[tester::#EG2] [Encoder] [0m[36m      - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#EG2] [Encoder] [0m[36m      - Topics[0][0m
+[33m[tester::#EG2] [Encoder] [0m[36m        - Topic[0m
+[33m[tester::#EG2] [Encoder] [0m[36m          - UUID (71a59a51-8968-4f8b-937e-c1c783742528)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m          - Partitions[0m
+[33m[tester::#EG2] [Encoder] [0m[36m            - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#EG2] [Encoder] [0m[36m            - Partitions[0][0m
+[33m[tester::#EG2] [Encoder] [0m[36m              - Partition[0m
+[33m[tester::#EG2] [Encoder] [0m[36m                - ID (0)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m                - CurrentLeaderEpoch (-1)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m                - FetchOffset (0)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m                - LastFetchedOffset (-1)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m                - LogStartOffset (-1)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m                - PartitionMaxBytes (2147483647)[0m
+[33m[tester::#EG2] [Encoder] [0m[36m    - ForgottenTopics[0m
+[33m[tester::#EG2] [Encoder] [0m[36m      - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#EG2] [Encoder] [0m[36m    - RackID ("")[0m
+[33m[tester::#EG2] [client] [0m[94mSending "Fetch" request[0m
+[33m[tester::#EG2] [client] [0m[36mHexdump of sent "Fetch" request: [0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#EG2] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#EG2] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#EG2] [client] [0m[36m0000 | 00 00 00 63 00 01 00 10 19 4e 9b b5 00 0c 6b 61 | ...c.....N....ka[0m
+[33m[tester::#EG2] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 00 00 01 f4 00 | fka-tester......[0m
+[33m[tester::#EG2] [client] [0m[36m0020 | 00 00 01 7f ff ff ff 00 00 00 00 00 00 00 00 00 | ................[0m
+[33m[tester::#EG2] [client] [0m[36m0030 | 02 71 a5 9a 51 89 68 4f 8b 93 7e c1 c7 83 74 25 | .q..Q.hO..~...t%[0m
+[33m[tester::#EG2] [client] [0m[36m0040 | 28 02 00 00 00 00 ff ff ff ff 00 00 00 00 00 00 | (...............[0m
+[33m[tester::#EG2] [client] [0m[36m0050 | 00 00 ff ff ff ff ff ff ff ff ff ff ff ff 7f ff | ................[0m
+[33m[tester::#EG2] [client] [0m[36m0060 | ff ff 00 00 01 01 00                            | .......[0m
+[33m[tester::#EG2] [client] [0m[36m[0m
+[33m[tester::#EG2] [client] [0m[36mHexdump of received "Fetch" response: [0m
+[33m[tester::#EG2] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#EG2] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#EG2] [client] [0m[36m0000 | 00 00 00 92 19 4e 9b b5 00 00 00 00 00 00 00 00 | .....N..........[0m
+[33m[tester::#EG2] [client] [0m[36m0010 | 00 00 00 02 71 a5 9a 51 89 68 4f 8b 93 7e c1 c7 | ....q..Q.hO..~..[0m
+[33m[tester::#EG2] [client] [0m[36m0020 | 83 74 25 28 02 00 00 00 00 00 00 00 00 00 00 00 | .t%(............[0m
+[33m[tester::#EG2] [client] [0m[36m0030 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................[0m
+[33m[tester::#EG2] [client] [0m[36m0040 | 00 00 00 01 00 00 00 00 4b 00 00 00 00 00 00 00 | ........K.......[0m
+[33m[tester::#EG2] [client] [0m[36m0050 | 00 00 00 00 3e 00 00 00 00 02 21 77 32 d2 00 00 | ....>.....!w2...[0m
+[33m[tester::#EG2] [client] [0m[36m0060 | 00 00 00 00 00 00 01 91 e0 5b 6d 8b 00 00 01 91 | .........[m.....[0m
+[33m[tester::#EG2] [client] [0m[36m0070 | e0 5b 6d 8b 00 00 00 00 00 00 00 00 00 00 00 00 | .[m.............[0m
+[33m[tester::#EG2] [client] [0m[36m0080 | 00 00 00 00 00 01 18 00 00 00 01 0c 62 61 6e 61 | ............bana[0m
+[33m[tester::#EG2] [client] [0m[36m0090 | 6e 61 01 00 00 00                               | na....[0m
+[33m[tester::#EG2] [client] [0m[36m[0m
+[33m[tester::#EG2] [Decoder] [0m[36m- FetchResponse[0m
+[33m[tester::#EG2] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#EG2] [Decoder] [0m[36m    - CorrelationID (424582069)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#EG2] [Decoder] [0m[36m    - ThrottleTimeMS (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m    - ErrorCode (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m    - SessionID (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m    - Topics[0m
+[33m[tester::#EG2] [Decoder] [0m[36m      - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#EG2] [Decoder] [0m[36m      - Topics[0][0m
+[33m[tester::#EG2] [Decoder] [0m[36m        - UUID (71a59a51-8968-4f8b-937e-c1c783742528)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m        - Partitions[0m
+[33m[tester::#EG2] [Decoder] [0m[36m          - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#EG2] [Decoder] [0m[36m          - Partitions[0][0m
+[33m[tester::#EG2] [Decoder] [0m[36m            - Id (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m            - ErrorCode (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m            - HighWaterMark (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m            - LastStableOffset (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m            - LogStartOffset (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m            - AbortedTransactions[0m
+[33m[tester::#EG2] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#EG2] [Decoder] [0m[36m            - PreferredReadReplica (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m            - RecordBatches[0m
+[33m[tester::#EG2] [Decoder] [0m[36m              - Size (75 (Record size(74) + 1))[0m
+[33m[tester::#EG2] [Decoder] [0m[36m              - RecordBatches[0][0m
+[33m[tester::#EG2] [Decoder] [0m[36m                - Offset (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                - Length (62)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                - PartitionLeaderEpoch (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                - MagicByte (2)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                - CRC (561459922)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                - Attributes (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                - LastOffsetDelta (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                - FirstTimeStamp (1726045973899)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                - MaxTimeStamp (1726045973899)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                - ProducerID (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                - ProducerEpoch (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                - BaseSequence (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                - Records[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                  - Length (1)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                  - Records[0][0m
+[33m[tester::#EG2] [Decoder] [0m[36m                    - Record[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                      - Length (12)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                      - Attributes (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                      - TimestampDelta (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                      - OffsetDelta (0)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                      - KeyLength (-1)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                      - ValueLength (6)[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                      - Value ([98 97 110 97 110 97] -> UTF-8: (banana))[0m
+[33m[tester::#EG2] [Decoder] [0m[36m                      - HeadersLength (-1)[0m
+[33m[tester::#EG2] [0m[92m✓ TopicResponses Length: 1[0m
+[33m[tester::#EG2] [0m[92m✓ TopicResponse[0] TopicUUID: 71a59a51-8968-4f8b-937e-c1c783742528[0m
+[33m[tester::#EG2] [0m[92m✓ PartitionResponses Length: 1[0m
+[33m[tester::#EG2] [0m[92m✓ PartitionResponse[0] ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#EG2] [0m[92m✓ PartitionResponse[0] PartitionId: 0[0m
+[33m[tester::#EG2] [0m[92m✓ RecordBatch bytes match with the contents on disk[0m
+[33m[tester::#EG2] [0m[92mTest passed.[0m
+[33m[tester::#EG2] [0m[36mTerminating program[0m
+[33m[tester::#EG2] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#CM4] [0m[94mRunning tests for Stage #CM4 (Consuming Messages - Fetch with an empty topic)[0m
+[33m[tester::#CM4] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#CM4] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#CM4] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#CM4] [Encoder] [0m[36m- FetchRequest[0m
+[33m[tester::#CM4] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#CM4] [Encoder] [0m[36m    - APIKey (1)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m    - APIVersion (16)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m    - CorrelationID (961436390)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#CM4] [Encoder] [0m[36m    - MaxWaitMS (500)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m    - MinBytes (1)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m    - MaxBytes (2147483647)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m    - IsolationLevel (0)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m    - SessionID (0)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m    - SessionEpoch (0)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m    - Topics[0m
+[33m[tester::#CM4] [Encoder] [0m[36m      - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#CM4] [Encoder] [0m[36m      - Topics[0][0m
+[33m[tester::#CM4] [Encoder] [0m[36m        - Topic[0m
+[33m[tester::#CM4] [Encoder] [0m[36m          - UUID (71a59a51-8968-4f8b-937e-95d57d25e885)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m          - Partitions[0m
+[33m[tester::#CM4] [Encoder] [0m[36m            - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#CM4] [Encoder] [0m[36m            - Partitions[0][0m
+[33m[tester::#CM4] [Encoder] [0m[36m              - Partition[0m
+[33m[tester::#CM4] [Encoder] [0m[36m                - ID (0)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m                - CurrentLeaderEpoch (-1)[0m
+[33m[your_program] [0m
+[33m[tester::#CM4] [Encoder] [0m[36m                - FetchOffset (0)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m                - LastFetchedOffset (-1)[0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#CM4] [Encoder] [0m[36m                - LogStartOffset (-1)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m                - PartitionMaxBytes (2147483647)[0m
+[33m[tester::#CM4] [Encoder] [0m[36m    - ForgottenTopics[0m
+[33m[tester::#CM4] [Encoder] [0m[36m      - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#CM4] [Encoder] [0m[36m    - RackID ("")[0m
+[33m[tester::#CM4] [client] [0m[94mSending "Fetch" request[0m
+[33m[tester::#CM4] [client] [0m[36mHexdump of sent "Fetch" request: [0m
+[33m[tester::#CM4] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#CM4] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#CM4] [client] [0m[36m0000 | 00 00 00 63 00 01 00 10 39 4e 5a e6 00 0c 6b 61 | ...c....9NZ...ka[0m
+[33m[tester::#CM4] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 00 00 01 f4 00 | fka-tester......[0m
+[33m[tester::#CM4] [client] [0m[36m0020 | 00 00 01 7f ff ff ff 00 00 00 00 00 00 00 00 00 | ................[0m
+[33m[tester::#CM4] [client] [0m[36m0030 | 02 71 a5 9a 51 89 68 4f 8b 93 7e 95 d5 7d 25 e8 | .q..Q.hO..~..}%.[0m
+[33m[tester::#CM4] [client] [0m[36m0040 | 85 02 00 00 00 00 ff ff ff ff 00 00 00 00 00 00 | ................[0m
+[33m[tester::#CM4] [client] [0m[36m0050 | 00 00 ff ff ff ff ff ff ff ff ff ff ff ff 7f ff | ................[0m
+[33m[tester::#CM4] [client] [0m[36m0060 | ff ff 00 00 01 01 00                            | .......[0m
+[33m[tester::#CM4] [client] [0m[36m[0m
+[33m[tester::#CM4] [client] [0m[36mHexdump of received "Fetch" response: [0m
+[33m[tester::#CM4] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#CM4] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#CM4] [client] [0m[36m0000 | 00 00 00 48 39 4e 5a e6 00 00 00 00 00 00 00 00 | ...H9NZ.........[0m
+[33m[tester::#CM4] [client] [0m[36m0010 | 00 00 00 02 71 a5 9a 51 89 68 4f 8b 93 7e 95 d5 | ....q..Q.hO..~..[0m
+[33m[tester::#CM4] [client] [0m[36m0020 | 7d 25 e8 85 02 00 00 00 00 00 00 00 00 00 00 00 | }%..............[0m
+[33m[tester::#CM4] [client] [0m[36m0030 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................[0m
+[33m[tester::#CM4] [client] [0m[36m0040 | 00 00 00 01 00 00 00 00 01 00 00 00             | ............[0m
+[33m[tester::#CM4] [client] [0m[36m[0m
+[33m[tester::#CM4] [Decoder] [0m[36m- FetchResponse[0m
+[33m[tester::#CM4] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#CM4] [Decoder] [0m[36m    - CorrelationID (961436390)[0m
+[33m[tester::#CM4] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#CM4] [Decoder] [0m[36m    - ThrottleTimeMS (0)[0m
+[33m[tester::#CM4] [Decoder] [0m[36m    - ErrorCode (0)[0m
+[33m[tester::#CM4] [Decoder] [0m[36m    - SessionID (0)[0m
+[33m[tester::#CM4] [Decoder] [0m[36m    - Topics[0m
+[33m[tester::#CM4] [Decoder] [0m[36m      - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#CM4] [Decoder] [0m[36m      - Topics[0][0m
+[33m[tester::#CM4] [Decoder] [0m[36m        - UUID (71a59a51-8968-4f8b-937e-95d57d25e885)[0m
+[33m[tester::#CM4] [Decoder] [0m[36m        - Partitions[0m
+[33m[tester::#CM4] [Decoder] [0m[36m          - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#CM4] [Decoder] [0m[36m          - Partitions[0][0m
+[33m[tester::#CM4] [Decoder] [0m[36m            - Id (0)[0m
+[33m[tester::#CM4] [Decoder] [0m[36m            - ErrorCode (0)[0m
+[33m[tester::#CM4] [Decoder] [0m[36m            - HighWaterMark (0)[0m
+[33m[tester::#CM4] [Decoder] [0m[36m            - LastStableOffset (0)[0m
+[33m[tester::#CM4] [Decoder] [0m[36m            - LogStartOffset (0)[0m
+[33m[tester::#CM4] [Decoder] [0m[36m            - AbortedTransactions[0m
+[33m[tester::#CM4] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#CM4] [Decoder] [0m[36m            - PreferredReadReplica (0)[0m
+[33m[tester::#CM4] [Decoder] [0m[36m            - RecordBatches[0m
+[33m[tester::#CM4] [Decoder] [0m[36m              - Size (1 (Record size(0) + 1))[0m
+[33m[tester::#CM4] [0m[92m✓ TopicResponses Length: 1[0m
+[33m[tester::#CM4] [0m[92m✓ TopicResponse[0] TopicUUID: 71a59a51-8968-4f8b-937e-95d57d25e885[0m
+[33m[tester::#CM4] [0m[92m✓ PartitionResponses Length: 1[0m
+[33m[tester::#CM4] [0m[92m✓ PartitionResponse[0] ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#CM4] [0m[92m✓ PartitionResponse[0] PartitionId: 0[0m
+[33m[tester::#CM4] [0m[92mTest passed.[0m
+[33m[tester::#CM4] [0m[36mTerminating program[0m
+[33m[your_program] [0mConnection closed by peer
+[33m[tester::#CM4] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#HN6] [0m[94mRunning tests for Stage #HN6 (Consuming Messages - Fetch with an unknown topic)[0m
+[33m[tester::#HN6] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#HN6] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#HN6] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#HN6] [Encoder] [0m[36m- FetchRequest[0m
+[33m[tester::#HN6] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#HN6] [Encoder] [0m[36m    - APIKey (1)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m    - APIVersion (16)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m    - CorrelationID (429285368)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#HN6] [Encoder] [0m[36m    - MaxWaitMS (500)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m    - MinBytes (1)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m    - MaxBytes (2147483647)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m    - IsolationLevel (0)[0m
+[33m[your_program] [0m
+[33m[tester::#HN6] [Encoder] [0m[36m    - SessionID (0)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m    - SessionEpoch (0)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m    - Topics[0m
+[33m[tester::#HN6] [Encoder] [0m[36m      - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#HN6] [Encoder] [0m[36m      - Topics[0][0m
+[33m[tester::#HN6] [Encoder] [0m[36m        - Topic[0m
+[33m[tester::#HN6] [Encoder] [0m[36m          - UUID (71a59a51-8968-4f8b-937e-00000000050c)[0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#HN6] [Encoder] [0m[36m          - Partitions[0m
+[33m[tester::#HN6] [Encoder] [0m[36m            - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#HN6] [Encoder] [0m[36m            - Partitions[0][0m
+[33m[tester::#HN6] [Encoder] [0m[36m              - Partition[0m
+[33m[tester::#HN6] [Encoder] [0m[36m                - ID (0)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m                - CurrentLeaderEpoch (-1)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m                - FetchOffset (0)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m                - LastFetchedOffset (-1)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m                - LogStartOffset (-1)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m                - PartitionMaxBytes (2147483647)[0m
+[33m[tester::#HN6] [Encoder] [0m[36m    - ForgottenTopics[0m
+[33m[tester::#HN6] [Encoder] [0m[36m      - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#HN6] [Encoder] [0m[36m    - RackID ("")[0m
+[33m[tester::#HN6] [client] [0m[94mSending "Fetch" request[0m
+[33m[tester::#HN6] [client] [0m[36mHexdump of sent "Fetch" request: [0m
+[33m[tester::#HN6] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#HN6] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#HN6] [client] [0m[36m0000 | 00 00 00 63 00 01 00 10 19 96 5f f8 00 0c 6b 61 | ...c......_...ka[0m
+[33m[tester::#HN6] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 00 00 01 f4 00 | fka-tester......[0m
+[33m[tester::#HN6] [client] [0m[36m0020 | 00 00 01 7f ff ff ff 00 00 00 00 00 00 00 00 00 | ................[0m
+[33m[tester::#HN6] [client] [0m[36m0030 | 02 71 a5 9a 51 89 68 4f 8b 93 7e 00 00 00 00 05 | .q..Q.hO..~.....[0m
+[33m[tester::#HN6] [client] [0m[36m0040 | 0c 02 00 00 00 00 ff ff ff ff 00 00 00 00 00 00 | ................[0m
+[33m[tester::#HN6] [client] [0m[36m0050 | 00 00 ff ff ff ff ff ff ff ff ff ff ff ff 7f ff | ................[0m
+[33m[tester::#HN6] [client] [0m[36m0060 | ff ff 00 00 01 01 00                            | .......[0m
+[33m[tester::#HN6] [client] [0m[36m[0m
+[33m[tester::#HN6] [client] [0m[36mHexdump of received "Fetch" response: [0m
+[33m[tester::#HN6] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#HN6] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#HN6] [client] [0m[36m0000 | 00 00 00 48 19 96 5f f8 00 00 00 00 00 00 00 00 | ...H.._.........[0m
+[33m[tester::#HN6] [client] [0m[36m0010 | 00 00 00 02 71 a5 9a 51 89 68 4f 8b 93 7e 00 00 | ....q..Q.hO..~..[0m
+[33m[tester::#HN6] [client] [0m[36m0020 | 00 00 05 0c 02 00 00 00 00 00 64 00 00 00 00 00 | ..........d.....[0m
+[33m[tester::#HN6] [client] [0m[36m0030 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 | ................[0m
+[33m[tester::#HN6] [client] [0m[36m0040 | 00 00 00 01 00 00 00 00 00 00 00 00             | ............[0m
+[33m[tester::#HN6] [client] [0m[36m[0m
+[33m[tester::#HN6] [Decoder] [0m[36m- FetchResponse[0m
+[33m[tester::#HN6] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#HN6] [Decoder] [0m[36m    - CorrelationID (429285368)[0m
+[33m[tester::#HN6] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#HN6] [Decoder] [0m[36m    - ThrottleTimeMS (0)[0m
+[33m[tester::#HN6] [Decoder] [0m[36m    - ErrorCode (0)[0m
+[33m[tester::#HN6] [Decoder] [0m[36m    - SessionID (0)[0m
+[33m[tester::#HN6] [Decoder] [0m[36m    - Topics[0m
+[33m[tester::#HN6] [Decoder] [0m[36m      - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#HN6] [Decoder] [0m[36m      - Topics[0][0m
+[33m[tester::#HN6] [Decoder] [0m[36m        - UUID (71a59a51-8968-4f8b-937e-00000000050c)[0m
+[33m[tester::#HN6] [Decoder] [0m[36m        - Partitions[0m
+[33m[tester::#HN6] [Decoder] [0m[36m          - Length (2 (Array length(1) + 1))[0m
+[33m[tester::#HN6] [Decoder] [0m[36m          - Partitions[0][0m
+[33m[tester::#HN6] [Decoder] [0m[36m            - Id (0)[0m
+[33m[tester::#HN6] [Decoder] [0m[36m            - ErrorCode (100)[0m
+[33m[tester::#HN6] [Decoder] [0m[36m            - HighWaterMark (0)[0m
+[33m[tester::#HN6] [Decoder] [0m[36m            - LastStableOffset (0)[0m
+[33m[tester::#HN6] [Decoder] [0m[36m            - LogStartOffset (0)[0m
+[33m[tester::#HN6] [Decoder] [0m[36m            - AbortedTransactions[0m
+[33m[tester::#HN6] [Decoder] [0m[36m              - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#HN6] [Decoder] [0m[36m            - PreferredReadReplica (0)[0m
+[33m[tester::#HN6] [Decoder] [0m[36m            - RecordBatches[0m
+[33m[tester::#HN6] [Decoder] [0m[36m              - Size (0 (Null record))[0m
+[33m[tester::#HN6] [0m[92m✓ TopicResponses Length: 1[0m
+[33m[tester::#HN6] [0m[92m✓ TopicResponse[0] TopicUUID: 71a59a51-8968-4f8b-937e-00000000050c[0m
+[33m[tester::#HN6] [0m[92m✓ PartitionResponses Length: 1[0m
+[33m[tester::#HN6] [0m[92m✓ PartitionResponse[0] ErrorCode: 100 (UNKNOWN_TOPIC_ID)[0m
+[33m[tester::#HN6] [0m[92m✓ PartitionResponse[0] PartitionId: 0[0m
+[33m[tester::#HN6] [0m[92mTest passed.[0m
+[33m[tester::#HN6] [0m[36mTerminating program[0m
+[33m[your_program] [0mConnection closed by peer
+[33m[tester::#HN6] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#DH6] [0m[94mRunning tests for Stage #DH6 (Consuming Messages - Fetch with no topics)[0m
+[33m[tester::#DH6] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#DH6] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#DH6] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#DH6] [Encoder] [0m[36m- FetchRequest[0m
+[33m[tester::#DH6] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#DH6] [Encoder] [0m[36m    - APIKey (1)[0m
+[33m[tester::#DH6] [Encoder] [0m[36m    - APIVersion (16)[0m
+[33m[tester::#DH6] [Encoder] [0m[36m    - CorrelationID (1007336789)[0m
+[33m[tester::#DH6] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#DH6] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#DH6] [Encoder] [0m[36m    - MaxWaitMS (500)[0m
+[33m[tester::#DH6] [Encoder] [0m[36m    - MinBytes (1)[0m
+[33m[tester::#DH6] [Encoder] [0m[36m    - MaxBytes (2147483647)[0m
+[33m[tester::#DH6] [Encoder] [0m[36m    - IsolationLevel (0)[0m
+[33m[tester::#DH6] [Encoder] [0m[36m    - SessionID (0)[0m
+[33m[tester::#DH6] [Encoder] [0m[36m    - SessionEpoch (0)[0m
+[33m[tester::#DH6] [Encoder] [0m[36m    - Topics[0m
+[33m[tester::#DH6] [Encoder] [0m[36m      - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#DH6] [Encoder] [0m[36m    - ForgottenTopics[0m
+[33m[tester::#DH6] [Encoder] [0m[36m      - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#DH6] [Encoder] [0m[36m    - RackID ("")[0m
+[33m[tester::#DH6] [client] [0m[94mSending "Fetch" request[0m
+[33m[tester::#DH6] [client] [0m[36mHexdump of sent "Fetch" request: [0m
+[33m[tester::#DH6] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#DH6] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#DH6] [client] [0m[36m0000 | 00 00 00 30 00 01 00 10 3c 0a bd 55 00 0c 6b 61 | ...0....<..U..ka[0m
+[33m[tester::#DH6] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 00 00 01 f4 00 | fka-tester......[0m
+[33m[tester::#DH6] [client] [0m[36m0020 | 00 00 01 7f ff ff ff 00 00 00 00 00 00 00 00 00 | ................[0m
+[33m[tester::#DH6] [client] [0m[36m0030 | 01 01 01 00                                     | ....[0m
+[33m[tester::#DH6] [client] [0m[36m[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#DH6] [client] [0m[36mHexdump of received "Fetch" response: [0m
+[33m[tester::#DH6] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#DH6] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#DH6] [client] [0m[36m0000 | 00 00 00 11 3c 0a bd 55 00 00 00 00 00 00 00 00 | ....<..U........[0m
+[33m[tester::#DH6] [client] [0m[36m0010 | 00 00 00 01 00                                  | .....[0m
+[33m[tester::#DH6] [client] [0m[36m[0m
+[33m[tester::#DH6] [Decoder] [0m[36m- FetchResponse[0m
+[33m[tester::#DH6] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#DH6] [Decoder] [0m[36m    - CorrelationID (1007336789)[0m
+[33m[tester::#DH6] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#DH6] [Decoder] [0m[36m    - ThrottleTimeMS (0)[0m
+[33m[tester::#DH6] [Decoder] [0m[36m    - ErrorCode (0)[0m
+[33m[tester::#DH6] [Decoder] [0m[36m    - SessionID (0)[0m
+[33m[tester::#DH6] [Decoder] [0m[36m    - Topics[0m
+[33m[tester::#DH6] [Decoder] [0m[36m      - Length (1 (Array length(0) + 1))[0m
+[33m[tester::#DH6] [0m[92m✓ TopicResponses Length: 0[0m
+[33m[tester::#DH6] [0m[92mTest passed.[0m
+[33m[tester::#DH6] [0m[36mTerminating program[0m
+[33m[your_program] [0mConnection closed by peer
+[33m[tester::#DH6] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#GS0] [0m[94mRunning tests for Stage #GS0 (Consuming Messages - Include Fetch in ApiVersions)[0m
+[33m[tester::#GS0] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#GS0] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#GS0] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#GS0] [Encoder] [0m[36m- ApiVersionsRequest[0m
+[33m[tester::#GS0] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#GS0] [Encoder] [0m[36m    - APIKey (18)[0m
+[33m[tester::#GS0] [Encoder] [0m[36m    - APIVersion (4)[0m
+[33m[tester::#GS0] [Encoder] [0m[36m    - CorrelationID (1523621953)[0m
+[33m[tester::#GS0] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#GS0] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#GS0] [Encoder] [0m[36m    - ClientSoftwareName (kafka-cli)[0m
+[33m[tester::#GS0] [Encoder] [0m[36m    - ClientSoftwareVersion (0.1)[0m
+[33m[tester::#GS0] [client] [0m[94mSending "ApiVersions" request[0m
+[33m[tester::#GS0] [client] [0m[36mHexdump of sent "ApiVersions" request: [0m
+[33m[tester::#GS0] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#GS0] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#GS0] [client] [0m[36m0000 | 00 00 00 26 00 12 00 04 5a d0 a0 41 00 0c 6b 61 | ...&....Z..A..ka[0m
+[33m[tester::#GS0] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 0a 6b 61 66 6b | fka-tester..kafk[0m
+[33m[tester::#GS0] [client] [0m[36m0020 | 61 2d 63 6c 69 04 30 2e 31 00                   | a-cli.0.1.[0m
+[33m[tester::#GS0] [client] [0m[36m[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#GS0] [client] [0m[36mHexdump of received "ApiVersions" response: [0m
+[33m[tester::#GS0] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#GS0] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#GS0] [client] [0m[36m0000 | 00 00 00 28 5a d0 a0 41 00 00 05 00 12 00 00 00 | ...(Z..A........[0m
+[33m[tester::#GS0] [client] [0m[36m0010 | 04 00 00 01 00 00 00 10 00 00 4b 00 00 00 00 00 | ..........K.....[0m
+[33m[tester::#GS0] [client] [0m[36m0020 | 00 00 00 00 00 0b 00 00 00 00 00 00             | ............[0m
+[33m[tester::#GS0] [client] [0m[36m[0m
+[33m[tester::#GS0] [Decoder] [0m[36m- ApiVersionsResponse[0m
+[33m[tester::#GS0] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#GS0] [Decoder] [0m[36m    - CorrelationID (1523621953)[0m
+[33m[tester::#GS0] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#GS0] [Decoder] [0m[36m    - ErrorCode (0)[0m
+[33m[tester::#GS0] [Decoder] [0m[36m    - ApiKeys[0m
+[33m[tester::#GS0] [Decoder] [0m[36m      - Length (5 (Array length(4) + 1))[0m
+[33m[tester::#GS0] [Decoder] [0m[36m      - ApiKeys[0][0m
+[33m[tester::#GS0] [Decoder] [0m[36m        - APIKey (18)[0m
+[33m[tester::#GS0] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#GS0] [Decoder] [0m[36m        - MaxVersion (4)[0m
+[33m[tester::#GS0] [Decoder] [0m[36m      - ApiKeys[1][0m
+[33m[tester::#GS0] [Decoder] [0m[36m        - APIKey (1)[0m
+[33m[tester::#GS0] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#GS0] [Decoder] [0m[36m        - MaxVersion (16)[0m
+[33m[tester::#GS0] [Decoder] [0m[36m      - ApiKeys[2][0m
+[33m[tester::#GS0] [Decoder] [0m[36m        - APIKey (75)[0m
+[33m[tester::#GS0] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#GS0] [Decoder] [0m[36m        - MaxVersion (0)[0m
+[33m[tester::#GS0] [Decoder] [0m[36m      - ApiKeys[3][0m
+[33m[tester::#GS0] [Decoder] [0m[36m        - APIKey (0)[0m
+[33m[tester::#GS0] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#GS0] [Decoder] [0m[36m        - MaxVersion (11)[0m
+[33m[tester::#GS0] [Decoder] [0m[36m    - ThrottleTimeMs (0)[0m
+[33m[tester::#GS0] [0m[92m✓ CorrelationID: 1523621953[0m
+[33m[tester::#GS0] [0m[92m✓ ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#GS0] [0m[92m✓ API keys array length: 4[0m
+[33m[tester::#GS0] [0m[92m✔ MinVersion for ApiVersions is <= 4 & >= 0[0m
+[33m[tester::#GS0] [0m[92m✔ MaxVersion for ApiVersions is >= 4[0m
+[33m[tester::#GS0] [0m[92m✔ MinVersion for Fetch is <= 16 & >= 0[0m
+[33m[tester::#GS0] [0m[92m✔ MaxVersion for Fetch is >= 16[0m
+[33m[tester::#GS0] [0m[92mTest passed.[0m
+[33m[tester::#GS0] [0m[36mTerminating program[0m
+[33m[tester::#GS0] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#PV1] [0m[94mRunning tests for Stage #PV1 (Handle ApiVersions requests)[0m
+[33m[tester::#PV1] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#PV1] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#PV1] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#PV1] [Encoder] [0m[36m- ApiVersionsRequest[0m
+[33m[tester::#PV1] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#PV1] [Encoder] [0m[36m    - APIKey (18)[0m
+[33m[tester::#PV1] [Encoder] [0m[36m    - APIVersion (4)[0m
+[33m[tester::#PV1] [Encoder] [0m[36m    - CorrelationID (33297638)[0m
+[33m[tester::#PV1] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#PV1] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#PV1] [Encoder] [0m[36m    - ClientSoftwareName (kafka-cli)[0m
+[33m[tester::#PV1] [Encoder] [0m[36m    - ClientSoftwareVersion (0.1)[0m
+[33m[tester::#PV1] [client] [0m[94mSending "ApiVersions" request[0m
+[33m[tester::#PV1] [client] [0m[36mHexdump of sent "ApiVersions" request: [0m
+[33m[tester::#PV1] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#PV1] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#PV1] [client] [0m[36m0000 | 00 00 00 26 00 12 00 04 01 fc 14 e6 00 0c 6b 61 | ...&..........ka[0m
+[33m[tester::#PV1] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 0a 6b 61 66 6b | fka-tester..kafk[0m
+[33m[tester::#PV1] [client] [0m[36m0020 | 61 2d 63 6c 69 04 30 2e 31 00                   | a-cli.0.1.[0m
+[33m[tester::#PV1] [client] [0m[36m[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#PV1] [client] [0m[36mHexdump of received "ApiVersions" response: [0m
+[33m[tester::#PV1] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#PV1] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#PV1] [client] [0m[36m0000 | 00 00 00 28 01 fc 14 e6 00 00 05 00 12 00 00 00 | ...(............[0m
+[33m[tester::#PV1] [client] [0m[36m0010 | 04 00 00 01 00 00 00 10 00 00 4b 00 00 00 00 00 | ..........K.....[0m
+[33m[tester::#PV1] [client] [0m[36m0020 | 00 00 00 00 00 0b 00 00 00 00 00 00             | ............[0m
+[33m[tester::#PV1] [client] [0m[36m[0m
+[33m[tester::#PV1] [Decoder] [0m[36m- ApiVersionsResponse[0m
+[33m[tester::#PV1] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#PV1] [Decoder] [0m[36m    - CorrelationID (33297638)[0m
+[33m[tester::#PV1] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#PV1] [Decoder] [0m[36m    - ErrorCode (0)[0m
+[33m[tester::#PV1] [Decoder] [0m[36m    - ApiKeys[0m
+[33m[tester::#PV1] [Decoder] [0m[36m      - Length (5 (Array length(4) + 1))[0m
+[33m[tester::#PV1] [Decoder] [0m[36m      - ApiKeys[0][0m
+[33m[tester::#PV1] [Decoder] [0m[36m        - APIKey (18)[0m
+[33m[tester::#PV1] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#PV1] [Decoder] [0m[36m        - MaxVersion (4)[0m
+[33m[tester::#PV1] [Decoder] [0m[36m      - ApiKeys[1][0m
+[33m[tester::#PV1] [Decoder] [0m[36m        - APIKey (1)[0m
+[33m[tester::#PV1] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#PV1] [Decoder] [0m[36m        - MaxVersion (16)[0m
+[33m[tester::#PV1] [Decoder] [0m[36m      - ApiKeys[2][0m
+[33m[tester::#PV1] [Decoder] [0m[36m        - APIKey (75)[0m
+[33m[tester::#PV1] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#PV1] [Decoder] [0m[36m        - MaxVersion (0)[0m
+[33m[tester::#PV1] [Decoder] [0m[36m      - ApiKeys[3][0m
+[33m[tester::#PV1] [Decoder] [0m[36m        - APIKey (0)[0m
+[33m[tester::#PV1] [Decoder] [0m[36m        - MinVersion (0)[0m
+[33m[tester::#PV1] [Decoder] [0m[36m        - MaxVersion (11)[0m
+[33m[tester::#PV1] [Decoder] [0m[36m    - ThrottleTimeMs (0)[0m
+[33m[tester::#PV1] [0m[92m✓ CorrelationID: 33297638[0m
+[33m[tester::#PV1] [0m[92m✓ ErrorCode: 0 (NO_ERROR)[0m
+[33m[tester::#PV1] [0m[92m✓ API keys array length: 4[0m
+[33m[tester::#PV1] [0m[92m✔ MinVersion for ApiVersions is <= 4 & >= 0[0m
+[33m[tester::#PV1] [0m[92m✔ MaxVersion for ApiVersions is >= 4[0m
+[33m[your_program] [0mConnection closed by peer
+[33m[tester::#PV1] [0m[92mTest passed.[0m
+[33m[tester::#PV1] [0m[36mTerminating program[0m
+[33m[tester::#PV1] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#NC5] [0m[94mRunning tests for Stage #NC5 (Parse API Version)[0m
+[33m[tester::#NC5] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#NC5] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#NC5] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#NC5] [Encoder] [0m[36m- ApiVersionsRequest[0m
+[33m[tester::#NC5] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#NC5] [Encoder] [0m[36m    - APIKey (18)[0m
+[33m[tester::#NC5] [Encoder] [0m[36m    - APIVersion (1752)[0m
+[33m[tester::#NC5] [Encoder] [0m[36m    - CorrelationID (2127851633)[0m
+[33m[tester::#NC5] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#NC5] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#NC5] [Encoder] [0m[36m    - ClientSoftwareName (kafka-cli)[0m
+[33m[tester::#NC5] [Encoder] [0m[36m    - ClientSoftwareVersion (0.1)[0m
+[33m[tester::#NC5] [client] [0m[94mSending "ApiVersions" request[0m
+[33m[tester::#NC5] [client] [0m[36mHexdump of sent "ApiVersions" request: [0m
+[33m[tester::#NC5] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#NC5] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#NC5] [client] [0m[36m0000 | 00 00 00 26 00 12 06 d8 7e d4 70 71 00 0c 6b 61 | ...&....~.pq..ka[0m
+[33m[tester::#NC5] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 0a 6b 61 66 6b | fka-tester..kafk[0m
+[33m[tester::#NC5] [client] [0m[36m0020 | 61 2d 63 6c 69 04 30 2e 31 00                   | a-cli.0.1.[0m
+[33m[tester::#NC5] [client] [0m[36m[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#NC5] [client] [0m[36mHexdump of received "ApiVersions" response: [0m
+[33m[tester::#NC5] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#NC5] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#NC5] [client] [0m[36m0000 | 00 00 00 28 7e d4 70 71 00 23 05 00 12 00 00 00 | ...(~.pq.#......[0m
+[33m[tester::#NC5] [client] [0m[36m0010 | 04 00 00 01 00 00 00 10 00 00 4b 00 00 00 00 00 | ..........K.....[0m
+[33m[tester::#NC5] [client] [0m[36m0020 | 00 00 00 00 00 0b 00 00 00 00 00 00             | ............[0m
+[33m[tester::#NC5] [client] [0m[36m[0m
+[33m[tester::#NC5] [Decoder] [0m[36m- ApiVersionsResponse[0m
+[33m[tester::#NC5] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#NC5] [Decoder] [0m[36m    - CorrelationID (2127851633)[0m
+[33m[tester::#NC5] [Decoder] [0m[36m  - Body[0m
+[33m[tester::#NC5] [Decoder] [0m[36m    - ErrorCode (35)[0m
+[33m[tester::#NC5] [0m[92m✓ CorrelationID: 2127851633[0m
+[33m[tester::#NC5] [0m[92m✓ ErrorCode: 35 (UNSUPPORTED_VERSION)[0m
+[33m[tester::#NC5] [0m[92mTest passed.[0m
+[33m[tester::#NC5] [0m[36mTerminating program[0m
+[33m[your_program] [0mConnection closed by peer
+[33m[tester::#NC5] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#WA6] [0m[94mRunning tests for Stage #WA6 (Parse Correlation ID)[0m
+[33m[tester::#WA6] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#WA6] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#WA6] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#WA6] [Encoder] [0m[36m- ApiVersionsRequest[0m
+[33m[tester::#WA6] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#WA6] [Encoder] [0m[36m    - APIKey (18)[0m
+[33m[tester::#WA6] [Encoder] [0m[36m    - APIVersion (4)[0m
+[33m[tester::#WA6] [Encoder] [0m[36m    - CorrelationID (233414962)[0m
+[33m[tester::#WA6] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#WA6] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#WA6] [Encoder] [0m[36m    - ClientSoftwareName (kafka-cli)[0m
+[33m[tester::#WA6] [Encoder] [0m[36m    - ClientSoftwareVersion (0.1)[0m
+[33m[tester::#WA6] [client] [0m[94mSending "ApiVersions" request[0m
+[33m[tester::#WA6] [client] [0m[36mHexdump of sent "ApiVersions" request: [0m
+[33m[tester::#WA6] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#WA6] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#WA6] [client] [0m[36m0000 | 00 00 00 26 00 12 00 04 0d e9 a1 32 00 0c 6b 61 | ...&.......2..ka[0m
+[33m[tester::#WA6] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 0a 6b 61 66 6b | fka-tester..kafk[0m
+[33m[tester::#WA6] [client] [0m[36m0020 | 61 2d 63 6c 69 04 30 2e 31 00                   | a-cli.0.1.[0m
+[33m[tester::#WA6] [client] [0m[36m[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#WA6] [client] [0m[36mHexdump of received "ApiVersions" response: [0m
+[33m[tester::#WA6] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#WA6] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#WA6] [client] [0m[36m0000 | 00 00 00 28 0d e9 a1 32 00 00 05 00 12 00 00 00 | ...(...2........[0m
+[33m[tester::#WA6] [client] [0m[36m0010 | 04 00 00 01 00 00 00 10 00 00 4b 00 00 00 00 00 | ..........K.....[0m
+[33m[tester::#WA6] [client] [0m[36m0020 | 00 00 00 00 00 0b 00 00 00 00 00 00             | ............[0m
+[33m[tester::#WA6] [client] [0m[36m[0m
+[33m[tester::#WA6] [Decoder] [0m[36m- ApiVersionsResponse[0m
+[33m[tester::#WA6] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#WA6] [Decoder] [0m[36m    - CorrelationID (233414962)[0m
+[33m[tester::#WA6] [0m[92m✓ CorrelationID: 233414962[0m
+[33m[tester::#WA6] [0m[92mTest passed.[0m
+[33m[tester::#WA6] [0m[36mTerminating program[0m
+[33m[your_program] [0mConnection closed by peer
+[33m[tester::#WA6] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#NV3] [0m[94mRunning tests for Stage #NV3 (Send Correlation ID)[0m
+[33m[tester::#NV3] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#NV3] [client] [0m[36mConnecting to broker at localhost:9092[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#NV3] [client] [0m[36mSuccessfully connected to broker at localhost:9092[0m
+[33m[tester::#NV3] [Encoder] [0m[36m- ApiVersionsRequest[0m
+[33m[tester::#NV3] [Encoder] [0m[36m  - Header[0m
+[33m[tester::#NV3] [Encoder] [0m[36m    - APIKey (18)[0m
+[33m[tester::#NV3] [Encoder] [0m[36m    - APIVersion (4)[0m
+[33m[tester::#NV3] [Encoder] [0m[36m    - CorrelationID (7)[0m
+[33m[tester::#NV3] [Encoder] [0m[36m    - ClientID (kafka-tester)[0m
+[33m[tester::#NV3] [Encoder] [0m[36m  - Body[0m
+[33m[tester::#NV3] [Encoder] [0m[36m    - ClientSoftwareName (kafka-cli)[0m
+[33m[tester::#NV3] [Encoder] [0m[36m    - ClientSoftwareVersion (0.1)[0m
+[33m[tester::#NV3] [client] [0m[94mSending "ApiVersions" request[0m
+[33m[tester::#NV3] [client] [0m[36mHexdump of sent "ApiVersions" request: [0m
+[33m[tester::#NV3] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#NV3] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#NV3] [client] [0m[36m0000 | 00 00 00 26 00 12 00 04 00 00 00 07 00 0c 6b 61 | ...&..........ka[0m
+[33m[tester::#NV3] [client] [0m[36m0010 | 66 6b 61 2d 74 65 73 74 65 72 00 0a 6b 61 66 6b | fka-tester..kafk[0m
+[33m[tester::#NV3] [client] [0m[36m0020 | 61 2d 63 6c 69 04 30 2e 31 00                   | a-cli.0.1.[0m
+[33m[tester::#NV3] [client] [0m[36m[0m
+[33m[your_program] [0m
+[33m[your_program] [0mAccepted new connection
+[33m[tester::#NV3] [client] [0m[36mHexdump of received "ApiVersions" response: [0m
+[33m[tester::#NV3] [client] [0m[36mIdx  | Hex                                             | ASCII[0m
+[33m[tester::#NV3] [client] [0m[36m-----+-------------------------------------------------+-----------------[0m
+[33m[tester::#NV3] [client] [0m[36m0000 | 00 00 00 28 00 00 00 07 00 00 05 00 12 00 00 00 | ...(............[0m
+[33m[tester::#NV3] [client] [0m[36m0010 | 04 00 00 01 00 00 00 10 00 00 4b 00 00 00 00 00 | ..........K.....[0m
+[33m[tester::#NV3] [client] [0m[36m0020 | 00 00 00 00 00 0b 00 00 00 00 00 00             | ............[0m
+[33m[tester::#NV3] [client] [0m[36m[0m
+[33m[tester::#NV3] [Decoder] [0m[36m- ApiVersionsResponse[0m
+[33m[tester::#NV3] [Decoder] [0m[36m  - Header[0m
+[33m[tester::#NV3] [Decoder] [0m[36m    - CorrelationID (7)[0m
+[33m[tester::#NV3] [0m[92m✓ CorrelationID: 7[0m
+[33m[tester::#NV3] [0m[92mTest passed.[0m
+[33m[tester::#NV3] [0m[36mTerminating program[0m
+[33m[your_program] [0mConnection closed by peer
+[33m[tester::#NV3] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#VI6] [0m[94mRunning tests for Stage #VI6 (Bind to a port)[0m
+[33m[tester::#VI6] [0m[94m$ ./your_program.sh /tmp/server.properties[0m
+[33m[tester::#VI6] [0m[94mConnecting to port 9092...[0m
+[33m[your_program] [0mLogs from your program will appear here!
+[33m[tester::#VI6] [0m[36mConnection successful[0m
+[33m[tester::#VI6] [0m[92mTest passed.[0m
+[33m[tester::#VI6] [0m[36mTerminating program[0m
+[33m[tester::#VI6] [0m[36mProgram terminated successfully[0m
+
+Test passed. Congrats!
+
+[32mSubmit your changes to move to the next step:[0m
+[32m[0m
+[32m$ codecrafters submit[0m
+
