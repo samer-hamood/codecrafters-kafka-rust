@@ -8,7 +8,9 @@ use std::thread;
 use crate::api_keys::{API_VERSIONS, DESCRIBE_TOPIC_PARTITIONS, FETCH};
 use crate::api_versions::api_versions_response_v4::{ApiKey, ApiVersionsResponseV4};
 use crate::byte_parsable::ByteParsable;
-use crate::describe_topic_partitions::describe_topic_partitions_request_v0::DescribeTopicPartitionsRequestV0;
+use crate::describe_topic_partitions::describe_topic_partitions_request_v0::{
+    self, topic_name, DescribeTopicPartitionsRequestV0,
+};
 use crate::describe_topic_partitions::describe_topic_partitions_response_v0::{
     DescribeTopicPartitionsResponseV0, Partition, Topic,
 };
@@ -120,14 +122,15 @@ fn respond_to_describe_topic_partitions_request(
     request_header: RequestHeaderV2,
     buf: &[u8],
 ) -> Vec<u8> {
-    let describe_topic_partitions_request =
-        DescribeTopicPartitionsRequestV0::parse(buf, request_header.size());
     let throttle_time_ms = 0;
     let is_internal = false;
     let topic_authorized_operation = 0;
     let record_batches = get_record_batches_from_metadata_log();
-    let topics = describe_topic_partitions_request
-        .topics
+    let mut describe_topic_partitions_request =
+        DescribeTopicPartitionsRequestV0::parse(buf, request_header.size());
+    let request_topics = &mut describe_topic_partitions_request.topics;
+    request_topics.sort_by(topic_name);
+    let topics = request_topics
         .iter()
         .map(|request_topic| {
             let record_values = get_record_values(&record_batches, &request_topic.name);

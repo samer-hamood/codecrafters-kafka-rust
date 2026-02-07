@@ -2,6 +2,7 @@ use crate::byte_parsable::ByteParsable;
 use crate::serializable::{BoxedSerializable, Serializable};
 use crate::size::Size;
 use crate::types::unsigned_varint::UnsignedVarint;
+use std::cmp::Ordering;
 use std::iter;
 use std::slice::Iter;
 
@@ -39,6 +40,15 @@ impl<T: Serializable + Size + ByteParsable<T> + Clone> CompactArray<T> {
 
     pub fn iter(&self) -> Iter<'_, T> {
         self.elements.as_deref().unwrap_or(&[]).iter()
+    }
+
+    pub fn sort_by<F>(&mut self, compare: F)
+    where
+        F: FnMut(&T, &T) -> Ordering,
+    {
+        if let Some(v) = self.elements.as_mut() {
+            v.sort_by(compare)
+        }
     }
 }
 

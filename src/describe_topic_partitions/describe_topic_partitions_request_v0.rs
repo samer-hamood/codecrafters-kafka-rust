@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use crate::{
     byte_parsable::ByteParsable,
     serializable::Serializable,
@@ -55,6 +57,10 @@ impl ByteParsable<DescribeTopicPartitionsRequestV0> for DescribeTopicPartitionsR
 pub struct Topic {
     pub name: CompactString,
     pub _tagged_fields: TaggedFieldsSection,
+}
+
+pub fn topic_name(topic1: &Topic, topic2: &Topic) -> Ordering {
+    topic1.name.cmp(&topic2.name)
 }
 
 impl Size for Topic {

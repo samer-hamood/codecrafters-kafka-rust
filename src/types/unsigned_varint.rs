@@ -4,7 +4,7 @@ use crate::serializable::Serializable;
 use crate::types::variable_integer::{parse, serialize, size_of};
 use crate::{byte_parsable::ByteParsable, size::Size, types::zig_zag_decoder::ZigZagDecoder};
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct UnsignedVarint {
     pub value: u32,
     pub byte_count: usize,
