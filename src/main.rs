@@ -293,9 +293,11 @@ fn check_topic_exists(topic_id: &Uuid, record_batches: Vec<RecordBatch>) -> i16 
 }
 
 fn metadata_file_contains(topic_id: &Uuid, record_batches: Vec<RecordBatch>) -> bool {
-    record_batches
-        .iter()
-        .any(|record_batch| record_batch_contains_topic(record_batch, topic_id))
+    record_batches.iter().any(|record_batch| {
+        !record_batch
+            .parse_record_values(SearchItem::TopicId(*topic_id), true)
+            .is_empty()
+    })
 }
 
 fn get_record_batches_from_metadata_log() -> Vec<RecordBatch> {
@@ -331,21 +333,6 @@ fn get_file_size(path: &str) -> usize {
     fs::metadata(path)
         .expect("Unable to read metadata for file")
         .len() as usize
-}
-
-fn record_batch_contains_topic(record_batch: &RecordBatch, topic_id: &Uuid) -> bool {
-    for record in &record_batch.records {
-        let mut offset: usize = 0;
-        let metadata_record = MetadataRecord::parse(&record.value, offset);
-        offset += metadata_record.size();
-        if metadata_record._type == 2 {
-            let topic_record = TopicRecord::parse(&record.value, offset, metadata_record);
-            if &topic_record.topic_uuid == topic_id {
-                return true;
-            }
-        }
-    }
-    false
 }
 
 fn check_supported_version(version: i16) -> i16 {
