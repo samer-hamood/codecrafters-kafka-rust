@@ -5,7 +5,7 @@ use std::net::TcpListener;
 use std::net::TcpStream;
 use std::thread;
 
-use crate::api_keys::{API_VERSIONS, DESCRIBE_TOPIC_PARTITIONS, FETCH};
+use crate::api_keys::{API_VERSIONS, DESCRIBE_TOPIC_PARTITIONS, FETCH, PRODUCE};
 use crate::api_versions::api_versions_response_v4::{ApiKey, ApiVersionsResponseV4};
 use crate::byte_parsable::ByteParsable;
 use crate::describe_topic_partitions::describe_topic_partitions_request_v0::{
@@ -44,6 +44,7 @@ mod fetch;
 mod headers;
 mod macros;
 mod partial_parsable;
+mod produce;
 mod records;
 mod serializable;
 mod size;
@@ -186,6 +187,12 @@ fn respond_to_api_versions_request(request_header: RequestHeaderV2) -> Vec<u8> {
                 DESCRIBE_TOPIC_PARTITIONS,
                 describe_topic_partitions::MIN_VERSION,
                 describe_topic_partitions::MAX_VERSION,
+                TaggedFieldsSection::empty(),
+            ),
+            ApiKey::new(
+                PRODUCE,
+                produce::MIN_VERSION,
+                produce::MAX_VERSION,
                 TaggedFieldsSection::empty(),
             ),
         ]
