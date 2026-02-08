@@ -3,6 +3,7 @@ use std::fmt::{Debug, Display};
 use crate::byte_parsable::ByteParsable;
 use crate::serializable::Serializable;
 use crate::size::Size;
+use crate::types::compact_nullable_string::CompactNullableString;
 use crate::types::unsigned_varint::UnsignedVarint;
 
 // https://kafka.apache.org/27/protocol.html#protocol_types
@@ -10,7 +11,24 @@ use crate::types::unsigned_varint::UnsignedVarint;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CompactString {
     pub length: UnsignedVarint,
-    pub bytes: Option<Vec<u8>>,
+    pub bytes: Vec<u8>,
+}
+
+impl CompactString {
+    #[allow(dead_code)]
+    pub fn to_compact_nullable_string(&self) -> CompactNullableString {
+        CompactNullableString {
+            length: self.length.clone(),
+            bytes: Some(self.bytes.clone()),
+        }
+    }
+
+    pub fn into_compact_nullable_string(self) -> CompactNullableString {
+        CompactNullableString {
+            length: self.length,
+            bytes: Some(self.bytes),
+        }
+    }
 }
 
 impl Size for CompactString {
@@ -24,28 +42,20 @@ impl ByteParsable<CompactString> for CompactString {
         let mut offset = offset;
         let length = UnsignedVarint::parse(bytes, offset);
         offset += length.size();
-
         let bytes = match length.value {
-            0 => None,
-            1 => Some(Vec::new()),
-            _ => Some(bytes[offset..offset + (length.value - 1) as usize].into()),
+            1 => Vec::new(),
+            _ => bytes[offset..offset + (length.value - 1) as usize].into(),
         };
-
         Self { length, bytes }
     }
 }
 
 impl Serializable for CompactString {
     fn to_be_bytes(&self) -> Vec<u8> {
-        match &self.bytes {
-            Some(b) => {
-                let mut bytes = Vec::new();
-                bytes.extend_from_slice(&self.length.to_be_bytes());
-                bytes.extend_from_slice(&b.to_vec());
-                bytes
-            }
-            None => Vec::new(),
-        }
+        let mut bytes = Vec::new();
+        bytes.extend_from_slice(&self.length.to_be_bytes());
+        bytes.extend_from_slice(&self.bytes.to_vec());
+        bytes
     }
 }
 
@@ -63,13 +73,9 @@ impl Ord for CompactString {
 
 impl Display for CompactString {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if let Some(bytes) = &self.bytes {
-            match str::from_utf8(bytes) {
-                Ok(s) => write!(f, "{}", s),
-                Err(e) => panic!("Invalid UTF-8: {}", e),
-            }
-        } else {
-            panic!("No bytes to display CompactString")
+        match str::from_utf8(&self.bytes) {
+            Ok(s) => write!(f, "{}", s),
+            Err(e) => panic!("Invalid UTF-8: {}", e),
         }
     }
 }
@@ -84,7 +90,7 @@ mod test {
     impl CompactString {
         fn from(s: &str) -> Self {
             let length = UnsignedVarint::new(s.len() as u32);
-            let bytes = Some(String::from(s).into_bytes());
+            let bytes = String::from(s).into_bytes();
             Self { length, bytes }
         }
     }

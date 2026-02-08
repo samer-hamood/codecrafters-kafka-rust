@@ -1,5 +1,6 @@
 use uuid::Uuid;
 
+use crate::types::compact_nullable_string::CompactNullableString;
 use crate::{
     byte_parsable::ByteParsable,
     error_codes,
@@ -102,7 +103,7 @@ impl std::fmt::Display for DescribeTopicPartitionsResponseV0 {
 #[derive(Debug, Clone)]
 pub struct Topic {
     pub error_code: i16,
-    pub name: CompactString,
+    pub name: CompactNullableString,
     pub topic_id: Uuid,
     pub is_internal: bool,
     pub partitions: CompactArray<Partition>,
@@ -113,7 +114,7 @@ pub struct Topic {
 impl Topic {
     pub fn new(
         error_code: i16,
-        name: CompactString,
+        name: CompactNullableString,
         topic_id: Uuid,
         is_internal: bool,
         partitions: CompactArray<Partition>,
