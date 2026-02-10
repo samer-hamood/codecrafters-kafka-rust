@@ -6,13 +6,11 @@ pub struct ResponseHeaderV0 {
 }
 
 impl ResponseHeaderV0 {
-    fn new(correlation_id: i32) -> ResponseHeaderV0 {
-        ResponseHeaderV0 { correlation_id }
-    }
-
     pub fn to_be_bytes(&self) -> Vec<u8> {
         // Convert to bytes in big-endian order
         self.correlation_id.to_be_bytes().to_vec()
+    pub fn new(correlation_id: i32) -> Self {
+        Self { correlation_id }
     }
 }
 
