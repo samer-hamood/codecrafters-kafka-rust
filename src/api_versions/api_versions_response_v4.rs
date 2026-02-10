@@ -7,7 +7,6 @@ use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
 use crate::types::compact_array::CompactArray;
 
-#[allow(dead_code)]
 #[derive(Debug)]
 pub struct ApiVersionsResponseV4 {
     pub correlation_id: i32,
@@ -59,7 +58,6 @@ impl Serializable for ApiVersionsResponseV4 {
     }
 }
 
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct ApiKey {
     api_key: i16,
@@ -68,7 +66,6 @@ pub struct ApiKey {
     _tagged_fields: TaggedFieldsSection,
 }
 
-#[allow(dead_code)]
 impl ApiKey {
     pub fn new(
         api_key: i16,
@@ -116,7 +113,6 @@ mod test {
 
     use super::*;
 
-    #[allow(dead_code)]
     fn api_versions_response() -> ApiVersionsResponseV4 {
         let correlation_id = 7;
         let api_keys: CompactArray<ApiKey> = vec![
