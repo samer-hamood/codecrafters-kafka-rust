@@ -108,6 +108,7 @@ impl Serializable for ApiKey {
     }
 }
 
+#[cfg(test)]
 mod test {
     use crate::error_codes;
 
