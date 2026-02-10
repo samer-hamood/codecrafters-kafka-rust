@@ -42,6 +42,12 @@ impl<T: Serializable + Size + ByteParsable<T> + Clone> CompactArray<T> {
         self.elements.as_deref().unwrap_or(&[]).iter()
     }
 
+    pub fn into_iter(self) -> std::vec::IntoIter<T> {
+        self.elements
+            .map(|v| v.into_iter())
+            .unwrap_or_else(|| vec![].into_iter())
+    }
+
     pub fn sort_by<F>(&mut self, compare: F)
     where
         F: FnMut(&T, &T) -> Ordering,

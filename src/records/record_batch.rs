@@ -310,4 +310,12 @@ impl RecordValue {
             None
         }
     }
+
+    pub fn into_partition_record(self) -> Option<PartitionRecord> {
+        if let RecordValue::Partition(record) = self {
+            Some(record)
+        } else {
+            None
+        }
+    }
 }

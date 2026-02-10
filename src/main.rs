@@ -133,19 +133,19 @@ fn respond_to_describe_topic_partitions_request(
         DescribeTopicPartitionsRequestV0::parse(buf, request_header.size());
     let request_topics = describe_topic_partitions_request.topics;
     let topics = request_topics
-        .iter()
+        .into_iter()
         .map(|request_topic| {
             let record_values = get_record_values(&record_batches, &request_topic.name);
             let (topic_id, error_code) = get_topic_id_and_error_code(&record_values);
             let partitions = record_values
-                .iter()
-                .filter_map(|record_value| record_value.to_partition_record())
+                .into_iter()
+                .filter_map(|record_value| record_value.into_partition_record())
                 .map(Partition::from_partition_record)
                 .collect::<Vec<Partition>>()
                 .into();
             Topic::new(
                 error_code,
-                request_topic.name.clone(),
+                request_topic.name.into_compact_nullable_string(),
                 topic_id,
                 is_internal,
                 partitions,
