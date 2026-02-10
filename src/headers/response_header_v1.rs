@@ -1,4 +1,4 @@
-use crate::serializable::{BoxedSerializable, Serializable};
+use crate::serializable::Serializable;
 use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
 
@@ -24,10 +24,10 @@ impl Size for ResponseHeaderV1 {
 }
 
 impl Serializable for ResponseHeaderV1 {
-    fn serializable_fields(&self) -> Vec<BoxedSerializable> {
-        vec![
-            Box::new(self.correlation_id),
-            Box::new(self._tagged_fields.clone()),
-        ]
+    fn to_be_bytes(&self) -> Vec<u8> {
+        let mut bytes = Vec::new();
+        bytes.extend_from_slice(&self.correlation_id.to_be_bytes());
+        bytes.extend_from_slice(&self._tagged_fields.to_be_bytes());
+        bytes
     }
 }

@@ -1,5 +1,5 @@
 use crate::records::record_batch::RecordBatch;
-use crate::serializable::{BoxedSerializable, Serializable};
+use crate::serializable::Serializable;
 use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
 use crate::types::compact_nullable_bytes::CompactNullableBytes;

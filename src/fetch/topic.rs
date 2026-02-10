@@ -2,7 +2,7 @@ use uuid::Uuid;
 
 use super::partition::{RequestPartition, ResponsePartition};
 use crate::byte_parsable::ByteParsable;
-use crate::serializable::{BoxedSerializable, Serializable};
+use crate::serializable::Serializable;
 use crate::size::Size;
 use crate::tagged_fields_section::{self, TaggedFieldsSection};
 use crate::types::compact_array::CompactArray;
@@ -72,12 +72,12 @@ impl Size for ResponseTopic {
 }
 
 impl Serializable for ResponseTopic {
-    fn serializable_fields(&self) -> Vec<BoxedSerializable> {
-        vec![
-            Box::new(self.topic_id),
-            Box::new(self.partitions.clone()),
-            Box::new(self._tagged_fields.clone()),
-        ]
+    fn to_be_bytes(&self) -> Vec<u8> {
+        let mut bytes = Vec::new();
+        bytes.extend_from_slice(&self.topic_id.to_be_bytes());
+        bytes.extend_from_slice(&self.partitions.to_be_bytes());
+        bytes.extend_from_slice(&self._tagged_fields.to_be_bytes());
+        bytes
     }
 }
 

@@ -2,7 +2,7 @@ use std::array;
 
 use crate::byte_parsable::ByteParsable;
 use crate::error_codes::NONE;
-use crate::serializable::{BoxedSerializable, Serializable};
+use crate::serializable::Serializable;
 use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
 use crate::types::compact_array::CompactArray;
@@ -41,16 +41,13 @@ impl Size for ApiVersionsResponseV4 {
 }
 
 impl Serializable for ApiVersionsResponseV4 {
-    fn serializable_fields(&self) -> Vec<BoxedSerializable> {
-        let mut fields: Vec<BoxedSerializable> = Vec::with_capacity(6);
-        let message_size = self.size() as i32;
-        fields.push(Box::new(message_size));
-        fields.push(Box::new(self.correlation_id));
-        fields.push(Box::new(self.error_code));
-        fields.push(Box::new(self.api_keys.clone()));
-        fields.push(Box::new(self.throttle_time_ms));
-        fields.push(Box::new(self._tagged_fields.clone()));
-        fields
+    fn to_be_bytes(&self) -> Vec<u8> {
+        let mut bytes: Vec<u8> = Vec::new();
+        bytes.extend_from_slice(&self.error_code.to_be_bytes());
+        bytes.extend_from_slice(&self.api_keys.to_be_bytes());
+        bytes.extend_from_slice(&self.throttle_time_ms.to_be_bytes());
+        bytes.extend_from_slice(&self._tagged_fields.to_be_bytes());
+        bytes
     }
 }
 
@@ -94,13 +91,13 @@ impl ByteParsable<ApiKey> for ApiKey {
 }
 
 impl Serializable for ApiKey {
-    fn serializable_fields(&self) -> Vec<BoxedSerializable> {
-        vec![
-            Box::new(self.api_key),
-            Box::new(self.min_version),
-            Box::new(self.max_version),
-            Box::new(self._tagged_fields.clone()),
-        ]
+    fn to_be_bytes(&self) -> Vec<u8> {
+        let mut bytes = Vec::new();
+        bytes.extend_from_slice(&self.api_key.to_be_bytes());
+        bytes.extend_from_slice(&self.min_version.to_be_bytes());
+        bytes.extend_from_slice(&self.max_version.to_be_bytes());
+        bytes.extend_from_slice(&self._tagged_fields.to_be_bytes());
+        bytes
     }
 }
 

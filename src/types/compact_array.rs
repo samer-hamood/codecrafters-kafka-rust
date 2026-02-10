@@ -1,5 +1,5 @@
 use crate::byte_parsable::ByteParsable;
-use crate::serializable::{BoxedSerializable, Serializable};
+use crate::serializable::Serializable;
 use crate::size::Size;
 use crate::types::unsigned_varint::UnsignedVarint;
 use std::cmp::Ordering;
@@ -83,12 +83,10 @@ impl<T: Serializable + Size + ByteParsable<T> + Clone> ByteParsable<CompactArray
 }
 
 impl<T: Serializable + Size + ByteParsable<T> + Clone + 'static> Serializable for CompactArray<T> {
-    fn serializable_fields(&self) -> Vec<BoxedSerializable> {
-        iter::once(Box::new(self.length.clone()) as BoxedSerializable)
-            .chain(
-                self.iter()
-                    .map(|x| Box::new(x.clone()) as BoxedSerializable),
-            )
+    fn to_be_bytes(&self) -> Vec<u8> {
+        iter::once(self.length.to_be_bytes())
+            .chain(self.iter().map(|x| x.to_be_bytes()))
+            .flatten()
             .collect()
     }
 }

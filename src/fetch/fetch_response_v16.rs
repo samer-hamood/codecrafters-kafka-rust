@@ -1,6 +1,6 @@
 use crate::fetch::topic::ResponseTopic;
 use crate::headers::response_header_v1::ResponseHeaderV1;
-use crate::serializable::{BoxedSerializable, Serializable};
+use crate::serializable::Serializable;
 use crate::size::Size;
 use crate::tagged_fields_section::TaggedFieldsSection;
 use crate::types::compact_array::CompactArray;
@@ -59,17 +59,14 @@ impl Size for FetchResponseV16 {
 }
 
 impl Serializable for FetchResponseV16 {
-    fn serializable_fields(&self) -> Vec<BoxedSerializable> {
-        let mut fields: Vec<BoxedSerializable> = Vec::with_capacity(7);
-        let message_size = self.size() as i32;
-        fields.push(Box::new(message_size));
-        fields.push(Box::new(self.header.clone()));
-        fields.push(Box::new(self.throttle_time_ms));
-        fields.push(Box::new(self.error_code));
-        fields.push(Box::new(self.session_id));
-        fields.push(Box::new(self.responses.clone()));
-        fields.push(Box::new(self._tagged_fields.clone()));
-        fields
+    fn to_be_bytes(&self) -> Vec<u8> {
+        let mut bytes: Vec<u8> = Vec::new();
+        bytes.extend_from_slice(&self.throttle_time_ms.to_be_bytes());
+        bytes.extend_from_slice(&self.error_code.to_be_bytes());
+        bytes.extend_from_slice(&self.session_id.to_be_bytes());
+        bytes.extend_from_slice(&self.responses.to_be_bytes());
+        bytes.extend_from_slice(&self._tagged_fields.to_be_bytes());
+        bytes
     }
 }
 

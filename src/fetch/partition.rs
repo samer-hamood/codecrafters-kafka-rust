@@ -2,7 +2,7 @@ use std::io::Cursor;
 
 use crate::byte_parsable::ByteParsable;
 use crate::fetch::partition;
-use crate::serializable::{BoxedSerializable, Serializable};
+use crate::serializable::Serializable;
 use crate::size::{self, Size};
 use crate::tagged_fields_section::TaggedFieldsSection;
 use crate::types::compact_array::CompactArray;
@@ -94,18 +94,18 @@ impl Size for ResponsePartition {
 }
 
 impl Serializable for ResponsePartition {
-    fn serializable_fields(&self) -> Vec<BoxedSerializable> {
-        vec![
-            Box::new(self.partition_index),
-            Box::new(self.error_code),
-            Box::new(self.high_watermark),
-            Box::new(self.last_stable_offset),
-            Box::new(self.log_start_offset),
-            Box::new(self.aborted_transactions.clone()),
-            Box::new(self.preferred_read_replica),
-            Box::new(self.records.clone()),
-            Box::new(self._tagged_fields.clone()),
-        ]
+    fn to_be_bytes(&self) -> Vec<u8> {
+        let mut bytes = Vec::new();
+        bytes.extend_from_slice(&self.partition_index.to_be_bytes());
+        bytes.extend_from_slice(&self.error_code.to_be_bytes());
+        bytes.extend_from_slice(&self.high_watermark.to_be_bytes());
+        bytes.extend_from_slice(&self.last_stable_offset.to_be_bytes());
+        bytes.extend_from_slice(&self.log_start_offset.to_be_bytes());
+        bytes.extend_from_slice(&self.aborted_transactions.to_be_bytes());
+        bytes.extend_from_slice(&self.preferred_read_replica.to_be_bytes());
+        bytes.extend_from_slice(&self.records.to_be_bytes());
+        bytes.extend_from_slice(&self._tagged_fields.to_be_bytes());
+        bytes
     }
 }
 

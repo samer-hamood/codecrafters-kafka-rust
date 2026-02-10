@@ -6,7 +6,7 @@ use crate::{
     error_codes,
     headers::{self, response_header_v1::ResponseHeaderV1},
     records::partition_record::PartitionRecord,
-    serializable::{BoxedSerializable, Serializable},
+    serializable::Serializable,
     size::Size,
     tagged_fields_section::TaggedFieldsSection,
     types::{compact_array::CompactArray, compact_string::CompactString},
