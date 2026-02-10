@@ -303,6 +303,7 @@ impl RecordValue {
         }
     }
 
+    #[allow(dead_code)]
     pub fn to_partition_record(&self) -> Option<PartitionRecord> {
         if let RecordValue::Partition(record) = self {
             Some(record.clone())
