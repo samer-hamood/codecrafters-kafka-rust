@@ -1,4 +1,9 @@
-use crate::{serializable::Serializable, size::Size, types::unsigned_varint::UnsignedVarint};
+use crate::{
+    byte_parsable::ByteParsable,
+    serializable::Serializable,
+    size::Size,
+    types::{compact_nullable::CompactNullable, unsigned_varint::UnsignedVarint},
+};
 
 #[derive(Debug, Clone)]
 pub struct CompactNullableBytes {
@@ -20,6 +25,13 @@ impl Size for CompactNullableBytes {
         self.length.size() + self.bytes.size()
     }
 }
+
+impl CompactNullable<CompactNullableBytes> for CompactNullableBytes {}
+
+impl ByteParsable<CompactNullableBytes> for CompactNullableBytes {
+    fn parse(bytes: &[u8], offset: usize) -> Self {
+        let (length, bytes) = Self::parse_length_and_bytes(bytes, offset);
+        Self { length, bytes }
     }
 }
 

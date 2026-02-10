@@ -1,4 +1,5 @@
 pub mod compact_array;
+pub mod compact_nullable;
 pub mod compact_nullable_bytes;
 pub mod compact_nullable_string;
 pub mod compact_records;

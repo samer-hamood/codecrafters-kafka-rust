@@ -3,6 +3,7 @@ use std::fmt::{Debug, Display};
 use crate::byte_parsable::ByteParsable;
 use crate::serializable::Serializable;
 use crate::size::Size;
+use crate::types::compact_nullable::CompactNullable;
 use crate::types::unsigned_varint::UnsignedVarint;
 
 // https://kafka.apache.org/27/protocol.html#protocol_types
@@ -28,16 +29,11 @@ impl Size for CompactNullableString {
     }
 }
 
+impl CompactNullable<CompactNullableString> for CompactNullableString {}
+
 impl ByteParsable<CompactNullableString> for CompactNullableString {
     fn parse(bytes: &[u8], offset: usize) -> Self {
-        let mut offset = offset;
-        let length = UnsignedVarint::parse(bytes, offset);
-        offset += length.size();
-        let bytes = match length.value {
-            0 => None,
-            1 => Some(Vec::new()),
-            _ => Some(bytes[offset..offset + (length.value - 1) as usize].into()),
-        };
+        let (length, bytes) = Self::parse_length_and_bytes(bytes, offset);
         Self { length, bytes }
     }
 }
