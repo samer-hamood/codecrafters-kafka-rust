@@ -92,14 +92,20 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
             }
             Ok(n) => {
                 debug!("Read {n} byte(s)");
+                let request_start_offset = total_bytes_read;
                 total_bytes_read += n;
                 if total_bytes_read >= header_size {
-                    let request_header = RequestHeaderV2::parse(buf, 0);
+                    let request_header = RequestHeaderV2::parse(buf, request_start_offset);
                     let response_bytes = match request_header.request_api_key {
                         API_VERSIONS => respond_to_api_versions_request(request_header),
-                        FETCH => respond_to_fetch_request(request_header, buf),
-                        DESCRIBE_TOPIC_PARTITIONS => {
-                            respond_to_describe_topic_partitions_request(request_header, buf)
+                        FETCH => {
+                            respond_to_fetch_request(request_header, buf, request_start_offset)
+                        }
+                        DESCRIBE_TOPIC_PARTITIONS => respond_to_describe_topic_partitions_request(
+                            request_header,
+                            buf,
+                            request_start_offset,
+                        ),
                         }
                         _ => Vec::new(),
                     };
@@ -124,13 +130,14 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
 fn respond_to_describe_topic_partitions_request(
     request_header: RequestHeaderV2,
     buf: &[u8],
+    offset: usize,
 ) -> Vec<u8> {
     let throttle_time_ms = 0;
     let is_internal = false;
     let topic_authorized_operation = 0;
     let record_batches = get_record_batches_from_metadata_log();
     let describe_topic_partitions_request =
-        DescribeTopicPartitionsRequestV0::parse(buf, request_header.size());
+        DescribeTopicPartitionsRequestV0::parse(buf, offset + request_header.size());
     let request_topics = describe_topic_partitions_request.topics;
     let topics = request_topics
         .into_iter()
@@ -204,11 +211,11 @@ fn respond_to_api_versions_request(request_header: RequestHeaderV2) -> Vec<u8> {
     api_response.to_be_bytes()
 }
 
-fn respond_to_fetch_request(request_header: RequestHeaderV2, buf: &[u8]) -> Vec<u8> {
+fn respond_to_fetch_request(request_header: RequestHeaderV2, buf: &[u8], offset: usize) -> Vec<u8> {
     let throttle_time_ms = 0;
     let session_id = 0;
     let mut topics = Vec::new();
-    let fetch_request = FetchRequestV16::parse(buf, request_header.size());
+    let fetch_request = FetchRequestV16::parse(buf, offset + request_header.size());
     for _ in 0..fetch_request.topics.len() {
         let partition_index = 0;
         let high_watermark = 0;
