@@ -17,7 +17,9 @@ impl CompactNullableBytes {
 
 impl Size for CompactNullableBytes {
     fn size(&self) -> usize {
-        self.length.size() + self.bytes.as_ref().map(|v| v.len()).unwrap_or(0)
+        self.length.size() + self.bytes.size()
+    }
+}
     }
 }
 
