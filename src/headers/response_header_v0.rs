@@ -1,5 +1,6 @@
 use crate::size::Size;
 
+#[derive(Debug, Clone)]
 pub struct ResponseHeaderV0 {
     pub correlation_id: i32,
 }
