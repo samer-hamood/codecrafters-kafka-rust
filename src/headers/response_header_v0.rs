@@ -1,4 +1,4 @@
-use crate::size::Size;
+use crate::{serializable::Serializable, size::Size};
 
 #[derive(Debug, Clone)]
 pub struct ResponseHeaderV0 {
@@ -6,9 +6,6 @@ pub struct ResponseHeaderV0 {
 }
 
 impl ResponseHeaderV0 {
-    pub fn to_be_bytes(&self) -> Vec<u8> {
-        // Convert to bytes in big-endian order
-        self.correlation_id.to_be_bytes().to_vec()
     pub fn new(correlation_id: i32) -> Self {
         Self { correlation_id }
     }
@@ -17,5 +14,11 @@ impl ResponseHeaderV0 {
 impl Size for ResponseHeaderV0 {
     fn size(&self) -> usize {
         self.correlation_id.size()
+    }
+}
+
+impl Serializable for ResponseHeaderV0 {
+    fn to_be_bytes(&self) -> Vec<u8> {
+        self.correlation_id.to_be_bytes().to_vec()
     }
 }
