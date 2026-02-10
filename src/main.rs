@@ -129,10 +129,9 @@ fn respond_to_describe_topic_partitions_request(
     let is_internal = false;
     let topic_authorized_operation = 0;
     let record_batches = get_record_batches_from_metadata_log();
-    let mut describe_topic_partitions_request =
+    let describe_topic_partitions_request =
         DescribeTopicPartitionsRequestV0::parse(buf, request_header.size());
-    let request_topics = &mut describe_topic_partitions_request.topics;
-    request_topics.sort_by(topic_name);
+    let request_topics = describe_topic_partitions_request.topics;
     let topics = request_topics
         .iter()
         .map(|request_topic| {

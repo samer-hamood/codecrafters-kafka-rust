@@ -37,7 +37,8 @@ impl Size for DescribeTopicPartitionsRequestV0 {
 impl ByteParsable<DescribeTopicPartitionsRequestV0> for DescribeTopicPartitionsRequestV0 {
     fn parse(bytes: &[u8], offset: usize) -> DescribeTopicPartitionsRequestV0 {
         let mut offset: usize = offset;
-        let topics = CompactArray::<Topic>::parse(bytes, offset);
+        let mut topics = CompactArray::<Topic>::parse(bytes, offset);
+        topics.sort_by(topic_name);
         offset += topics.size();
         let response_partition_limit = i32::parse(bytes, offset);
         offset += response_partition_limit.size();
