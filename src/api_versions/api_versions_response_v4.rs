@@ -23,9 +23,9 @@ impl ApiVersionsResponseV4 {
         api_keys: CompactArray<ApiKey>,
         throttle_time_ms: i32,
         _tagged_fields: TaggedFieldsSection,
-    ) -> ApiVersionsResponseV4 {
-        ApiVersionsResponseV4 {
             correlation_id,
+    ) -> Self {
+        Self {
             error_code,
             api_keys,
             throttle_time_ms,
