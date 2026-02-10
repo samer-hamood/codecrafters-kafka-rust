@@ -23,7 +23,6 @@ use crate::types::compact_array::CompactArray;
 ///       records => COMPACT_RECORDS
 #[derive(Debug, Clone)]
 pub struct FetchResponseV16 {
-    header: ResponseHeaderV1,
     throttle_time_ms: i32,
     error_code: i16,
     session_id: i32,
@@ -33,7 +32,6 @@ pub struct FetchResponseV16 {
 
 impl FetchResponseV16 {
     pub fn new(
-        correlation_id: i32,
         throttle_time_ms: i32,
         error_code: i16,
         session_id: i32,
@@ -41,7 +39,6 @@ impl FetchResponseV16 {
         _tagged_fields: TaggedFieldsSection,
     ) -> FetchResponseV16 {
         FetchResponseV16 {
-            header: ResponseHeaderV1::new(correlation_id),
             throttle_time_ms,
             error_code,
             session_id,
@@ -53,9 +50,7 @@ impl FetchResponseV16 {
 
 impl Size for FetchResponseV16 {
     fn size(&self) -> usize {
-        // NB: This is the message size and should not include message size (4 bytes) itself
-        self.header.size()
-            + self.throttle_time_ms.size()
+        self.throttle_time_ms.size()
             + self.error_code.size()
             + self.session_id.size()
             + self.responses.size()
@@ -80,23 +75,25 @@ impl Serializable for FetchResponseV16 {
 
 #[cfg(test)]
 mod test {
+    use crate::api_response::{self, ApiResponse};
+
     use super::*;
 
     #[test]
     fn computes_message_size() {
         let expected_size = (4 + 1) + 4 + 2 + 4 + (1 + 0) + 1;
 
-        let correlation_id = 1519289319;
+        let correlation_id = 1519289319; // 4 + 1 (tag buffer) bytes
         let response = FetchResponseV16::new(
-            correlation_id,               // 4 + 1 (tag buffer) bytes
             0,                            // 4 bytes
             0,                            // 2 bytes
             0,                            // 4 bytes
             CompactArray::empty(),        // 1 byte
             TaggedFieldsSection::empty(), // 1 byte
         );
+        let api_response = api_response::v1(correlation_id, response);
 
-        assert_eq!(expected_size, response.size());
+        assert_eq!(expected_size, api_response.message_size);
     }
 
     #[test]
@@ -118,9 +115,8 @@ mod test {
             0x00,
         ];
 
-        let correlation_id = 0;
+        let correlation_id = 0; // 4 + 1 (tag buffer) bytes
         let response = FetchResponseV16::new(
-            correlation_id,               // 4 + 1 (tag buffer) bytes
             0,                            // 4 bytes
             0,                            // 2 bytes
             0,                            // 4 bytes
@@ -128,6 +124,8 @@ mod test {
             TaggedFieldsSection::empty(), // 1 byte
         );
 
-        assert_eq!(expected_bytes, response.to_be_bytes());
+        let api_response = api_response::v1(correlation_id, response);
+
+        assert_eq!(expected_bytes, api_response.to_be_bytes());
     }
 }

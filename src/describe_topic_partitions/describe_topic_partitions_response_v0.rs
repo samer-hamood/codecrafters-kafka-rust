@@ -37,7 +37,6 @@ use crate::{
 ///     partition_index => INT32
 #[derive(Debug)]
 pub struct DescribeTopicPartitionsResponseV0 {
-    header: ResponseHeaderV1,
     pub throttle_time_ms: i32,
     pub topics: CompactArray<Topic>,
     pub next_cursor: i8, // Although, this type is not what is in the protocol spec (see above)
@@ -46,14 +45,12 @@ pub struct DescribeTopicPartitionsResponseV0 {
 
 impl DescribeTopicPartitionsResponseV0 {
     pub fn new(
-        correlation_id: i32,
         throttle_time_ms: i32,
         topics: CompactArray<Topic>,
         next_cursor: i8,
         _tagged_fields: TaggedFieldsSection,
     ) -> Self {
         Self {
-            header: ResponseHeaderV1::new(correlation_id),
             throttle_time_ms,
             topics,
             next_cursor,
@@ -64,8 +61,7 @@ impl DescribeTopicPartitionsResponseV0 {
 
 impl Size for DescribeTopicPartitionsResponseV0 {
     fn size(&self) -> usize {
-        self.header.size()
-            + self.throttle_time_ms.size()
+        self.throttle_time_ms.size()
             + self.topics.size()
             + self.next_cursor.size()
             + self._tagged_fields.size()
@@ -74,10 +70,7 @@ impl Size for DescribeTopicPartitionsResponseV0 {
 
 impl Serializable for DescribeTopicPartitionsResponseV0 {
     fn to_be_bytes(&self) -> Vec<u8> {
-        let message_size = self.size() as i32;
         let mut bytes = Vec::new();
-        bytes.extend_from_slice(&message_size.to_be_bytes());
-        bytes.extend_from_slice(&self.header.to_be_bytes());
         bytes.extend_from_slice(&self.throttle_time_ms.to_be_bytes());
         bytes.extend_from_slice(&self.topics.to_be_bytes());
         bytes.extend_from_slice(&self.next_cursor.to_be_bytes());
@@ -90,7 +83,6 @@ impl std::fmt::Display for DescribeTopicPartitionsResponseV0 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut debug_struct = f.debug_struct("DescribeTopicPartitionsResponseV0");
 
-        debug_struct.field("header", &self.header);
         debug_struct.field("throttle_time_ms", &self.throttle_time_ms);
         debug_struct.field("topics", &self.topics);
         debug_struct.field("next_cursor", &self.next_cursor);

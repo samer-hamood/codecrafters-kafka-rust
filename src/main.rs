@@ -6,6 +6,7 @@ use std::net::TcpStream;
 use std::thread;
 
 use crate::api_keys::{API_VERSIONS, DESCRIBE_TOPIC_PARTITIONS, FETCH, PRODUCE};
+use crate::api_response::ApiResponse;
 use crate::api_versions::api_versions_response_v4::{ApiKey, ApiVersionsResponseV4};
 use crate::byte_parsable::ByteParsable;
 use crate::describe_topic_partitions::describe_topic_partitions_request_v0::{
@@ -36,6 +37,7 @@ use tracing::{debug, info, trace};
 use uuid::Uuid;
 
 mod api_keys;
+mod api_response;
 mod api_versions;
 mod byte_parsable;
 mod describe_topic_partitions;
@@ -156,19 +158,18 @@ fn respond_to_describe_topic_partitions_request(
         .into();
     let next_cursor: i8 = -1;
     let response = DescribeTopicPartitionsResponseV0::new(
-        request_header.correlation_id,
         throttle_time_ms,
         topics,
         next_cursor,
         TaggedFieldsSection::empty(),
     );
-    response.to_be_bytes()
+    let api_response = api_response::v1(request_header.correlation_id, response);
+    api_response.to_be_bytes()
 }
 
 fn respond_to_api_versions_request(request_header: RequestHeaderV2) -> Vec<u8> {
     let throttle_time_ms = 0;
-    ApiVersionsResponseV4::new(
-        request_header.correlation_id,
+    let response = ApiVersionsResponseV4::new(
         check_supported_version(request_header.request_api_version),
         vec![
             ApiKey::new(
@@ -199,8 +200,9 @@ fn respond_to_api_versions_request(request_header: RequestHeaderV2) -> Vec<u8> {
         .into(),
         throttle_time_ms,
         TaggedFieldsSection::empty(),
-    )
-    .to_be_bytes()
+    );
+    let api_response = api_response::v0(request_header.correlation_id, response);
+    api_response.to_be_bytes()
 }
 
 fn respond_to_fetch_request(request_header: RequestHeaderV2, buf: &[u8]) -> Vec<u8> {
@@ -244,15 +246,15 @@ fn respond_to_fetch_request(request_header: RequestHeaderV2, buf: &[u8]) -> Vec<
         ));
     }
     let responses = CompactArray::new(topics);
-    FetchResponseV16::new(
-        request_header.correlation_id,
+    let response = FetchResponseV16::new(
         throttle_time_ms,
         error_codes::NONE,
         session_id,
         responses,
         TaggedFieldsSection::empty(),
-    )
-    .to_be_bytes()
+    );
+    let api_response = api_response::v1(request_header.correlation_id, response);
+    api_response.to_be_bytes()
 }
 
 fn get_record_values(

@@ -9,7 +9,6 @@ use crate::types::compact_array::CompactArray;
 
 #[derive(Debug)]
 pub struct ApiVersionsResponseV4 {
-    pub correlation_id: i32,
     pub error_code: i16,
     pub api_keys: CompactArray<ApiKey>,
     pub throttle_time_ms: i32,
@@ -18,12 +17,10 @@ pub struct ApiVersionsResponseV4 {
 
 impl ApiVersionsResponseV4 {
     pub fn new(
-        correlation_id: i32,
         error_code: i16,
         api_keys: CompactArray<ApiKey>,
         throttle_time_ms: i32,
         _tagged_fields: TaggedFieldsSection,
-            correlation_id,
     ) -> Self {
         Self {
             error_code,
@@ -36,8 +33,7 @@ impl ApiVersionsResponseV4 {
 
 impl Size for ApiVersionsResponseV4 {
     fn size(&self) -> usize {
-        self.correlation_id.size()
-            + self.error_code.size()
+        self.error_code.size()
             + self.api_keys.size()
             + self.throttle_time_ms.size()
             + self._tagged_fields.size()
@@ -110,12 +106,16 @@ impl Serializable for ApiKey {
 
 #[cfg(test)]
 mod test {
-    use crate::error_codes;
+    use crate::{
+        api_response::{self, v0, ApiResponse},
+        error_codes,
+        headers::response_header_v0::ResponseHeaderV0,
+    };
 
     use super::*;
 
-    fn api_versions_response() -> ApiVersionsResponseV4 {
-        let correlation_id = 7;
+    fn api_versions_response() -> ApiResponse<ResponseHeaderV0, ApiVersionsResponseV4> {
+        let correlation_id = 7; // 4 bytes
         let api_keys: CompactArray<ApiKey> = vec![
             ApiKey::new(1, 0, 17, TaggedFieldsSection::empty()), // 7 bytes
             ApiKey::new(18, 0, 4, TaggedFieldsSection::empty()), // 7 bytes
@@ -123,13 +123,13 @@ mod test {
         ]
         .into();
         let throttle_time_ms = 0;
-        ApiVersionsResponseV4::new(
-            correlation_id,               // 4 bytes
+        let response = ApiVersionsResponseV4::new(
             error_codes::NONE,            // 2 bytes
             api_keys,                     // 1 + 21 bytes
             throttle_time_ms,             // 4 bytes
             TaggedFieldsSection::empty(), // 1 bytes
-        )
+        );
+        api_response::v0(correlation_id, response)
     }
 
     #[test]
@@ -138,7 +138,7 @@ mod test {
 
         let response = api_versions_response();
 
-        assert_eq!(expected_size, response.size());
+        assert_eq!(expected_size, response.message_size);
     }
 
     #[test]
