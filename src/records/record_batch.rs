@@ -1,3 +1,6 @@
+use std::fs::{self, File};
+use std::io::Read;
+
 use uuid::Uuid;
 
 use crate::partial_parsable::PartialParsable;
@@ -31,6 +34,30 @@ pub struct RecordBatch {
 }
 
 impl RecordBatch {
+    pub fn from_file(path: &str) -> Vec<RecordBatch> {
+        fn get_file_size(path: &str) -> usize {
+            fs::metadata(path)
+                .expect("Unable to read metadata for file")
+                .len() as usize
+        }
+
+        let mut record_batches = Vec::new();
+
+        // Parse file
+        let file_byte_count: usize = get_file_size(path);
+        let mut buf = Vec::with_capacity(file_byte_count);
+        let mut file = File::open(path).unwrap_or_else(|_| panic!("File not found: {path}"));
+        let _ = file.read_to_end(&mut buf);
+        let mut offset = 0;
+        while offset < file_byte_count {
+            let record_batch = RecordBatch::parse(&buf, offset);
+            offset += record_batch.size();
+            record_batches.push(record_batch);
+        }
+
+        record_batches
+    }
+
     pub fn expected_length(&self) -> usize {
         self.base_offset.size() + self.batch_length.size() + self.batch_length as usize
     }

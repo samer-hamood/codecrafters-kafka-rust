@@ -323,32 +323,8 @@ fn get_record_batches_from_data_log(topic_name: &str, partition_index: i32) -> V
     get_record_batches_from_log_file(format!("{topic_name}-{partition_index}").as_str())
 }
 
-fn get_record_batches_from_log_file(directory: &str) -> Vec<RecordBatch> {
+pub fn get_record_batches_from_log_file(directory: &str) -> Vec<RecordBatch> {
     let log_file_path = format!("/tmp/kraft-combined-logs/{directory}/00000000000000000000.log");
-    let mut metadata_file = File::open(&log_file_path)
-        .unwrap_or_else(|_| panic!("Log file not found: {log_file_path}"));
-
-    let mut record_batches = Vec::new();
-
-    // Parse file
-    let file_byte_count: usize = get_file_size(&log_file_path);
-    let mut buf = vec![0; file_byte_count];
-    let _ = metadata_file.read(&mut buf);
-    let mut offset = 0;
-    while offset < file_byte_count {
-        let record_batch = RecordBatch::parse(&buf, offset);
-        offset += record_batch.size();
-        record_batches.push(record_batch);
-    }
-
-    record_batches
-}
-
-fn get_file_size(path: &str) -> usize {
-    fs::metadata(path)
-        .expect("Unable to read metadata for file")
-        .len() as usize
-}
 
 fn check_supported_version(version: i16) -> i16 {
     if SUPPORTED_API_VERSIONS.contains(&version) {
@@ -356,6 +332,7 @@ fn check_supported_version(version: i16) -> i16 {
     } else {
         error_codes::UNSUPPORTED_VERSION
     }
+    RecordBatch::from_file(&log_file_path)
 }
 
 fn write_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) -> usize {
