@@ -7,14 +7,17 @@ use std::thread;
 
 use crate::api_keys::{API_VERSIONS, DESCRIBE_TOPIC_PARTITIONS, FETCH, PRODUCE};
 use crate::api_response::ApiResponse;
+use crate::api_versions::api_versions_api::ApiVersionsApi;
 use crate::api_versions::api_versions_response_v4::{ApiKey, ApiVersionsResponseV4};
 use crate::byte_parsable::ByteParsable;
+use crate::describe_topic_partitions::describe_topic_partitions_api::DescribeTopicPartitionsApi;
 use crate::describe_topic_partitions::describe_topic_partitions_request_v0::{
     self, topic_name, DescribeTopicPartitionsRequestV0,
 };
 use crate::describe_topic_partitions::describe_topic_partitions_response_v0::{
     DescribeTopicPartitionsResponseV0, Partition, Topic,
 };
+use crate::fetch::fetch_api::FetchApi;
 use crate::fetch::fetch_request_v16::FetchRequestV16;
 use crate::fetch::fetch_response_v16::FetchResponseV16;
 use crate::fetch::partition::{ResponsePartition, Transaction};
@@ -53,8 +56,6 @@ mod size;
 mod tagged_fields_section;
 mod types;
 mod utils;
-
-const SUPPORTED_API_VERSIONS: [i16; 5] = [0, 1, 2, 3, 4];
 
 fn main() {
     let config = load_config();
@@ -97,16 +98,15 @@ fn process_bytes_from_stream(stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                 if total_bytes_read >= header_size {
                     let request_header = RequestHeaderV2::parse(buf, request_start_offset);
                     let response_bytes = match request_header.request_api_key {
-                        API_VERSIONS => respond_to_api_versions_request(request_header),
-                        FETCH => {
-                            respond_to_fetch_request(request_header, buf, request_start_offset)
-                        }
-                        DESCRIBE_TOPIC_PARTITIONS => respond_to_describe_topic_partitions_request(
+                        API_VERSIONS => ApiVersionsApi::respond(request_header).to_be_bytes(),
+                        FETCH => FetchApi::respond(request_header, buf, request_start_offset)
+                            .to_be_bytes(),
+                        DESCRIBE_TOPIC_PARTITIONS => DescribeTopicPartitionsApi::respond(
                             request_header,
                             buf,
                             request_start_offset,
-                        ),
-                        }
+                        )
+                        .to_be_bytes(),
                         _ => Vec::new(),
                     };
 
@@ -127,211 +127,12 @@ fn process_bytes_from_stream(stream: &mut TcpStream, buf: &mut [u8]) -> usize {
     total_bytes_read
 }
 
-fn respond_to_describe_topic_partitions_request(
-    request_header: RequestHeaderV2,
-    buf: &[u8],
-    offset: usize,
-) -> Vec<u8> {
-    let throttle_time_ms = 0;
-    let is_internal = false;
-    let topic_authorized_operation = 0;
-    let record_batches = get_record_batches_from_metadata_log();
-    let describe_topic_partitions_request =
-        DescribeTopicPartitionsRequestV0::parse(buf, offset + request_header.size());
-    let request_topics = describe_topic_partitions_request.topics;
-    let topics = request_topics
-        .into_iter()
-        .map(|request_topic| {
-            let record_values = get_record_values(&record_batches, &request_topic.name);
-            let (topic_id, error_code) = get_topic_id_and_error_code(&record_values);
-            let partitions = record_values
-                .into_iter()
-                .filter_map(|record_value| record_value.into_partition_record())
-                .map(Partition::from_partition_record)
-                .collect::<Vec<Partition>>()
-                .into();
-            Topic::new(
-                error_code,
-                request_topic.name.into_compact_nullable_string(),
-                topic_id,
-                is_internal,
-                partitions,
-                topic_authorized_operation,
-                TaggedFieldsSection::empty(),
-            )
-        })
-        .collect::<Vec<Topic>>()
-        .into();
-    let next_cursor: i8 = -1;
-    let response = DescribeTopicPartitionsResponseV0::new(
-        throttle_time_ms,
-        topics,
-        next_cursor,
-        TaggedFieldsSection::empty(),
-    );
-    let api_response = api_response::v1(request_header.correlation_id, response);
-    api_response.to_be_bytes()
-}
-
-fn respond_to_api_versions_request(request_header: RequestHeaderV2) -> Vec<u8> {
-    let throttle_time_ms = 0;
-    let response = ApiVersionsResponseV4::new(
-        check_supported_version(request_header.request_api_version),
-        vec![
-            ApiKey::new(
-                API_VERSIONS,
-                api_versions::MIN_VERSION,
-                api_versions::MAX_VERSION,
-                TaggedFieldsSection::empty(),
-            ),
-            ApiKey::new(
-                FETCH,
-                fetch::MIN_VERSION,
-                fetch::MAX_VERSION,
-                TaggedFieldsSection::empty(),
-            ),
-            ApiKey::new(
-                DESCRIBE_TOPIC_PARTITIONS,
-                describe_topic_partitions::MIN_VERSION,
-                describe_topic_partitions::MAX_VERSION,
-                TaggedFieldsSection::empty(),
-            ),
-            ApiKey::new(
-                PRODUCE,
-                produce::MIN_VERSION,
-                produce::MAX_VERSION,
-                TaggedFieldsSection::empty(),
-            ),
-        ]
-        .into(),
-        throttle_time_ms,
-        TaggedFieldsSection::empty(),
-    );
-    let api_response = api_response::v0(request_header.correlation_id, response);
-    api_response.to_be_bytes()
-}
-
-fn respond_to_fetch_request(request_header: RequestHeaderV2, buf: &[u8], offset: usize) -> Vec<u8> {
-    let throttle_time_ms = 0;
-    let session_id = 0;
-    let mut topics = Vec::new();
-    let fetch_request = FetchRequestV16::parse(buf, offset + request_header.size());
-    for _ in 0..fetch_request.topics.len() {
-        let partition_index = 0;
-        let high_watermark = 0;
-        let last_stable_offset = 0;
-        let log_start_offset = 0;
-        let aborted_transactions: CompactArray<Transaction> = CompactArray::empty();
-        let preferred_read_replica = 0;
-        let topic_id: Uuid = fetch_request.topics[0].topic_id;
-        let metadata_record_batches = get_record_batches_from_metadata_log();
-        let records =
-            if let Some(topic_record) = get_topic_record(&topic_id, &metadata_record_batches) {
-                let topic_name = topic_record.topic_name.to_string();
-                let data_record_batches =
-                    get_record_batches_from_data_log(&topic_name, partition_index);
-                CompactRecords::from_record_batches(&data_record_batches)
-            } else {
-                CompactRecords::null()
-            };
-        topics.push(ResponseTopic::new(
-            topic_id,
-            vec![ResponsePartition {
-                partition_index,
-                error_code: check_topic_exists(&topic_id, metadata_record_batches),
-                high_watermark,
-                last_stable_offset,
-                log_start_offset,
-                aborted_transactions,
-                preferred_read_replica,
-                records,
-                _tagged_fields: TaggedFieldsSection::empty(),
-            }]
-            .into(),
-            TaggedFieldsSection::empty(),
-        ));
-    }
-    let responses = CompactArray::new(topics);
-    let response = FetchResponseV16::new(
-        throttle_time_ms,
-        error_codes::NONE,
-        session_id,
-        responses,
-        TaggedFieldsSection::empty(),
-    );
-    let api_response = api_response::v1(request_header.correlation_id, response);
-    api_response.to_be_bytes()
-}
-
-fn get_record_values(
-    record_batches: &[RecordBatch],
-    topic_name: &CompactString,
-) -> Vec<RecordValue> {
-    record_batches
-        .iter()
-        .flat_map(|record_batch| {
-            record_batch.parse_record_values(SearchItem::TopicName(topic_name.clone()), false)
-        })
-        .collect()
-}
-
-fn get_topic_id_and_error_code(record_values: &[RecordValue]) -> (Uuid, i16) {
-    if record_values.is_empty() {
-        (all_zeroes_uuid(), error_codes::UNKNOWN_TOPIC_OR_PARTITION)
-    } else if let RecordValue::Topic(record) = &record_values[0] {
-        (record.topic_uuid, error_codes::NONE)
-    // Should always be TopicRecord but could get topic_uuid from PartitionRecord
-    } else if let RecordValue::Partition(record) = &record_values[0] {
-        (record.topic_uuid, error_codes::NONE)
-    } else {
-        (all_zeroes_uuid(), error_codes::UNKNOWN_TOPIC_OR_PARTITION)
-    }
-}
-
-fn get_topic_record(topic_id: &Uuid, record_batches: &[RecordBatch]) -> Option<TopicRecord> {
-    record_batches
-        .iter()
-        .flat_map(|record_batch| {
-            record_batch.parse_record_values(SearchItem::TopicId(*topic_id), true)
-        })
-        .filter_map(|record_value| record_value.to_topic_record())
-        .next()
-}
-
-fn check_topic_exists(topic_id: &Uuid, record_batches: Vec<RecordBatch>) -> i16 {
-    let topic_exists = metadata_file_contains(topic_id, record_batches);
-    if topic_exists {
-        error_codes::NONE
-    } else {
-        error_codes::UNKNOWN_TOPIC_ID
-    }
-}
-
-fn metadata_file_contains(topic_id: &Uuid, record_batches: Vec<RecordBatch>) -> bool {
-    record_batches.iter().any(|record_batch| {
-        !record_batch
-            .parse_record_values(SearchItem::TopicId(*topic_id), true)
-            .is_empty()
-    })
-}
-
-fn get_record_batches_from_metadata_log() -> Vec<RecordBatch> {
+pub fn get_record_batches_from_metadata_log() -> Vec<RecordBatch> {
     get_record_batches_from_log_file("__cluster_metadata-0")
-}
-
-fn get_record_batches_from_data_log(topic_name: &str, partition_index: i32) -> Vec<RecordBatch> {
-    get_record_batches_from_log_file(format!("{topic_name}-{partition_index}").as_str())
 }
 
 pub fn get_record_batches_from_log_file(directory: &str) -> Vec<RecordBatch> {
     let log_file_path = format!("/tmp/kraft-combined-logs/{directory}/00000000000000000000.log");
-
-fn check_supported_version(version: i16) -> i16 {
-    if SUPPORTED_API_VERSIONS.contains(&version) {
-        error_codes::NONE
-    } else {
-        error_codes::UNSUPPORTED_VERSION
-    }
     RecordBatch::from_file(&log_file_path)
 }
 
@@ -352,21 +153,6 @@ fn write_bytes_to_stream(_stream: &mut TcpStream, bytes: &[u8]) -> usize {
 #[cfg(test)]
 mod test {
     use super::*;
-    use parameterized::parameterized;
-
-    #[parameterized(
-        version = {
-            0, 1, 2, 3, 4
-        }
-    )]
-    fn checks_supported_version(version: i16) {
-        assert_eq!(error_codes::NONE, check_supported_version(version));
-    }
-
-    #[test]
-    fn checks_unsupported_version() {
-        assert_eq!(error_codes::UNSUPPORTED_VERSION, check_supported_version(6));
-    }
 
     #[test]
     #[ignore = ""]

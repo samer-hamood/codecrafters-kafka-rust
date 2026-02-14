@@ -110,3 +110,11 @@ impl<T: Serializable + Size + ByteParsable<T> + Clone> From<Vec<T>> for CompactA
         CompactArray::new(val)
     }
 }
+
+impl<const N: usize, T: Serializable + Size + ByteParsable<T> + Clone> From<[T; N]>
+    for CompactArray<T>
+{
+    fn from(val: [T; N]) -> Self {
+        CompactArray::new(val.into())
+    }
+}
