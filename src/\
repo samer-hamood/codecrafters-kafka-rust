@@ -1,0 +1,103 @@
+use uuid::Uuid;
+
+use crate::{
+    api_response::{self, ApiResponse},
+    byte_parsable::ByteParsable,
+    describe_topic_partitions::{
+        describe_topic_partitions_request_v0::DescribeTopicPartitionsRequestV0,
+        describe_topic_partitions_response_v0::{
+            DescribeTopicPartitionsResponseV0, Partition, Topic,
+        },
+    },
+    error_codes, get_record_batches_from_metadata_log,
+    headers::{request_header_v2::RequestHeaderV2, response_header_v1::ResponseHeaderV1},
+    records::record_batch::{RecordBatch, RecordValue, SearchItem},
+    size::Size,
+    tagged_fields_section::TaggedFieldsSection,
+    types::{compact_array::CompactArray, compact_string::CompactString},
+    utils::uuid::all_zeroes_uuid,
+};
+
+pub struct DescribeTopicPartitionsApi;
+
+impl DescribeTopicPartitionsApi {
+    pub fn respond(
+        request_header: RequestHeaderV2,
+        buf: &[u8],
+        offset: usize,
+    ) -> ApiResponse<ResponseHeaderV1, DescribeTopicPartitionsResponseV0> {
+        let throttle_time_ms = 0;
+        let is_internal = false;
+        let topic_authorized_operation = 0;
+        let record_batches = get_record_batches_from_metadata_log();
+        let describe_topic_partitions_request =
+            DescribeTopicPartitionsRequestV0::parse(buf, offset + request_header.size());
+        let request_topics = describe_topic_partitions_request.topics;
+        let topics = request_topics
+            .into_iter()
+            .map(|request_topic| {
+                let record_values = Self::get_record_values(&record_batches, &request_topic.name);
+                let (topic_id, error_code) = Self::get_topic_id_and_error_code(&record_values);
+                let partitions = Self::partitions(record_values);
+                // let partitions = record_values
+                //     .into_iter()
+                //     .filter_map(|record_value| record_value.into_partition_record())
+                //     .map(Partition::from_partition_record)
+                //     .collect::<Vec<Partition>>()
+                //     .into();
+                Topic::new(
+                    error_code,
+                    request_topic.name.into_compact_nullable_string(),
+                    topic_id,
+                    is_internal,
+                    partitions,
+                    topic_authorized_operation,
+                    TaggedFieldsSection::empty(),
+                )
+            })
+            .collect::<Vec<Topic>>()
+            .into();
+        let next_cursor: i8 = -1;
+        let response = DescribeTopicPartitionsResponseV0::new(
+            throttle_time_ms,
+            topics,
+            next_cursor,
+            TaggedFieldsSection::empty(),
+        );
+        api_response::v1(request_header.correlation_id, response)
+    }
+
+    fn partitions(record_values: Vec<RecordValue>) -> CompactArray<Partition> {
+        record_values
+            .into_iter()
+            .filter_map(|record_value| record_value.into_partition_record())
+            .map(Partition::from_partition_record)
+            .collect::<Vec<Partition>>()
+            .into()
+    }
+
+    fn get_record_values(
+        record_batches: &[RecordBatch],
+        topic_name: &CompactString,
+    ) -> Vec<RecordValue> {
+        record_batches
+            .iter()
+            .flat_map(|record_batch| {
+                record_batch.parse_record_values(SearchItem::TopicName(topic_name.clone()), false)
+            })
+            .collect()
+    }
+
+    fn get_topic_id_and_error_code(record_values: &[RecordValue]) -> (Uuid, i16) {
+        if record_values.is_empty() {
+            (all_zeroes_uuid(), error_codes::UNKNOWN_TOPIC_OR_PARTITION)
+        } else if let RecordValue::Topic(record) = &record_values[0] {
+            (record.topic_uuid, error_codes::NONE)
+        // Should always be TopicRecord but could get topic_uuid from PartitionRecord
+        } else if let RecordValue::Partition(record) = &record_values[0] {
+            (record.topic_uuid, error_codes::NONE)
+        } else {
+            (all_zeroes_uuid(), error_codes::UNKNOWN_TOPIC_OR_PARTITION)
+        }
+    }
+}
