@@ -24,6 +24,9 @@ use crate::fetch::partition::{ResponsePartition, Transaction};
 use crate::fetch::topic::ResponseTopic;
 use crate::headers::request_header_v2::RequestHeaderV2;
 use crate::partial_parsable::PartialParsable;
+use crate::produce::produce_api::ProduceApi;
+use crate::produce::produce_request_v11::ProduceRequestV11;
+use crate::produce::produce_response_v11::{PartitionResponse, ProduceResponseV11, Response};
 use crate::records::metadata_record::{MetadataRecord, TOPIC};
 use crate::records::record_batch::{RecordBatch, RecordValue, SearchItem};
 use crate::records::topic_record::TopicRecord;
@@ -107,6 +110,8 @@ fn process_bytes_from_stream(stream: &mut TcpStream, buf: &mut [u8]) -> usize {
                             request_start_offset,
                         )
                         .to_be_bytes(),
+                        PRODUCE => ProduceApi::respond(request_header, buf, request_start_offset)
+                            .to_be_bytes(),
                         _ => Vec::new(),
                     };
 

@@ -1,3 +1,4 @@
+use crate::byte_parsable::ByteParsable;
 use crate::records::record_batch::RecordBatch;
 use crate::serializable::Serializable;
 use crate::size::Size;
@@ -46,6 +47,13 @@ impl CompactRecords {
 impl Size for CompactRecords {
     fn size(&self) -> usize {
         self.records.size()
+    }
+}
+
+impl ByteParsable<CompactRecords> for CompactRecords {
+    fn parse(bytes: &[u8], offset: usize) -> Self {
+        let records = CompactNullableBytes::parse(bytes, offset);
+        Self { records }
     }
 }
 
