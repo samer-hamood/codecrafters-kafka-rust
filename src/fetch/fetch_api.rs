@@ -66,7 +66,7 @@ impl FetchApi {
             Self::get_records_from_data_log(topic_id, &metadata_record_batches, partition_index);
         ResponseTopic::new(
             topic_id,
-            [ResponsePartition::new(
+            [ResponsePartition {
                 partition_index,
                 error_code,
                 high_watermark,
@@ -75,8 +75,8 @@ impl FetchApi {
                 aborted_transactions,
                 preferred_read_replica,
                 records,
-                TaggedFieldsSection::empty(),
-            )]
+                _tagged_fields: TaggedFieldsSection::empty(),
+            }]
             .into(),
             TaggedFieldsSection::empty(),
         )
