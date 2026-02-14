@@ -80,12 +80,12 @@ fn main() {
     }
 }
 
-fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
+fn process_bytes_from_stream(stream: &mut TcpStream, buf: &mut [u8]) -> usize {
     debug!("Buffer length: {}", buf.len());
     let mut total_bytes_read = 0;
     let header_size = RequestHeaderV2::min_size();
     loop {
-        match _stream.read(&mut buf[total_bytes_read..]) {
+        match stream.read(&mut buf[total_bytes_read..]) {
             Ok(0) => {
                 println!("Connection closed by peer");
                 break;
@@ -112,7 +112,7 @@ fn process_bytes_from_stream(_stream: &mut TcpStream, buf: &mut [u8]) -> usize {
 
                     debug!("Response size: {} byte(s)", &response_bytes.len());
 
-                    let response_bytes_sent = write_bytes_to_stream(_stream, &response_bytes);
+                    let response_bytes_sent = write_bytes_to_stream(stream, &response_bytes);
 
                     debug!("Sent {response_bytes_sent} byte(s) for response");
                 }
