@@ -39,6 +39,7 @@ use crate::types::compact_string::CompactString;
 use crate::utils::config::load_config;
 use crate::utils::logging::init_logging;
 use crate::utils::uuid::all_zeroes_uuid;
+use itertools::Itertools;
 use tracing::{debug, info, trace};
 use uuid::Uuid;
 
@@ -130,6 +131,16 @@ fn process_bytes_from_stream(stream: &mut TcpStream, buf: &mut [u8]) -> usize {
     }
     debug!("Total bytes read: {}", total_bytes_read);
     total_bytes_read
+}
+
+pub fn get_record_values_by_topic_name_from_metadata_log(
+    topic_name: &CompactString,
+) -> Vec<RecordValue> {
+    let record_batches = get_record_batches_from_metadata_log();
+    record_batches
+        .into_iter()
+        .flat_map(|record_batch| record_batch.find_record_values_by_topic_name(topic_name))
+        .collect_vec()
 }
 
 pub fn get_record_batches_from_metadata_log() -> Vec<RecordBatch> {

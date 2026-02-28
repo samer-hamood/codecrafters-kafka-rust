@@ -88,6 +88,10 @@ impl RecordBatch {
         }
         record_values
     }
+
+    pub fn find_record_values_by_topic_name(&self, topic_name: &CompactString) -> Vec<RecordValue> {
+        self.parse_record_values(SearchItem::TopicName(topic_name.clone()), false)
+    }
 }
 
 impl Size for RecordBatch {
@@ -317,6 +321,15 @@ impl RecordValue {
     pub fn to_topic_record(&self) -> Option<TopicRecord> {
         if let RecordValue::Topic(record) = self {
             Some(record.clone())
+        } else {
+            None
+        }
+    }
+
+    #[allow(clippy::needless_borrow)]
+    pub fn as_topic_record(&self) -> Option<&TopicRecord> {
+        if let RecordValue::Topic(record) = self {
+            Some(&record)
         } else {
             None
         }
