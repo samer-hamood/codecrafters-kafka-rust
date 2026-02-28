@@ -11,6 +11,7 @@ use crate::types::compact_string::CompactString;
 use crate::types::signed_varint::SignedVarint;
 use crate::types::unsigned_varint::UnsignedVarint;
 use crate::types::varlong::Varlong;
+use crate::utils::file;
 use crate::{byte_parsable::ByteParsable, size::Size};
 
 #[derive(Debug)]
@@ -35,21 +36,12 @@ pub struct RecordBatch {
 
 impl RecordBatch {
     pub fn from_file(path: &str) -> Vec<RecordBatch> {
-        fn get_file_size(path: &str) -> usize {
-            fs::metadata(path)
-                .expect("Unable to read metadata for file")
-                .len() as usize
-        }
-
         let mut record_batches = Vec::new();
 
-        // Parse file
-        let file_byte_count: usize = get_file_size(path);
-        let mut buf = Vec::with_capacity(file_byte_count);
-        let mut file = File::open(path).unwrap_or_else(|_| panic!("File not found: {path}"));
-        let _ = file.read_to_end(&mut buf);
+        let buf = file::read_file(path)
+            .unwrap_or_else(|_| panic!("An error occurred trying to read file: {path}"));
         let mut offset = 0;
-        while offset < file_byte_count {
+        while offset < buf.len() {
             let record_batch = RecordBatch::parse(&buf, offset);
             offset += record_batch.size();
             record_batches.push(record_batch);
