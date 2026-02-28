@@ -1,7 +1,7 @@
 use crate::{
     api_response::{self, ApiResponse},
     byte_parsable::ByteParsable,
-    error_codes::UNKNOWN_TOPIC_OR_PARTITION,
+    error_codes, get_record_values_by_topic_name_from_metadata_log,
     headers::{request_header_v2::RequestHeaderV2, response_header_v1::ResponseHeaderV1},
     produce::{
         produce_request_v11::{Partition, ProduceRequestV11, Topic},
